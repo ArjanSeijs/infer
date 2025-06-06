@@ -10,6 +10,8 @@ extern crate stable_mir;
 use std::{env, ops::ControlFlow};
 
 mod textual;
+#[allow(unused)]
+mod textual_defs;
 use textual::mir_to_textual;
 
 fn main() {
