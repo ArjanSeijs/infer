@@ -1,4 +1,6 @@
-use crate::textual_defs::{boolexp, exp, nodename};
+use stable_mir::mir::{TerminatorKind};
+
+use crate::textual_defs::{boolexp, exp, ident, nodename, PrintTextual};
 
 /*
 [OCaml Definition]
@@ -13,15 +15,72 @@ module Terminator : sig
     | Unreachable
 end
 */
+
+#[derive(Debug)]
 pub struct NodeCall {
-    label: nodename::T,
-    ssa_args: Vec<exp::T>
+    pub label: nodename::NodeName,
+    pub ssa_args: Vec<exp::Exp>,
 }
 
-pub enum T {
-    If{bexp: boolexp::T, then: Box<T>, else_: Box<T>},
-    Ret(exp::T),
+#[derive(Debug)]
+pub enum Terminator {
+    If {
+        bexp: boolexp::BoolExp,
+        then: Box<Terminator>,
+        else_: Box<Terminator>,
+    },
+    Ret(exp::Exp),
     Jump(Vec<NodeCall>),
-    Throw(exp::T),
-    Unreachable
+    Throw(exp::Exp),
+    Unreachable,
+}
+
+impl PrintTextual for Terminator {
+    fn pp(&self) -> String {
+        match self {
+            Terminator::If { bexp, then, else_ } => todo!(),
+            Terminator::Ret(exp) => format!("ret {}", exp.pp()),
+            Terminator::Jump(node_calls) => todo!(),
+            Terminator::Throw(exp) => todo!(),
+            Terminator::Unreachable => todo!(),
+        }
+    }
+}
+
+pub fn terminator_to_textual(terminator: &stable_mir::mir::Terminator) -> Terminator {
+    match &terminator.kind {
+        TerminatorKind::Goto { target } => todo!("Goto"),
+        TerminatorKind::SwitchInt { discr, targets } => todo!("SwitchInt"),
+        TerminatorKind::Resume => todo!("Resume"),
+        TerminatorKind::Abort => todo!("Abort"),
+        TerminatorKind::Return => Terminator::Ret(exp::Exp::Var(ident::T { val: 0 })), // Rust puts return value in 0
+        TerminatorKind::Unreachable => Terminator::Unreachable,
+        TerminatorKind::Drop {
+            place,
+            target,
+            unwind,
+        } => todo!("Drop"),
+        TerminatorKind::Call {
+            func,
+            args,
+            destination,
+            target,
+            unwind,
+        } => todo!("Call"),
+        TerminatorKind::Assert {
+            cond,
+            expected,
+            msg,
+            target,
+            unwind,
+        } => todo!("Assert"),
+        TerminatorKind::InlineAsm {
+            template,
+            operands,
+            options,
+            line_spans,
+            destination,
+            unwind,
+        } => todo!("InlineAsm"),
+    }
 }

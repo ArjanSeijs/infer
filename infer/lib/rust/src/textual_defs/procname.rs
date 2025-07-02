@@ -1,9 +1,17 @@
-use crate::textual_defs::name;
+use crate::textual_defs::{name, PrintTextual};
 
 /*
 [OCaml Definition]
 module ProcName : NAME 
 */
-pub struct T {
-    name: name::T
+
+#[derive(Debug)]
+pub struct ProcName {
+    pub name: name::T
+}
+
+impl PrintTextual for ProcName {
+    fn pp(&self) -> String {
+        self.name.pp()
+    }
 }

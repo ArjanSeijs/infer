@@ -1,26 +1,46 @@
+use std::io::Write;
 
-mod attr;
-mod basetypename;
-mod boolexp;
-mod constant;
-mod exp;
-mod global;
-mod fieldname;
-mod fielddecl;
-mod qualifiedprocname;
-mod ident;
-mod instr;
-mod module;
-mod name;
-mod node;
-mod nodename;
-mod procname;
-mod struct_;
-mod sourcefile;
-mod procdecl;
-mod procdesc;
-mod location;
-mod terminator;
-mod typ;
-mod typename;
-mod varname;
+pub mod attr;
+pub mod basetypename;
+pub mod boolexp;
+pub mod constant;
+pub mod exp;
+pub mod fielddecl;
+pub mod fieldname;
+pub mod global;
+pub mod ident;
+pub mod instr;
+pub mod location;
+pub mod module;
+pub mod name;
+pub mod node;
+pub mod nodename;
+pub mod procdecl;
+pub mod procdesc;
+pub mod procname;
+pub mod qualifiedprocname;
+pub mod sourcefile;
+pub mod struct_;
+pub mod terminator;
+pub mod typ;
+pub mod typename;
+pub mod varname;
+
+pub trait WriteTextual {
+    fn write(&self, out: &mut impl Write) -> ();
+}
+
+pub trait PrintTextual {
+    fn pp(&self) -> String;
+}
+
+pub trait PrintTextualWithSeperator {
+    fn pp_list(&self, seperator: &str) -> String;
+}
+
+impl<T: PrintTextual> PrintTextualWithSeperator for Vec<T> {
+    fn pp_list(&self, seperator: &str) -> String {
+        let mapped : Vec<String> = self.iter().map(|v| v.pp()).collect();
+        mapped.join(seperator)
+    }
+}

@@ -6,9 +6,11 @@ module Struct : sig
   type t =
     {name: TypeName.t; supers: TypeName.t list; fields: FieldDecl.t list; attributes: Attr.t list}
 */
-pub struct T {
-    name: typename::T,
-    supers: Vec<typename::T>,
-    fields: Vec<fielddecl::T>,
-    attributes: Vec<attr::T>
+
+#[derive(Debug)]
+pub struct Struct {
+    pub name: typename::TypeName,
+    pub supers: Vec<typename::TypeName>,
+    pub fields: Vec<fielddecl::FieldDecl>,
+    pub attributes: Vec<attr::Attr>
 }

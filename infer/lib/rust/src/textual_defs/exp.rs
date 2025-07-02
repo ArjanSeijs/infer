@@ -1,5 +1,5 @@
 use crate::textual_defs::{
-    attr, constant, fieldname, ident, qualifiedprocname, typ, typename, varname,
+    attr::{self, Attr}, constant, fieldname::{self, FieldName}, ident, qualifiedprocname::{self, QualifiedProcName}, typ, typename::{self, TypeName}, varname::{self, VarName}, PrintTextual, PrintTextualWithSeperator
 };
 
 /*
@@ -23,43 +23,71 @@ module Exp : sig
     | Apply of {closure: t; args: t list}
     | Typ of Typ.t
 */
+#[derive(Debug)]
 pub enum CallKind {
     Virtual,
     NonVirtual,
 }
 
+#[derive(Debug)]
 pub struct QualifiedFieldname {
-    enclosing_class: typename::T,
-    name: fieldname::T,
+    pub enclosing_class: TypeName,
+    pub name: FieldName,
 }
 
-pub enum T {
+#[derive(Debug)]
+pub enum Exp {
     Var(ident::T),
     Load {
-        exp: Box<T>,
-        typ: Option<typ::T>,
+        exp: Box<Exp>,
+        typ: Option<typ::Typ>,
     },
-    LVar(varname::T),
+    LVar(VarName),
     Field {
-        exp: Box<T>,
+        exp: Box<Exp>,
         field: QualifiedFieldname,
     },
-    Index(Box<T>, Box<T>),
-    Const(constant::T),
+    Index(Box<Exp>, Box<Exp>),
+    Const(constant::Const),
     Call {
-        proc: qualifiedprocname::T,
-        args: Vec<T>,
+        proc: QualifiedProcName,
+        args: Vec<Exp>,
         kind: CallKind,
     },
     Closure {
-        proc: qualifiedprocname::T,
-        captured: Vec<T>,
-        params: Vec<varname::T>,
-        attributes: Vec<attr::T>,
+        proc: QualifiedProcName,
+        captured: Vec<Exp>,
+        params: Vec<VarName>,
+        attributes: Vec<Attr>,
     },
     Apply {
-        closure: Box<T>,
-        args: Vec<T>,
+        closure: Box<Exp>,
+        args: Vec<Exp>,
     },
-    Typ(typ::T),
+    Typ(typ::Typ),
+}
+
+impl PrintTextual for Exp {
+    fn pp(&self) -> String {
+        match self {
+            Exp::Var(id) => id.pp(),
+            Exp::Load { exp, typ } => todo!(),
+            Exp::LVar(var_name) => format!("&{}", var_name.pp()),
+            Exp::Field { exp, field } => todo!(),
+            Exp::Index(exp, exp1) => todo!(),
+            Exp::Const(t) => t.pp(),
+            Exp::Call { proc, args, kind } => match kind {
+                CallKind::Virtual => todo!(),
+                CallKind::NonVirtual => format!("{}({})",proc.pp(),args.pp_list(",")),
+            },
+            Exp::Closure {
+                proc,
+                captured,
+                params,
+                attributes,
+            } => todo!(),
+            Exp::Apply { closure, args } => todo!(),
+            Exp::Typ(typ) => todo!(),
+        }
+    }
 }

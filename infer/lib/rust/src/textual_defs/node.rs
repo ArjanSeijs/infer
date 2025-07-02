@@ -1,4 +1,13 @@
-use crate::textual_defs::{ident, instr, location, node, nodename, terminator, typ};
+use stable_mir::mir::BasicBlock;
+
+use crate::textual_defs::{
+    PrintTextual, ident,
+    instr::{self, statment_to_textual},
+    location, name, node,
+    nodename::{self, NodeName},
+    terminator::{self, terminator_to_textual},
+    typ,
+};
 
 /*
 [OCaml Definition]
@@ -16,12 +25,53 @@ module Node : sig
   module Set : Stdlib.Set.S with type elt = t
 end
 */
-pub struct T {
-    label: nodename::T,
-    ssa_parameters: Vec<(ident::T, typ::T)>,
-    exn_succs: Vec<nodename::T>,
-    last: terminator::T,
-    instrs: Vec<instr::T>,
-    last_loc: location::T,
-    label_loc: location::T
+
+#[derive(Debug)]
+pub struct Node {
+    pub label: nodename::NodeName,
+    pub ssa_parameters: Vec<(ident::T, typ::Typ)>,
+    pub exn_succs: Vec<nodename::NodeName>,
+    pub last: terminator::Terminator,
+    pub instrs: Vec<instr::Instr>,
+    pub last_loc: location::Location,
+    pub label_loc: location::Location,
+}
+impl PrintTextual for Node {
+    fn pp(&self) -> String {
+        let node_name = format!("  #{}: ", self.label.name.value);
+        let instrs: Vec<_> = self
+            .instrs
+            .iter()
+            .map(|instr| format!("    {}", instr.pp()))
+            .collect();
+        let terminator = self.last.pp();
+        format!("{node_name}\n{}\n    {terminator}\n",instrs.join("\n"))
+    }
+}
+
+pub fn block_to_textual(block: &BasicBlock) -> Node {
+    let statements = &block.statements;
+    let terminator = &block.terminator;
+
+    let label = NodeName {
+        name: name::T {
+            value: "todo".to_string(),
+            loc: location::Location::Unknown,
+        },
+    };
+    let ssa_parameters = vec![];
+    let exn_succs = vec![];
+    let last = terminator_to_textual(terminator);
+    let instrs = statements.iter().flat_map(statment_to_textual).collect();
+    let last_loc = location::Location::Unknown;
+    let label_loc = location::Location::Unknown;
+    node::Node {
+        label,
+        ssa_parameters,
+        exn_succs,
+        last,
+        instrs,
+        last_loc,
+        label_loc,
+    }
 }

@@ -3,4 +3,6 @@
 module SourceFile : sig
   type t
 */
-pub enum T {}
+
+#[derive(Debug)]
+pub enum SourceFile {}

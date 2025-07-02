@@ -1,3 +1,5 @@
+use crate::textual_defs::PrintTextual;
+
 /*
 [OCaml Definition]
 module Const : sig
@@ -8,9 +10,21 @@ module Const : sig
     | Float of float  (** float constants *)
 end
 */
-pub enum T {
+#[derive(Debug)]
+pub enum Const {
     Int(i128),
     Null,
     Str(String),
     Float(f64),
+}
+
+impl PrintTextual for Const {
+    fn pp(&self) -> String {
+        match self {
+            Const::Int(i) => format!("{i}"),
+            Const::Null => format!("null"),
+            Const::Str(str) => format!("\"{str}\""),
+            Const::Float(f) => format!("{f}"),
+        }
+    }
 }

@@ -11,15 +11,18 @@ module Module = struct
 
   type t = {attrs: Attr.t list; decls: decl list; sourcefile: SourceFile.t}
 */
+
+#[derive(Debug)]
 pub enum Decl {
-    Global(global::T),
-    Struct(struct_::T),
-    Procdecl(procdecl::T),
-    Proc(procdesc::T)
+    Global(global::Global),
+    Struct(struct_::Struct),
+    Procdecl(procdecl::ProcDecl),
+    Proc(procdesc::ProcDesc)
 }
 
+#[derive(Debug)]
 pub struct T {
-    attrs: Vec<attr::T>,
+    attrs: Vec<attr::Attr>,
     decls: Vec<Decl>,
-    sourcefile : sourcefile::T
+    sourcefile : sourcefile::SourceFile
 }

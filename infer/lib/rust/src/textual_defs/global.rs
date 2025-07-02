@@ -6,8 +6,10 @@ module Global : sig
   type t = {name: VarName.t; typ: Typ.t; attributes: Attr.t list}
 end
 */
-pub struct T {
-    name: varname::T,
-    typ: typ::T,
-    attributes: Vec<attr::T>
+
+#[derive(Debug)]
+pub struct Global {
+    pub name: varname::VarName,
+    pub typ: typ::Typ,
+    pub attributes: Vec<attr::Attr>
 }

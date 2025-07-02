@@ -8,9 +8,10 @@ module BoolExp : sig
   val pp : F.formatter -> t -> unit [@@warning "-unused-value-declaration"]
 end
 */
-pub enum T {
-    Exp(exp::T),
-    Not(Box<T>),
-    And(Box<T>,Box<T>),
-    Or(Box<T>,Box<T>)
+#[derive(Debug)]
+pub enum BoolExp {
+    Exp(exp::Exp),
+    Not(Box<BoolExp>),
+    And(Box<BoolExp>,Box<BoolExp>),
+    Or(Box<BoolExp>,Box<BoolExp>)
 }

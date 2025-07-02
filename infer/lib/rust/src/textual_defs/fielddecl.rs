@@ -9,12 +9,15 @@ type qualified_fieldname = {enclosing_class: TypeName.t; name: FieldName.t}
 
 use crate::textual_defs::{attr, fieldname, typ, typename};
 
+#[derive(Debug)]
 pub struct QualifiedFieldname {
-    enclosing_class: typename::T,
-    name: fieldname::T,
+    pub enclosing_class: typename::TypeName,
+    pub name: fieldname::FieldName,
 }
-pub struct T {
-    qualified_name: QualifiedFieldname,
-    typ: typ::T,
-    attributes: Vec<attr::T>,
+
+#[derive(Debug)]
+pub struct FieldDecl {
+    pub qualified_name: QualifiedFieldname,
+    pub typ: typ::Typ,
+    pub attributes: Vec<attr::Attr>,
 }
