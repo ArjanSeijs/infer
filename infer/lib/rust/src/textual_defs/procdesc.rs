@@ -89,7 +89,7 @@ pub fn item_to_procdesc(item: &CrateItem) -> procdesc::ProcDesc {
     let inner_locals = body.inner_locals();
     let blocks = &body.blocks;
 
-    // print_debug(item, name, arg_locals, ret_local, inner_locals, blocks);
+    print_debug(item, name, arg_locals, ret_local, inner_locals, blocks);
 
     let proc_decl = to_proc_decl(name, arg_locals, ret_local);
     let nodes = blocks.iter().map(block_to_textual).collect();
@@ -103,7 +103,7 @@ pub fn item_to_procdesc(item: &CrateItem) -> procdesc::ProcDesc {
     // In mir the declerations are layed out as follows:
     // 0: ret_local, the return type is always located on 0
     // 1 ... #args : arg_locals, the next variables are the arguments provided to the function
-    // #args ... : inner_locals, the following variables are 
+    // #args ... : inner_locals, the following variables are
     let params: Vec<VarName> = arg_locals
         .iter()
         .enumerate()
@@ -111,7 +111,7 @@ pub fn item_to_procdesc(item: &CrateItem) -> procdesc::ProcDesc {
         .map(|s| VarName { name: s })
         .collect();
 
-    let locals: Vec<(VarName, typ::Annotated)> = inner_locals
+    let mut locals: Vec<(VarName, typ::Annotated)> = inner_locals
         .iter()
         .enumerate()
         .map(|(i, decl)| {
@@ -123,7 +123,14 @@ pub fn item_to_procdesc(item: &CrateItem) -> procdesc::ProcDesc {
             )
         })
         .collect();
-    
+    locals.push(
+        (VarName {
+            name: name::T {
+                value: "var_0".to_string(),
+                loc: Location::Unknown,
+            },
+        },typ::Annotated { typ: typ::Typ::Int, attributes: vec![] }),
+    );
     let exit_loc = location::Location::Unknown;
     let proc_desc = procdesc::ProcDesc {
         proc_decl,
@@ -137,19 +144,21 @@ pub fn item_to_procdesc(item: &CrateItem) -> procdesc::ProcDesc {
     proc_desc
 }
 
-// fn print_debug(
-//     item: CrateItem,
-//     name: &String,
-//     arg_locals: &[stable_mir::mir::LocalDecl],
-//     ret_local: &stable_mir::mir::LocalDecl,
-//     inner_locals: &[stable_mir::mir::LocalDecl],
-//     blocks: &Vec<stable_mir::mir::BasicBlock>,
-// ) {
-//     // dbg!("============");
-//     // dbg!("== item == \n {:#?}", item);
-//     // dbg!("== name == \n {:#?} ", name);
-//     // dbg!("== arg_locals == \n {:#?}", arg_locals);
-//     // dbg!("== ret_locals == \n {:#?}", ret_local);
-//     // dbg!("== inner_locals == \n {:#?}", inner_locals);
-//     // dbg!("== blocks == \n {:#?}", blocks);
-// }
+fn print_debug(
+    item: &CrateItem,
+    name: &String,
+    arg_locals: &[stable_mir::mir::LocalDecl],
+    ret_local: &stable_mir::mir::LocalDecl,
+    inner_locals: &[stable_mir::mir::LocalDecl],
+    blocks: &Vec<stable_mir::mir::BasicBlock>,
+) {
+    let x = stable_mir::local_crate();
+    dbg!("============");
+    dbg!(item);
+    dbg!(name);
+    dbg!(arg_locals);
+    dbg!(ret_local);
+    dbg!(inner_locals);
+    dbg!(blocks);
+    dbg!(x.fn_defs());
+}

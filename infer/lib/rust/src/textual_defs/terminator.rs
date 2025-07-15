@@ -53,7 +53,7 @@ pub fn terminator_to_textual(terminator: &stable_mir::mir::Terminator) -> Termin
         TerminatorKind::SwitchInt { discr, targets } => todo!("SwitchInt"),
         TerminatorKind::Resume => todo!("Resume"),
         TerminatorKind::Abort => todo!("Abort"),
-        TerminatorKind::Return => Terminator::Ret(exp::Exp::Var(ident::T { val: 0 })), // Rust puts return value in 0
+        TerminatorKind::Return => Terminator::Ret(exp::Exp::Var(ident::Ident { val: 0 })), // Rust puts return value in 0
         TerminatorKind::Unreachable => Terminator::Unreachable,
         TerminatorKind::Drop {
             place,

@@ -37,7 +37,7 @@ end
 #[derive(Debug)]
 pub enum Instr {
     Load {
-        id: ident::T,
+        id: ident::Ident,
         exp: Exp,
         typ: Option<typ::Typ>,
         loc: location::Location,
@@ -53,7 +53,7 @@ pub enum Instr {
         loc: location::Location,
     },
     Let {
-        id: Option<ident::T>,
+        id: Option<ident::Ident>,
         exp: Exp,
         loc: location::Location,
     },
@@ -153,11 +153,11 @@ fn operand_to_textual(operand: &Operand) -> (Exp, Option<Instr>) {
     // A move or copy should be handled as a load instruction and reference to that variable
     match operand {
         Operand::Copy(place) | Operand::Move(place) => (
-            Exp::Var(ident::T {
+            Exp::Var(ident::Ident {
                 val: place_as_int(place),
             }),
             Some(Instr::Load {
-                id: ident::T {
+                id: ident::Ident {
                     val: place_as_int(place),
                 },
                 exp: Exp::LVar(VarName {

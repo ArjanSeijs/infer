@@ -37,7 +37,7 @@ pub struct QualifiedFieldname {
 
 #[derive(Debug)]
 pub enum Exp {
-    Var(ident::T),
+    Var(ident::Ident),
     Load {
         exp: Box<Exp>,
         typ: Option<typ::Typ>,

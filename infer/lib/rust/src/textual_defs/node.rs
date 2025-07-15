@@ -29,7 +29,7 @@ end
 #[derive(Debug)]
 pub struct Node {
     pub label: nodename::NodeName,
-    pub ssa_parameters: Vec<(ident::T, typ::Typ)>,
+    pub ssa_parameters: Vec<(ident::Ident, typ::Typ)>,
     pub exn_succs: Vec<nodename::NodeName>,
     pub last: terminator::Terminator,
     pub instrs: Vec<instr::Instr>,
