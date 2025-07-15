@@ -1,4 +1,4 @@
-use crate::textual_defs::{attr, typename, fielddecl};
+use crate::textual_defs::{attr::{self, Attr}, fielddecl::{self, FieldDecl}, typename::{self, TypeName}};
 
 /*
 [OCaml Definition]
@@ -9,8 +9,8 @@ module Struct : sig
 
 #[derive(Debug)]
 pub struct Struct {
-    pub name: typename::TypeName,
-    pub supers: Vec<typename::TypeName>,
-    pub fields: Vec<fielddecl::FieldDecl>,
-    pub attributes: Vec<attr::Attr>
+    pub name: TypeName,
+    pub supers: Vec<TypeName>,
+    pub fields: Vec<FieldDecl>,
+    pub attributes: Vec<Attr>
 }

@@ -4,7 +4,7 @@ use crate::textual_defs::name;
 [OCaml Definition]
 module BaseTypeName : NAME
 */
-#[derive(Debug)]
+#[derive(Debug,Clone)]
 pub struct BaseTypeName {
-    pub name: name::T
+    pub name: name::Name
 }

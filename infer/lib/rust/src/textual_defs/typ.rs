@@ -30,7 +30,7 @@ use stable_mir::{mir::LocalDecl, ty::RigidTy};
 
 use crate::textual_defs::{PrintTextual, attr, typename};
 
-#[derive(Debug)]
+#[derive(Debug,Clone)]
 pub enum Typ {
     Int,
     Float,
@@ -42,7 +42,7 @@ pub enum Typ {
     Array(Box<Typ>),
 }
 
-#[derive(Debug)]
+#[derive(Debug,Clone)]
 pub struct FunctionPrototype {
     pub params_type: Vec<Typ>,
     pub return_type: Typ,
@@ -53,7 +53,6 @@ pub struct Annotated {
     pub typ: Typ,
     pub attributes: Vec<attr::Attr>,
 }
-
 
 impl PrintTextual for Typ {
     fn pp(&self) -> String {
@@ -102,8 +101,14 @@ pub fn kind_to_textual(kind: &stable_mir::ty::TyKind) -> Typ {
     }
 }
 
-pub fn local_decl_to_type(local_decl: &LocalDecl) -> Annotated {
-    let attributes = vec![];
+pub fn local_decl_to_type(local_decl: &LocalDecl) -> Typ {
     let typ = kind_to_textual(&local_decl.ty.kind());
-    Annotated { typ, attributes }
+    typ
+}
+
+pub fn local_decl_to_annotated_typ(local_decl: &LocalDecl) -> Annotated {
+    Annotated {
+        typ: local_decl_to_type(local_decl),
+        attributes: vec![],
+    }
 }

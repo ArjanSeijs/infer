@@ -1,6 +1,6 @@
 use stable_mir::mir::{TerminatorKind};
 
-use crate::textual_defs::{boolexp, exp, ident, nodename, PrintTextual};
+use crate::textual_defs::{boolexp::{self, BoolExp}, exp::{self, Exp}, ident, nodename, PrintTextual};
 
 /*
 [OCaml Definition]
@@ -19,19 +19,19 @@ end
 #[derive(Debug)]
 pub struct NodeCall {
     pub label: nodename::NodeName,
-    pub ssa_args: Vec<exp::Exp>,
+    pub ssa_args: Vec<Exp>,
 }
 
 #[derive(Debug)]
 pub enum Terminator {
     If {
-        bexp: boolexp::BoolExp,
+        bexp: BoolExp,
         then: Box<Terminator>,
         else_: Box<Terminator>,
     },
-    Ret(exp::Exp),
+    Ret(Exp),
     Jump(Vec<NodeCall>),
-    Throw(exp::Exp),
+    Throw(Exp),
     Unreachable,
 }
 
@@ -44,43 +44,5 @@ impl PrintTextual for Terminator {
             Terminator::Throw(exp) => todo!(),
             Terminator::Unreachable => todo!(),
         }
-    }
-}
-
-pub fn terminator_to_textual(terminator: &stable_mir::mir::Terminator) -> Terminator {
-    match &terminator.kind {
-        TerminatorKind::Goto { target } => todo!("Goto"),
-        TerminatorKind::SwitchInt { discr, targets } => todo!("SwitchInt"),
-        TerminatorKind::Resume => todo!("Resume"),
-        TerminatorKind::Abort => todo!("Abort"),
-        TerminatorKind::Return => Terminator::Ret(exp::Exp::Var(ident::Ident { val: 0 })), // Rust puts return value in 0
-        TerminatorKind::Unreachable => Terminator::Unreachable,
-        TerminatorKind::Drop {
-            place,
-            target,
-            unwind,
-        } => todo!("Drop"),
-        TerminatorKind::Call {
-            func,
-            args,
-            destination,
-            target,
-            unwind,
-        } => todo!("Call"),
-        TerminatorKind::Assert {
-            cond,
-            expected,
-            msg,
-            target,
-            unwind,
-        } => todo!("Assert"),
-        TerminatorKind::InlineAsm {
-            template,
-            operands,
-            options,
-            line_spans,
-            destination,
-            unwind,
-        } => todo!("InlineAsm"),
     }
 }

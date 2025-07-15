@@ -36,11 +36,16 @@ pub trait PrintTextual {
 
 pub trait PrintTextualWithSeperator {
     fn pp_list(&self, seperator: &str) -> String;
+    fn pp_comma_list(&self) -> String;
 }
 
 impl<T: PrintTextual> PrintTextualWithSeperator for Vec<T> {
     fn pp_list(&self, seperator: &str) -> String {
-        let mapped : Vec<String> = self.iter().map(|v| v.pp()).collect();
+        let mapped: Vec<String> = self.iter().map(|v| v.pp()).collect();
         mapped.join(seperator)
+    }
+
+    fn pp_comma_list(&self) -> String {
+        self.pp_list(&",")
     }
 }

@@ -25,7 +25,11 @@ fn run_test(args: &mut Vec<String>, file_name: &str) {
 
     // Finally push filename
     args.push(file_name.to_string());
-    call_compiler(&args);
+    let result = call_compiler(&args);
+    match result {
+        Ok(s) => println!("{}",s),
+        Err(s) => println!("{}",s)
+    };
 }
 
 #[allow(unused)]
@@ -39,4 +43,10 @@ fn print_mir(args: &mut Vec<String>, file_name: &str) {
 fn add0() {
     run_test(&mut vec![], "./tests/example_files/add0.rs");
     // print_mir(&mut vec![], "./tests/example_files/add0.rs");
+}
+
+#[test]
+fn add1() {
+    run_test(&mut vec![], "./tests/example_files/add1.rs");
+    // print_mir(&mut vec![], "./tests/example_files/add1.rs");
 }

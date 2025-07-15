@@ -7,5 +7,5 @@ use crate::textual_defs::name;
 
 #[derive(Debug)]
 pub struct FieldName {
-    pub name: name::T
+    pub name: name::Name
 }

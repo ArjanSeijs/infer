@@ -1,4 +1,4 @@
-use crate::textual_defs::basetypename;
+use crate::textual_defs::basetypename::BaseTypeName;
 
 /*
 [OCaml Definition]
@@ -7,8 +7,8 @@ module TypeName : sig
   type t = {name: BaseTypeName.t; args: t list} [@@deriving compare, equal, hash]
 */
 
-#[derive(Debug)]
+#[derive(Debug,Clone)]
 pub struct TypeName {
-    name: basetypename::BaseTypeName,
+    name: BaseTypeName,
     args: Vec<TypeName>,
 }

@@ -14,34 +14,15 @@ module ProcDecl : sig
 use stable_mir::mir::LocalDecl;
 
 use crate::textual_defs::{
-    PrintTextual, PrintTextualWithSeperator,
-    attr::Attr,
-    qualifiedprocname::{QualifiedProcName, to_qualified_name},
-    typ::{self, local_decl_to_type},
+    attr::Attr, qualifiedprocname::QualifiedProcName, typ::{Annotated}, PrintTextual, PrintTextualWithSeperator
 };
 
 #[derive(Debug)]
 pub struct ProcDecl {
     pub qualified_name: QualifiedProcName,
-    pub formal_types: Vec<typ::Annotated>,
-    pub result_type: typ::Annotated,
+    pub formal_types: Vec<Annotated>,
+    pub result_type: Annotated,
     pub attributes: Vec<Attr>,
-}
-
-pub fn to_proc_decl(name: &String, arg_locals: &[LocalDecl], ret_local: &LocalDecl) -> ProcDecl {
-    let attributes = vec![];
-    let result_type = local_decl_to_type(ret_local);
-    let qualified_name = to_qualified_name(name);
-    let formal_types = arg_locals
-        .iter()
-        .map(|decl| local_decl_to_type(decl))
-        .collect();
-    ProcDecl {
-        qualified_name,
-        formal_types,
-        result_type,
-        attributes,
-    }
 }
 
 impl PrintTextual for ProcDecl {

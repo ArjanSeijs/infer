@@ -1,12 +1,7 @@
 use stable_mir::mir::BasicBlock;
 
 use crate::textual_defs::{
-    PrintTextual, ident,
-    instr::{self, statment_to_textual},
-    location, name, node,
-    nodename::{self, NodeName},
-    terminator::{self, terminator_to_textual},
-    typ,
+    ident::Ident, instr::Instr, location::Location, nodename::NodeName, terminator::Terminator, typ::Typ, PrintTextual
 };
 
 /*
@@ -28,13 +23,13 @@ end
 
 #[derive(Debug)]
 pub struct Node {
-    pub label: nodename::NodeName,
-    pub ssa_parameters: Vec<(ident::Ident, typ::Typ)>,
-    pub exn_succs: Vec<nodename::NodeName>,
-    pub last: terminator::Terminator,
-    pub instrs: Vec<instr::Instr>,
-    pub last_loc: location::Location,
-    pub label_loc: location::Location,
+    pub label: NodeName,
+    pub ssa_parameters: Vec<(Ident, Typ)>,
+    pub exn_succs: Vec<NodeName>,
+    pub last: Terminator,
+    pub instrs: Vec<Instr>,
+    pub last_loc: Location,
+    pub label_loc: Location,
 }
 impl PrintTextual for Node {
     fn pp(&self) -> String {
@@ -46,32 +41,5 @@ impl PrintTextual for Node {
             .collect();
         let terminator = self.last.pp();
         format!("{node_name}\n{}\n    {terminator}\n",instrs.join("\n"))
-    }
-}
-
-pub fn block_to_textual(block: &BasicBlock) -> Node {
-    let statements = &block.statements;
-    let terminator = &block.terminator;
-
-    let label = NodeName {
-        name: name::T {
-            value: "todo".to_string(),
-            loc: location::Location::Unknown,
-        },
-    };
-    let ssa_parameters = vec![];
-    let exn_succs = vec![];
-    let last = terminator_to_textual(terminator);
-    let instrs = statements.iter().flat_map(statment_to_textual).collect();
-    let last_loc = location::Location::Unknown;
-    let label_loc = location::Location::Unknown;
-    node::Node {
-        label,
-        ssa_parameters,
-        exn_succs,
-        last,
-        instrs,
-        last_loc,
-        label_loc,
     }
 }

@@ -1,9 +1,9 @@
-use crate::textual_defs::location::span_to_location;
-use crate::textual_defs::procdesc::item_to_procdesc;
-use crate::textual_defs::{PrintTextual, name};
+use crate::textual::translate::item_to_procdesc;
+use crate::textual_defs::PrintTextual;
 use stable_mir::CrateItems;
 use stable_mir::mir::VarDebugInfoContents;
-use stable_mir::ty::Span;
+
+mod translate;
 
 const HEADER: &str = "\
     // \n\
@@ -33,12 +33,4 @@ fn print_debug(var_debug_info: &stable_mir::mir::VarDebugInfo) -> String {
         VarDebugInfoContents::Const(op) => format!("{:?}", op),
     };
     format!("// debug {} => {}\n", var_debug_info.name, location)
-}
-
-pub fn parse_id(i: usize, span: Span) -> name::T {
-    let name = format!("var_{i}");
-    name::T {
-        value: name,
-        loc: span_to_location(span),
-    }
 }

@@ -1,4 +1,6 @@
-use crate::textual_defs::{PrintTextual, location::Location, name, procname, typename};
+use stable_mir::ty::Span;
+
+use crate::textual_defs::{location::Location, name::{self, Name}, procname::{self, ProcName}, typename, PrintTextual};
 
 /*
 [OCAML Definitions]
@@ -25,15 +27,11 @@ impl PrintTextual for QualifiedProcName {
     }
 }
 
-pub fn to_qualified_name(name: &String) -> QualifiedProcName {
-    let enclosing_class = EnclosingClass::TopLevel;
-    let name = {
-        let value = name.clone();
-        let loc = Location::Unknown;
-        name::T { value, loc }
-    };
-    QualifiedProcName {
-        enclosing_class,
-        name: procname::ProcName { name },
+impl QualifiedProcName {
+    pub fn new(value : String, span : Option<Span>) -> QualifiedProcName {
+        QualifiedProcName {
+            name: ProcName::new(value, span),
+            enclosing_class: EnclosingClass::TopLevel
+        }
     }
 }
