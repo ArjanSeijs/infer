@@ -33,7 +33,7 @@ pub struct Node {
 }
 impl PrintTextual for Node {
     fn pp(&self) -> String {
-        let node_name = format!("  #{}: ", self.label.name.value);
+        let node_name = format!("  #{}:", self.label.name.value);
         let instrs: Vec<_> = self
             .instrs
             .iter()

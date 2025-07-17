@@ -78,7 +78,7 @@ impl PrintTextual for Exp {
             Exp::Const(t) => t.pp(),
             Exp::Call { proc, args, kind } => match kind {
                 CallKind::Virtual => todo!(),
-                CallKind::NonVirtual => format!("{}({})",proc.pp(),args.pp_list(",")),
+                CallKind::NonVirtual => format!("{}({})",proc.pp(),args.pp_comma_list()),
             },
             Exp::Closure {
                 proc,

@@ -1,9 +1,7 @@
 use std::collections::HashMap;
 
 use stable_mir::{
-    CrateDef, CrateItem,
-    mir::{BasicBlock, BinOp, ConstOperand, LocalDecl, Operand, Rvalue, StatementKind},
-    ty::{Allocation, ConstantKind, Span},
+    mir::{BasicBlock, BinOp, ConstOperand, LocalDecl, Operand, Place, Rvalue, StatementKind}, ty::{Allocation, ConstantKind, FnDef, RigidTy, Span, TyKind}, CrateDef, CrateItem
 };
 
 use crate::textual_defs::{
@@ -90,8 +88,7 @@ fn block_to_node(
     let statements = &block.statements;
     let terminator = &block.terminator;
 
-    let todo_ = &"todo_".to_string();
-    let value = label_map.get(&idx).unwrap_or(todo_);
+    let value = label_map.get(&idx).unwrap();
     let label = NodeName::new(value.clone(), statements.get(0).map(|s| s.span));
 
     let ssa_parameters = vec![];
@@ -101,7 +98,7 @@ fn block_to_node(
         .iter()
         .flat_map(|stmt| statement_to_instr(stmt, &place_map))
         .collect();
-    let (instrs2, last) = terminator_to_textual(terminator, place_map);
+    let (instrs2, last) = terminator_to_textual(terminator, place_map, label_map);
 
     instrs.extend(instrs2);
     let last_loc = Location::Unknown;
@@ -131,8 +128,7 @@ fn assign_statement_to_instr(
     rvalue: &Rvalue,
     place_map: &PlaceMap,
 ) -> Vec<Instr> {
-    let todo = ("todo".to_string(), Typ::Null);
-    let (id, _) = place_map.get(&place.local).unwrap_or(&todo);
+    let (id, _) = place_to_id(place, place_map);
     let (exp2, typ) = rvalue_to_exp(rvalue, place_map);
     vec![Instr::Store {
         exp1: Exp::LVar(VarName::new(id.clone(), None)),
@@ -171,7 +167,7 @@ fn operand_to_exp(op: &Operand, place_map: &PlaceMap) -> (Exp, Option<Typ>) {
             Exp::LVar(VarName::from_place(place, place_map)),
             Some(Typ::Int),
         ),
-        Operand::Constant(const_operand) => (const_operand_to_exp(&const_operand), Some(Typ::Int)),
+        Operand::Constant(const_operand) => (const_operand_to_exp(&const_operand), Some(Typ::Int)), //TODO Constant types
     }
 }
 
@@ -224,12 +220,39 @@ fn decl_to_local(
 fn terminator_to_textual(
     terminator: &stable_mir::mir::Terminator,
     place_map: &PlaceMap,
+    label_map: &LabelMap
 ) -> (Vec<Instr>, Terminator) {
     match &terminator.kind {
         stable_mir::mir::TerminatorKind::Return => (
             vec![],
             Terminator::Ret(Exp::LVar(VarName::from_index(0, place_map))),
         ),
+        stable_mir::mir::TerminatorKind::Call {
+            func:
+                stable_mir::mir::Operand::Constant(ConstOperand {
+                    span: _,
+                    user_ty: _,
+                    const_,
+                }),
+            args:_,
+            destination,
+            target,
+            unwind:_,
+        } => match const_.ty().kind() {
+            TyKind::RigidTy(RigidTy::FnDef(FnDef(def), _)) => {
+                let exp2 = Exp::Call { proc: QualifiedProcName::new(def.name(), Some(terminator.span)), args: vec![], kind: CallKind::NonVirtual};
+                let term = Terminator::jump(target, &label_map);
+                let (_, typ) = place_to_id(destination, place_map);
+                let store = Instr::Store { exp1: Exp::LVar(VarName::from_place(&destination, place_map)), typ: Some(typ.clone()), exp2, loc: Location::from_span(Some(terminator.span))};
+                (vec![store],term)
+            },
+            _ => todo!(),
+        },
         term => todo!("{:?}", term),
     }
+}
+
+fn place_to_id<'a>(place: &Place, place_map: &'a PlaceMap) -> (&'a String, &'a Typ) {
+    let (expr, typ) = place_map.get(&place.local).unwrap();
+    (expr, typ)
 }

@@ -28,7 +28,7 @@ end
 
 use stable_mir::{mir::LocalDecl, ty::RigidTy};
 
-use crate::textual_defs::{PrintTextual, attr, typename};
+use crate::textual_defs::{attr, typename, PrintTextual, PrintTextualWithSeperator};
 
 #[derive(Debug,Clone)]
 pub enum Typ {
@@ -64,11 +64,7 @@ impl PrintTextual for Typ {
             Typ::Fun(prototype) => match prototype {
                 Some(prototype) => {
                     let param_types = prototype
-                        .params_type
-                        .iter()
-                        .map(|t| t.pp())
-                        .reduce(|a, b| a + "," + &b)
-                        .unwrap_or(String::new());
+                        .params_type.pp_comma_list();
                     let ret_type = prototype.return_type.pp();
                     format!("(fun ({}) -> {}", param_types, ret_type)
                 }
@@ -94,6 +90,7 @@ pub fn kind_to_textual(kind: &stable_mir::ty::TyKind) -> Typ {
             RigidTy::Float(_) => Typ::Float,
             RigidTy::Array(ty, _) => Typ::Array(Box::new(kind_to_textual(&ty.kind()))),
             RigidTy::RawPtr(ty, mutability) => Typ::Ptr(Box::new(kind_to_textual(&ty.kind()))),
+            RigidTy::Ref(_, ty, mutability) => Typ::Ptr(Box::new(kind_to_textual(&ty.kind()))),
             RigidTy::Tuple(items) if items.is_empty() => Typ::Void,
             s => todo!("kind_to_textual: {:?}", s),
         },

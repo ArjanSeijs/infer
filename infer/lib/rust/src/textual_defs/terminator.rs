@@ -1,6 +1,14 @@
-use stable_mir::mir::{TerminatorKind};
+use std::collections::HashMap;
 
-use crate::textual_defs::{boolexp::{self, BoolExp}, exp::{self, Exp}, ident, nodename, PrintTextual};
+use stable_mir::mir::TerminatorKind;
+
+use crate::textual_defs::{
+    PrintTextual, PrintTextualWithSeperator,
+    boolexp::{self, BoolExp},
+    exp::{self, Exp},
+    ident,
+    nodename::{self, NodeName},
+};
 
 /*
 [OCaml Definition]
@@ -39,10 +47,37 @@ impl PrintTextual for Terminator {
     fn pp(&self) -> String {
         match self {
             Terminator::If { bexp, then, else_ } => todo!(),
+            Terminator::Ret(Exp::LVar(varname)) => format!("ret {}", varname.pp()),
             Terminator::Ret(exp) => format!("ret {}", exp.pp()),
-            Terminator::Jump(node_calls) => todo!(),
+            Terminator::Jump(node_calls) => format!("jmp {}", node_calls.pp_comma_list()),
             Terminator::Throw(exp) => todo!(),
             Terminator::Unreachable => todo!(),
+        }
+    }
+}
+
+impl PrintTextual for NodeCall {
+    fn pp(&self) -> String {
+        if self.ssa_args.is_empty() {
+            self.label.pp()
+        } else {
+            format!("{}({})", self.label.pp(), self.ssa_args.pp_comma_list())
+        }
+    }
+}
+
+impl Terminator {
+    pub fn jump(idx: &Option<usize>, label_map: &HashMap<usize, String>) -> Terminator {
+        match idx {
+            Some(idx) => {
+                let label = label_map.get(&idx).unwrap();
+                let nodecall = NodeCall {
+                    label: NodeName::new(label.clone(), None),
+                    ssa_args: vec![],
+                };
+                Terminator::Jump(vec![nodecall])
+            }
+            None => Terminator::Jump(vec![]),
         }
     }
 }

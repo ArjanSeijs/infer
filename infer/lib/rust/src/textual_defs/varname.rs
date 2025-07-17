@@ -38,8 +38,7 @@ impl VarName {
     }
 
     pub fn from_index(index : usize, place_map: &HashMap<usize, (String, Typ)>) -> VarName {
-        let todo = ("todo".to_string(), Typ::Int);
-        let (id, _) = place_map.get(&index).unwrap_or(&todo);
+        let (id, _) = place_map.get(&index).unwrap();
         VarName {
             name: Name::new(id.clone(), None),
         }

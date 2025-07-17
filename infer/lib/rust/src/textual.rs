@@ -6,9 +6,9 @@ use stable_mir::mir::VarDebugInfoContents;
 mod translate;
 
 const HEADER: &str = "\
-    // \n\
+    //\n\
     // Copyright (c) Facebook, Inc. and its affiliates. \n\
-    // \n\
+    //\n\
     // This source code is licensed under the MIT license found in the \n\
     // LICENSE file in the root directory of this source tree. \n\
     \n\

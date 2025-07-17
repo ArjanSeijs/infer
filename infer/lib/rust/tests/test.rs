@@ -1,7 +1,30 @@
 #![feature(rustc_private)]
+use std::io::prelude::*;
+use std::fs::File;
+use pretty_assertions::assert_eq;
+
 use infer_rustc_mir::call_compiler;
 
-fn run_test(args: &mut Vec<String>, file_name: &str) {
+
+fn read_file(sil_file: &str) -> String {
+    let mut file = File::open(sil_file).expect("Unable to open the file");
+    let mut contents = String::new();
+    file.read_to_string(&mut contents).expect("Unable to read the file");
+    contents
+}
+
+fn run_test(args: &mut Vec<String>, rust_file: &str, sil_file: &str) {    
+    // Finally push filename
+    args.push(rust_file.to_string());
+    let result = call_compiler(&args);
+    let expected = read_file(sil_file);
+    match result {
+        Ok(s) => assert_eq!(s, expected),
+        Err(s) => assert!(false, "{}", s)
+    };
+}
+
+fn default_args(args: &mut Vec<String>) {
     // 'executable'
     args.insert(0, "cargo".to_string());
     // Do no optimisation on test
@@ -22,31 +45,24 @@ fn run_test(args: &mut Vec<String>, file_name: &str) {
     args.push("unused_variables".to_string());
     args.push("-A".to_string());
     args.push("unused_must_use".to_string());
-
-    // Finally push filename
-    args.push(file_name.to_string());
-    let result = call_compiler(&args);
-    match result {
-        Ok(s) => println!("{}",s),
-        Err(s) => println!("{}",s)
-    };
 }
 
 #[allow(unused)]
-fn print_mir(args: &mut Vec<String>, file_name: &str) {
+fn print_mir(args: &mut Vec<String>) {
     args.push("-Z".to_string());
     args.push("unpretty=mir".to_string());
-    run_test(args, file_name);
 }
 
 #[test]
 fn add0() {
-    run_test(&mut vec![], "./tests/example_files/add0.rs");
-    // print_mir(&mut vec![], "./tests/example_files/add0.rs");
+    let args = &mut vec![];
+    default_args(args);
+    run_test(args, "./tests/programs/add0.rs","./tests/programs/add0.sil");
 }
 
 #[test]
-fn add1() {
-    run_test(&mut vec![], "./tests/example_files/add1.rs");
-    // print_mir(&mut vec![], "./tests/example_files/add1.rs");
+fn call() {
+    let args = &mut vec![];
+    default_args(args);
+    run_test(args, "./tests/programs/call.rs", "./tests/programs/call.sil");
 }
