@@ -1,0 +1,25 @@
+//
+// Copyright (c) Facebook, Inc. and its affiliates. 
+//
+// This source code is licensed under the MIT license found in the 
+// LICENSE file in the root directory of this source tree. 
+
+.source_language = "rust"
+
+define foo() : void {
+  local var_0: void
+  #node_0:
+    store &var_0 <- bar()// 2:5
+    jmp node_1
+
+  #node_1:
+    ret var_0
+}
+
+define bar() : void {
+  local var_0: void
+  #node_0:
+    store &var_0 <- null
+    ret var_0
+
+}

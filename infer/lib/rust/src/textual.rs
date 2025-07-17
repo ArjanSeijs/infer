@@ -1,13 +1,36 @@
-use std::io::Write;
-
+use crate::textual::translate::item_to_procdesc;
+use crate::textual_defs::PrintTextual;
 use stable_mir::CrateItems;
+use stable_mir::mir::VarDebugInfoContents;
 
-// TODO TEXTUAL Definitions & Translations here!
+mod translate;
 
-pub fn mir_to_textual(items: CrateItems, out: &mut impl Write) {
+const HEADER: &str = "\
+    //\n\
+    // Copyright (c) Facebook, Inc. and its affiliates. \n\
+    //\n\
+    // This source code is licensed under the MIT license found in the \n\
+    // LICENSE file in the root directory of this source tree. \n\
+    \n\
+    .source_language = \"rust\"\n\n";
+
+pub fn mir_to_textual(items: CrateItems) -> String {
+    let mut sil_code = String::new();
+    sil_code.push_str(HEADER);
     for item in items {
-        // TODO Translate MIR to textual
-        write!(out, "Item: {:?}", item).expect("Item");
-        write!(out, "{:?}", item.body().expect("No Body").blocks).expect("Body");
+        let translation = item_to_procdesc(&item).pp();
+        for var_debug_info in &item.expect_body().var_debug_info {
+            sil_code.push_str(&print_debug(var_debug_info));
+        }
+        sil_code.push_str(&translation);
     }
+    sil_code
+}
+
+fn print_debug(var_debug_info: &stable_mir::mir::VarDebugInfo) -> String {
+    let location = match &var_debug_info.value {
+        VarDebugInfoContents::Place(place) => format!("_{}", place.local),
+        VarDebugInfoContents::Const(op) => format!("{:?}", op),
+    };
+    format!("// debug {} => {}\n", var_debug_info.name, location)
 }

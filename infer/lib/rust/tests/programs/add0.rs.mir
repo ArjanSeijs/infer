@@ -1,0 +1,12 @@
+fn add() -> () {
+    let mut _0: ();
+    let _1: i32;
+
+    bb0: {
+        StorageLive(_1);
+        _1 = Add(const 42_i32, const 43_i32);
+        StorageDead(_1);
+        _0 = const ();
+        return;
+    }
+}
