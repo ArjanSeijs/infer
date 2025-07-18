@@ -53,16 +53,59 @@ fn print_mir(args: &mut Vec<String>) {
     args.push("unpretty=mir".to_string());
 }
 
-#[test]
-fn add0() {
-    let args = &mut vec![];
-    default_args(args);
-    run_test(args, "./tests/programs/add0.rs","./tests/programs/add0.sil");
+mod exp {
+    use super::*;
+
+    #[test]
+    fn add0() {
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/exp/add0.rs","./tests/programs/exp/add0.sil");
+    }
+
+    #[test]
+    fn call() {
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/exp/call.rs", "./tests/programs/exp/call.sil");
+    }
 }
 
-#[test]
-fn call() {
-    let args = &mut vec![];
-    default_args(args);
-    run_test(args, "./tests/programs/call.rs", "./tests/programs/call.sil");
+mod constant {
+    use super::*;
+
+    #[test]
+    fn constant0() {
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/constant/constant0.rs", "./tests/programs/constant/constant0.sil");
+    }
+    
+    #[test]
+    fn constant1() {
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/constant/constant1.rs", "./tests/programs/constant/constant1.sil");
+    }
+    
+    #[test]
+    fn constant2() {
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/constant/constant2.rs", "./tests/programs/constant/constant2.sil");
+    }
+    
+    #[test]
+    fn constant3() {
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/constant/constant3.rs", "./tests/programs/constant/constant3.sil");
+    }
+    
+    #[test]
+    fn constant4() {
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/constant/constant4.rs", "./tests/programs/constant/constant4.sil");
+    }
 }
