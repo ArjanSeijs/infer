@@ -53,24 +53,6 @@ fn print_mir(args: &mut Vec<String>) {
     args.push("unpretty=mir".to_string());
 }
 
-mod exp {
-    use super::*;
-
-    #[test]
-    fn add0() {
-        let args = &mut vec![];
-        default_args(args);
-        run_test(args, "./tests/programs/exp/add0.rs","./tests/programs/exp/add0.sil");
-    }
-
-    #[test]
-    fn call() {
-        let args = &mut vec![];
-        default_args(args);
-        run_test(args, "./tests/programs/exp/call.rs", "./tests/programs/exp/call.sil");
-    }
-}
-
 mod constant {
     use super::*;
 
@@ -107,5 +89,62 @@ mod constant {
         let args = &mut vec![];
         default_args(args);
         run_test(args, "./tests/programs/constant/constant4.rs", "./tests/programs/constant/constant4.sil");
+    }
+}
+
+mod exp {
+    use super::*;
+
+    #[test]
+    fn add0() {
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/exp/add0.rs","./tests/programs/exp/add0.sil");
+    }
+
+    #[test]
+    fn call() {
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/exp/call.rs", "./tests/programs/exp/call.sil");
+    }
+}
+
+mod ident {
+    use super::*;
+
+    #[test]
+    fn ident0() {
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/ident/ident0.rs", "./tests/programs/ident/ident0.sil");
+    }
+
+    #[test]
+    fn ident1() {
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/ident/ident1.rs", "./tests/programs/ident/ident1.sil");
+    }
+    
+    #[test]
+    fn ident2() {
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/ident/ident2.rs", "./tests/programs/ident/ident2.sil");
+    }
+
+    #[test]
+    fn ident3() {
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/ident/ident3.rs", "./tests/programs/ident/ident3.sil");
+    }
+
+    #[test]
+    fn ident4() {
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/ident/ident4.rs", "./tests/programs/ident/ident4.sil");
     }
 }
