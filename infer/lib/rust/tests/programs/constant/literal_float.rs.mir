@@ -3,11 +3,11 @@
 // HINT: See also -Z dump-mir for MIR at specific points during compilation.
 fn test() -> () {
     let mut _0: ();
-    let _1: i32;
+    let _1: f64;
 
     bb0: {
         StorageLive(_1);
-        _1 = const 42_i32;
+        _1 = const 3.1400000000000001f64;
         StorageDead(_1);
         _0 = const ();
         return;

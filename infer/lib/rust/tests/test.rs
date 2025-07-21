@@ -53,92 +53,59 @@ fn print_mir(args: &mut Vec<String>) {
     args.push("unpretty=mir".to_string());
 }
 
-mod arithmetic {
+mod constant {
     use super::*;
 
+    #[test]
+    fn literal_float() {
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/constant/literal_float.rs", "./tests/programs/constant/literal_float.sil");
+    }
+
+    #[test]
+    fn literal_int() {
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/constant/literal_int.rs", "./tests/programs/constant/literal_int.sil");
+    }
+
+    #[test]
+    fn literal_mixed() {
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/constant/literal_mixed.rs", "./tests/programs/constant/literal_mixed.sil");
+    }
+
+    #[test]
+    fn literal_str() {
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/constant/literal_str.rs", "./tests/programs/constant/literal_str.sil");
+    }
+    
+    #[test]
+    fn literal_unit() {
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/constant/literal_unit.rs", "./tests/programs/constant/literal_unit.sil");
+    }    
+}
+
+mod exp {
+    use super::*;
+    
     #[test]
     fn add0() {
         let args = &mut vec![];
         default_args(args);
-        run_test(args, "./tests/programs/arithmetic/add0.rs", "./tests/programs/arithmetic/add0.sil");
-    }
-}
-
-mod assignment {
-    use super::*;
-
-    #[test]
-    fn arithmetic0() {
-        let args = &mut vec![];
-        default_args(args);
-        run_test(args, "./tests/programs/assignment/arithmetic0.rs", "./tests/programs/assignment/arithmetic0.sil");
+        run_test(args, "./tests/programs/exp/add0.rs", "./tests/programs/exp/add0.sil");
     }
 
     #[test]
-    fn multiple0() {
+    fn call() {
         let args = &mut vec![];
         default_args(args);
-        run_test(args, "./tests/programs/assignment/multiple0.rs", "./tests/programs/assignment/multiple0.sil");
-    }
-
-    #[test]
-    fn named0() {
-        let args = &mut vec![];
-        default_args(args);
-        run_test(args, "./tests/programs/assignment/named0.rs", "./tests/programs/assignment/named0.sil");
-    }
-}
-
-mod compound {
-    use super::*;
-
-    #[test]
-    fn nested0() {
-        let args = &mut vec![];
-        default_args(args);
-        run_test(args, "./tests/programs/compound/nested0.rs", "./tests/programs/compound/nested0.sil");
-    }
-}
-
-mod functions {
-    use super::*;
-
-    #[test]
-    fn call0() {
-        let args = &mut vec![];
-        default_args(args);
-        run_test(args, "./tests/programs/functions/call0.rs", "./tests/programs/functions/call0.sil");
-    }
-}
-
-mod literals {
-    use super::*;
-
-    #[test]
-    fn int0() {
-        let args = &mut vec![];
-        default_args(args);
-        run_test(args, "./tests/programs/literals/int0.rs", "./tests/programs/literals/int0.sil");
-    }
-
-    #[test]
-    fn float0() {
-        let args = &mut vec![];
-        default_args(args);
-        run_test(args, "./tests/programs/literals/float0.rs", "./tests/programs/literals/float0.sil");
-    }
-
-    #[test]
-    fn str0() {
-        let args = &mut vec![];
-        default_args(args);
-        run_test(args, "./tests/programs/literals/str0.rs", "./tests/programs/literals/str0.sil");
-    }
-
-    #[test]
-    fn null0() {
-        let args = &mut vec![];
-        default_args(args);
-        run_test(args, "./tests/programs/literals/null0.rs", "./tests/programs/literals/null0.sil");
+        run_test(args, "./tests/programs/exp/call.rs", "./tests/programs/exp/call.sil");
     }
 }
