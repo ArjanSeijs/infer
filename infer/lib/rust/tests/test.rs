@@ -53,59 +53,121 @@ fn print_mir(args: &mut Vec<String>) {
     args.push("unpretty=mir".to_string());
 }
 
-mod constant {
+mod operands {
     use super::*;
 
-    #[test]
-    fn literal_float() {
-        let args = &mut vec![];
-        default_args(args);
-        run_test(args, "./tests/programs/constant/literal_float.rs", "./tests/programs/constant/literal_float.sil");
+    mod constant {
+        use super::*;
+        
+        #[test]
+        fn literal_float() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/operands/constant/literal_float.rs", "./tests/programs/operands/constant/literal_float.sil");
+        }
+
+        #[test]
+        fn literal_int() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/operands/constant/literal_int.rs", "./tests/programs/operands/constant/literal_int.sil");
+        }
+
+        #[test]
+        fn literal_mixed() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/operands/constant/literal_mixed.rs", "./tests/programs/operands/constant/literal_mixed.sil");
+        }
+
+        #[test]
+        fn literal_str() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/operands/constant/literal_str.rs", "./tests/programs/operands/constant/literal_str.sil");
+        }
+        
+        #[test]
+        fn literal_unit() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/operands/constant/literal_unit.rs", "./tests/programs/operands/constant/literal_unit.sil");
+        }    
     }
 
-    #[test]
-    fn literal_int() {
-        let args = &mut vec![];
-        default_args(args);
-        run_test(args, "./tests/programs/constant/literal_int.rs", "./tests/programs/constant/literal_int.sil");
-    }
+    mod r#move {
+        use super::*;
 
-    #[test]
-    fn literal_mixed() {
-        let args = &mut vec![];
-        default_args(args);
-        run_test(args, "./tests/programs/constant/literal_mixed.rs", "./tests/programs/constant/literal_mixed.sil");
-    }
+        #[test]
+        fn basic_move() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/operands/move/basic_move.rs", "./tests/programs/operands/move/basic_move.sil");
+        }
 
-    #[test]
-    fn literal_str() {
-        let args = &mut vec![];
-        default_args(args);
-        run_test(args, "./tests/programs/constant/literal_str.rs", "./tests/programs/constant/literal_str.sil");
+        #[test]
+        fn move_chain() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/operands/move/move_chain.rs", "./tests/programs/operands/move/move_chain.sil");
+        }
+        
+        #[test]
+        fn move_from_field() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/operands/move/move_from_field.rs", "./tests/programs/operands/move/move_from_field.sil");
+        }
+
+        #[test]
+        fn move_from_return() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/operands/move/move_from_return.rs", "./tests/programs/operands/move/move_from_return.sil");
+        }
+        
+        #[test]
+        fn move_from_tuple() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/operands/move/move_from_tuple.rs", "./tests/programs/operands/move/move_from_tuple.sil");
+        }
+
+        #[test]
+        fn struct_move() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/operands/move/struct_move.rs", "./tests/programs/operands/move/struct_move.sil");
+        }
     }
-    
-    #[test]
-    fn literal_unit() {
-        let args = &mut vec![];
-        default_args(args);
-        run_test(args, "./tests/programs/constant/literal_unit.rs", "./tests/programs/constant/literal_unit.sil");
-    }    
 }
 
-mod exp {
+mod rvalues {
+    use super::*;
+
+    mod add {
+        use super::*;
+
+        #[test]
+        fn add0() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/rvalues/add/add0.rs", "./tests/programs/rvalues/add/add0.sil");
+        }
+    }
+}
+
+mod terminator {
     use super::*;
     
-    #[test]
-    fn add0() {
-        let args = &mut vec![];
-        default_args(args);
-        run_test(args, "./tests/programs/exp/add0.rs", "./tests/programs/exp/add0.sil");
-    }
+    mod call {
+        use super::*;
 
-    #[test]
-    fn call() {
-        let args = &mut vec![];
-        default_args(args);
-        run_test(args, "./tests/programs/exp/call.rs", "./tests/programs/exp/call.sil");
+        #[test]
+        fn call() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/terminator/call/call0.rs", "./tests/programs/terminator/call/call0.sil");
+        }
     }
 }

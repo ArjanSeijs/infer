@@ -1,0 +1,34 @@
+// WARNING: This output format is intended for human consumers only
+// and is subject to change without notice. Knock yourself out.
+// HINT: See also -Z dump-mir for MIR at specific points during compilation.
+fn make_string() -> String {
+    let mut _0: std::string::String;
+
+    bb0: {
+        _0 = <String as From<&str>>::from(const "hello") -> [return: bb1, unwind continue];
+    }
+
+    bb1: {
+        return;
+    }
+}
+
+fn test() -> () {
+    let mut _0: ();
+    let _1: std::string::String;
+    scope 1 {
+        debug s => _1;
+    }
+
+    bb0: {
+        _1 = make_string() -> [return: bb1, unwind continue];
+    }
+
+    bb1: {
+        drop(_1) -> [return: bb2, unwind continue];
+    }
+
+    bb2: {
+        return;
+    }
+}

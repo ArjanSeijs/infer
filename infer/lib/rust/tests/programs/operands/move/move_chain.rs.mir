@@ -1,0 +1,30 @@
+// WARNING: This output format is intended for human consumers only
+// and is subject to change without notice. Knock yourself out.
+// HINT: See also -Z dump-mir for MIR at specific points during compilation.
+fn test() -> () {
+    let mut _0: ();
+    let _1: std::string::String;
+    scope 1 {
+        debug a => _1;
+        scope 2 {
+            debug b => _1;
+            let _2: std::string::String;
+            scope 3 {
+                debug c => _2;
+            }
+        }
+    }
+
+    bb0: {
+        _1 = <String as From<&str>>::from(const "hello") -> [return: bb1, unwind continue];
+    }
+
+    bb1: {
+        _2 = move _1;
+        drop(_2) -> [return: bb2, unwind continue];
+    }
+
+    bb2: {
+        return;
+    }
+}

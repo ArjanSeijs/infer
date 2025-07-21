@@ -1,0 +1,29 @@
+// WARNING: This output format is intended for human consumers only
+// and is subject to change without notice. Knock yourself out.
+// HINT: See also -Z dump-mir for MIR at specific points during compilation.
+fn test() -> () {
+    let mut _0: ();
+    let _1: Wrapper;
+    let mut _2: std::string::String;
+    scope 1 {
+        debug w => _1;
+        let _3: std::string::String;
+        scope 2 {
+            debug s => _3;
+        }
+    }
+
+    bb0: {
+        _2 = <String as From<&str>>::from(const "hi") -> [return: bb1, unwind continue];
+    }
+
+    bb1: {
+        _1 = Wrapper { val: move _2 };
+        _3 = move (_1.0: std::string::String);
+        drop(_3) -> [return: bb2, unwind continue];
+    }
+
+    bb2: {
+        return;
+    }
+}
