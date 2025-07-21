@@ -140,6 +140,45 @@ mod operands {
             run_test(args, "./tests/programs/operands/move/struct_move.rs", "./tests/programs/operands/move/struct_move.sil");
         }
     }
+
+    mod copy {
+        use super::*;
+
+        #[test]
+        fn basic_copy() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/operands/copy/basic_copy.rs", "./tests/programs/operands/copy/basic_copy.sil");
+        }
+        
+        #[test]
+        fn copy_from_return() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/operands/copy/copy_from_return.rs", "./tests/programs/operands/copy/copy_from_return.sil");
+        }
+
+        #[test]
+        fn copy_in_exp() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/operands/copy/copy_in_exp.rs", "./tests/programs/operands/copy/copy_in_exp.sil");
+        }
+        
+        #[test]
+        fn nested_copy() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/operands/copy/nested_copy.rs", "./tests/programs/operands/copy/nested_copy.sil");
+        }
+        
+        #[test]
+        fn struct_copy() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/operands/copy/struct_copy.rs", "./tests/programs/operands/copy/struct_copy.sil");
+        }
+    }
 }
 
 mod rvalues {
