@@ -56,42 +56,42 @@ fn print_mir(args: &mut Vec<String>) {
 mod operands {
     use super::*;
 
-    mod constant {
+    mod const {
         use super::*;
         
         #[test]
         fn literal_float() {
             let args = &mut vec![];
             default_args(args);
-            run_test(args, "./tests/programs/operands/constant/literal_float.rs", "./tests/programs/operands/constant/literal_float.sil");
+            run_test(args, "./tests/programs/operands/const/literal_float.rs", "./tests/programs/operands/const/literal_float.sil");
         }
 
         #[test]
         fn literal_int() {
             let args = &mut vec![];
             default_args(args);
-            run_test(args, "./tests/programs/operands/constant/literal_int.rs", "./tests/programs/operands/constant/literal_int.sil");
+            run_test(args, "./tests/programs/operands/const/literal_int.rs", "./tests/programs/operands/const/literal_int.sil");
         }
 
         #[test]
         fn literal_mixed() {
             let args = &mut vec![];
             default_args(args);
-            run_test(args, "./tests/programs/operands/constant/literal_mixed.rs", "./tests/programs/operands/constant/literal_mixed.sil");
+            run_test(args, "./tests/programs/operands/const/literal_mixed.rs", "./tests/programs/operands/const/literal_mixed.sil");
         }
 
         #[test]
         fn literal_str() {
             let args = &mut vec![];
             default_args(args);
-            run_test(args, "./tests/programs/operands/constant/literal_str.rs", "./tests/programs/operands/constant/literal_str.sil");
+            run_test(args, "./tests/programs/operands/const/literal_str.rs", "./tests/programs/operands/const/literal_str.sil");
         }
         
         #[test]
         fn literal_unit() {
             let args = &mut vec![];
             default_args(args);
-            run_test(args, "./tests/programs/operands/constant/literal_unit.rs", "./tests/programs/operands/constant/literal_unit.sil");
+            run_test(args, "./tests/programs/operands/const/literal_unit.rs", "./tests/programs/operands/const/literal_unit.sil");
         }    
     }
 
