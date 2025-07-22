@@ -56,7 +56,7 @@ fn print_mir(args: &mut Vec<String>) {
 mod operands {
     use super::*;
 
-    mod const {
+    mod r#const {
         use super::*;
         
         #[test]
