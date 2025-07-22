@@ -6,25 +6,38 @@ fn test() -> () {
     let _1: std::string::String;
     scope 1 {
         debug a => _1;
+        let _2: std::string::String;
         scope 2 {
-            debug b => _1;
-            let _2: std::string::String;
+            debug b => _2;
+            let _3: std::string::String;
             scope 3 {
-                debug c => _2;
+                debug c => _3;
             }
         }
     }
 
     bb0: {
+        StorageLive(_1);
         _1 = <String as From<&str>>::from(const "hello") -> [return: bb1, unwind continue];
     }
 
     bb1: {
+        StorageLive(_2);
         _2 = move _1;
-        drop(_2) -> [return: bb2, unwind continue];
+        StorageLive(_3);
+        _3 = move _2;
+        _0 = const ();
+        drop(_3) -> [return: bb2, unwind: bb3];
     }
 
     bb2: {
+        StorageDead(_3);
+        StorageDead(_2);
+        StorageDead(_1);
         return;
+    }
+
+    bb3 (cleanup): {
+        resume;
     }
 }

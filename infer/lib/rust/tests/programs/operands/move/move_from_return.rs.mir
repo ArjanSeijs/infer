@@ -21,14 +21,21 @@ fn test() -> () {
     }
 
     bb0: {
+        StorageLive(_1);
         _1 = make_string() -> [return: bb1, unwind continue];
     }
 
     bb1: {
-        drop(_1) -> [return: bb2, unwind continue];
+        _0 = const ();
+        drop(_1) -> [return: bb2, unwind: bb3];
     }
 
     bb2: {
+        StorageDead(_1);
         return;
+    }
+
+    bb3 (cleanup): {
+        resume;
     }
 }

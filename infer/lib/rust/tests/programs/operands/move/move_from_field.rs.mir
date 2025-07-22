@@ -14,16 +14,27 @@ fn test() -> () {
     }
 
     bb0: {
+        StorageLive(_1);
+        StorageLive(_2);
         _2 = <String as From<&str>>::from(const "hi") -> [return: bb1, unwind continue];
     }
 
     bb1: {
         _1 = Wrapper { val: move _2 };
+        StorageDead(_2);
+        StorageLive(_3);
         _3 = move (_1.0: std::string::String);
-        drop(_3) -> [return: bb2, unwind continue];
+        _0 = const ();
+        drop(_3) -> [return: bb2, unwind: bb3];
     }
 
     bb2: {
+        StorageDead(_3);
+        StorageDead(_1);
         return;
+    }
+
+    bb3 (cleanup): {
+        resume;
     }
 }

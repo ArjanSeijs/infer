@@ -3,22 +3,15 @@
 // HINT: See also -Z dump-mir for MIR at specific points during compilation.
 fn test() -> () {
     let mut _0: ();
-    let _1: Point;
+    let _1: i32;
     scope 1 {
-        debug p1 => _1;
-        let _2: Point;
-        scope 2 {
-            debug p2 => _2;
-        }
+        debug x => _1;
     }
 
     bb0: {
         StorageLive(_1);
-        _1 = Point { x: const 1_i32, y: const 2_i32 };
-        StorageLive(_2);
-        _2 = move _1;
+        _1 = Add(const 3_i32, const 4_i32);
         _0 = const ();
-        StorageDead(_2);
         StorageDead(_1);
         return;
     }

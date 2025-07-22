@@ -184,14 +184,98 @@ mod operands {
 mod rvalues {
     use super::*;
 
-    mod add {
+    mod binop {
+        use super::*;
+
+        mod add {
+            use super::*;
+
+            #[test]
+            fn add_i16() {
+                let args = &mut vec![];
+                default_args(args);
+                run_test(args, "./tests/programs/rvalues/binop/add/add_i16.rs", "./tests/programs/rvalues/binop/add/add_i16.sil");
+            }
+
+            #[test]
+            fn add_i32() {
+                let args = &mut vec![];
+                default_args(args);
+                run_test(args, "./tests/programs/rvalues/binop/add/add_i32.rs", "./tests/programs/rvalues/binop/add/add_i32.sil");
+            }
+
+            #[test]
+            fn add0() {
+                let args = &mut vec![];
+                default_args(args);
+                run_test(args, "./tests/programs/rvalues/binop/add/add0.rs", "./tests/programs/rvalues/binop/add/add0.sil");
+            }
+        }
+
+        mod sub {
+            use super::*;
+
+            #[test]
+            fn sub_u128() {
+                let args = &mut vec![];
+                default_args(args);
+                run_test(args, "./tests/programs/rvalues/binop/sub/sub_u128.rs", "./tests/programs/rvalues/binop/sub/sub_u128.sil");
+            }
+        }
+    }
+
+    mod mut_raw_ptr {
         use super::*;
 
         #[test]
-        fn add0() {
+        fn mut_raw_ptr() {
             let args = &mut vec![];
             default_args(args);
-            run_test(args, "./tests/programs/rvalues/add/add0.rs", "./tests/programs/rvalues/add/add0.sil");
+            run_test(args, "./tests/programs/rvalues/mut_raw_ptr/mut_raw_ptr0.rs", "./tests/programs/rvalues/mut_raw_ptr/mut_raw_ptr0.sil");
+        }
+    }
+
+    mod mut_ref {
+        use super::*;
+
+        #[test]
+        fn mut_ref() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/rvalues/mut_ref/mut_ref0.rs", "./tests/programs/rvalues/mut_ref/mut_ref0.sil");
+        }
+    }
+
+    mod raw_ptr {
+        use super::*;
+
+        #[test]
+        fn raw_ptr() {
+            let args = &mut vec![]; 
+            default_args(args);
+            run_test(args, "./tests/programs/rvalues/raw_ptr/raw_ptr0.rs", "./tests/programs/rvalues/raw_ptr/raw_ptr0.sil");
+        }
+    }
+
+    mod r#ref {
+        use super::*;
+
+        #[test]
+        fn ref0() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/rvalues/ref/ref0.rs", "./tests/programs/rvalues/ref/ref0.sil");
+        }
+    }
+
+    mod unop {
+        use super::*;
+
+        #[test]
+        fn unop0() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/rvalues/unop/unop0.rs", "./tests/programs/rvalues/unop/unop0.sil");
         }
     }
 }
