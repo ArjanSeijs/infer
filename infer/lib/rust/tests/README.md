@@ -32,3 +32,30 @@ To generate MIR for a given test, use the following `rustc` command with nightly
 rustc +nightly -Z unpretty=mir -Z mir-opt-level=0 --crate-type=lib -C opt-level=3 \
   -A dead_code -A unused_variables -A unused_must_use \
   ./path/to/test_case.rs
+```
+
+## Running the Tests
+
+You can run all or a subset of the tests using Cargo:
+
+- Run **all tests**:
+
+  ```sh
+  cargo test
+  ```
+
+- Run all tests in a specific module (e.g., `operands`):
+
+   ```sh
+  cargo test operands
+  ```
+
+- Run tests for a specific construct (e.g., `operands/copy`):
+
+   ```sh
+  cargo test operands::copy
+  ```
+
+## Development Status
+
+A number of translation rules are still unimplemented or partially implemented, so many tests are currently expected to fail. Some tests are written ahead of implementation to define expected behavior and guide development.
