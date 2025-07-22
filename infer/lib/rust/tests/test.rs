@@ -196,6 +196,49 @@ mod rvalues {
     }
 }
 
+mod statements {
+    use super::*;
+
+    mod assign {
+        use super::*;
+        
+        #[test]
+        fn assign_binop() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/statements/assign/assign_binop.rs", "./tests/programs/statements/assign/assign_binop.sil");
+        }
+
+        #[test]
+        fn assign_cast() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/statements/assign/assign_cast.rs", "./tests/programs/statements/assign/assign_cast.sil");
+        }
+        
+        #[test]
+        fn assign_mut_ref() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/statements/assign/assign_mut_ref.rs", "./tests/programs/statements/assign/assign_mut_ref.sil");
+        }
+        
+        #[test]
+        fn assign_ref() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/statements/assign/assign_ref.rs", "./tests/programs/statements/assign/assign_ref.sil");
+        }
+        
+        #[test]
+        fn assign_tuple() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/statements/assign/assign_tuple.rs", "./tests/programs/statements/assign/assign_tuple.sil");
+        }
+    }
+}
+
 mod terminator {
     use super::*;
     
