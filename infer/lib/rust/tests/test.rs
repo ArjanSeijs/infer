@@ -237,6 +237,28 @@ mod statements {
             run_test(args, "./tests/programs/statements/assign/assign_tuple.rs", "./tests/programs/statements/assign/assign_tuple.sil");
         }
     }
+
+    mod storage_live {
+        use super::*;
+
+        #[test]
+        fn storage_live() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/statements/storage_live/storage_live.rs", "./tests/programs/statements/storage_live/storage_live.sil");
+        }
+    }
+
+    mod storage_dead {
+        use super::*;
+
+        #[test]
+        fn storage_dead_shadow() {
+            let args = &mut vec![];
+            default_args(args);
+            run_test(args, "./tests/programs/statements/storage_dead/storage_dead_shadow.rs", "./tests/programs/statements/storage_dead/storage_dead_shadow.sil");
+        }
+    }
 }
 
 mod terminator {
