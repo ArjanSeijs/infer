@@ -228,7 +228,7 @@ mod rvalues {
         use super::*;
 
         #[test]
-        fn mut_raw_ptr() {
+        fn mut_raw_ptr0() {
             let args = &mut vec![];
             default_args(args);
             run_test(args, "./tests/programs/rvalues/mut_raw_ptr/mut_raw_ptr0.rs", "./tests/programs/rvalues/mut_raw_ptr/mut_raw_ptr0.sil");
@@ -345,7 +345,7 @@ mod statements {
     }
 }
 
-mod terminator {
+mod terminators {
     use super::*;
     
     mod call {
@@ -355,7 +355,7 @@ mod terminator {
         fn call() {
             let args = &mut vec![];
             default_args(args);
-            run_test(args, "./tests/programs/terminator/call/call0.rs", "./tests/programs/terminator/call/call0.sil");
+            run_test(args, "./tests/programs/terminators/call/call0.rs", "./tests/programs/terminators/call/call0.sil");
         }
     }
 }

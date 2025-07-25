@@ -7,7 +7,7 @@
 .source_language = "rust"
 
 define test() : void {
-  local var_0: void, var_1: int, var_2: float, var_3: &str
+  local var_0: void, var_1: int, var_2: float, var_3: *String
   #node_0:
     store &var_1 <- 42
     store &var_2 <- 3.14
