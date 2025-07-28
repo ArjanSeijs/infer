@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use stable_mir::{
-    mir::{BasicBlock, BinOp, ConstOperand, LocalDecl, Operand, Place, Rvalue, StatementKind}, ty::{Allocation, ConstantKind, FnDef, RigidTy, Span, TyKind}, CrateDef, CrateItem
+    mir::{BasicBlock, BinOp, ConstOperand, LocalDecl, Operand, Place, Rvalue, StatementKind}, ty::{ConstantKind, FnDef, RigidTy, Span, TyKind}, CrateDef, CrateItem
 };
 
 use crate::textual_defs::{
@@ -15,9 +15,11 @@ use crate::textual_defs::{
     procdesc::ProcDesc,
     qualifiedprocname::QualifiedProcName,
     terminator::Terminator,
-    typ::{Annotated, Typ, local_decl_to_annotated_typ, local_decl_to_type},
+    typ::{Annotated, Typ, local_decl_to_annotated_typ, local_decl_to_type, kind_to_textual},
     varname::VarName,
 };
+
+use crate::utils::{fresh_id, bytes_to_int};
 
 type LabelMap = HashMap<usize, String>;
 type PlaceMap = HashMap<usize, (String, Typ)>;
@@ -179,66 +181,62 @@ fn const_operand_to_exp(const_operand: &ConstOperand) -> (Exp, Option<Typ>) {
     let typ = kind_to_textual(&const_operand.const_.ty().kind());
 
     let const_ = match const_kind {
-        ConstantKind::Allocated(alloc) => {
-            decode_allocated(&alloc.bytes, &typ)
-        }
+        ConstantKind::Allocated(alloc) => decode_allocated(&alloc.bytes, &typ),
 
         ConstantKind::ZeroSized => Const::Null,
 
-        ConstantKind::Value(val) => match val {
-            stable_mir::ty::Value::Scalar(scalar) => decode_scalar(&scalar, &typ),
-            _ => return (Exp::Unimplemented, Some(typ)),
-        },
-
-        ConstantKind::Unevaluated(_) |
-        ConstantKind::Param(_) |
-        ConstantKind::Ty(_) => return (Exp::Unimplemented, Some(typ)),
+        ConstantKind::Unevaluated(_)
+        | ConstantKind::Param(_)
+        | ConstantKind::Ty(_) => {
+            // TODO: Replace panic with proper error handling (e.g., Result or warning + fallback)
+            debug_assert!(false, "Unsupported constant kind encountered: {:?}", const_kind);
+            Const::Int(0)
+        }
     };
 
     (Exp::Const(const_), Some(typ))
 }
 
-fn decode_allocated(bytes: &Vec<Option<u8>>, typ: &Typ) -> Const {
+pub fn decode_allocated(bytes: &Vec<Option<u8>>, typ: &Typ) -> Const {
+    let raw_bytes: Vec<u8> = bytes.iter().map(|b| b.unwrap_or(0)).collect();
+
     match typ {
         // If it's a pointer to an array, assume it's a string literal
         Typ::Ptr(inner) if matches!(**inner, Typ::Array(_)) => {
-            let s: String = bytes
+            let s: String = raw_bytes
                 .iter()
-                .take_while(|b| b.is_some() && **b != Some(0)) // null-terminated
-                .map(|b| b.unwrap_or(b'?') as char)
+                .take_while(|b| **b != 0) // null-terminated
+                .map(|b| *b as char)
                 .collect();
             Const::Str(s)
         }
-        // Default fallback: interpret as integer
-        _ => Const::Int(bytes_to_int(bytes)),
-    }
-}
 
-fn decode_scalar(scalar: &stable_mir::ty::Scalar, typ: &Typ) -> Const {
-    match typ {
         Typ::Float => {
-            let bits = scalar.to_bits(64).unwrap_or(0);
-            Const::Float(f64::from_bits(bits))
+            if raw_bytes.len() >= 8 {
+                let mut arr = [0u8; 8];
+                arr.copy_from_slice(&raw_bytes[..8]);
+                let bits = u64::from_le_bytes(arr);
+                Const::Float(f64::from_bits(bits))
+            } else {
+                // TODO: Consider returning a Result in the future
+                debug_assert!(
+                    false,
+                    "decode_allocated: not enough bytes to interpret as float"
+                );
+                Const::Float(0.0)
+            }
         }
-        Typ::Int => {
-            let val = scalar.to_bits(128).unwrap_or(0);
-            Const::Int(val as i128)
-        }
-        Typ::Ptr(_) | Typ::Fun(_) => {
-            let val = scalar.to_bits(64).unwrap_or(0);
-            Const::Int(val as i128)
-        }
-        Typ::Null | Typ::Void => Const::Null,
-        _ => Const::Int(scalar.to_bits(64).unwrap_or(0) as i128)
-    }
-}
 
-fn bytes_to_int(bytes: &Vec<Option<u8>>) -> i128 {
-    bytes
-        .iter()
-        .enumerate()
-        .map(|(i, b)| (b.unwrap_or_default() as i128) << i)
-        .sum::<i128>()
+        Typ::Int | Typ::Ptr(_) | Typ::Fun(_) => Const::Int(bytes_to_int(&bytes)),
+
+        Typ::Null | Typ::Void => Const::Null,
+
+        _ => {
+            // TODO: Consider returning a Result in the future
+            debug_assert!(false, "decode_allocated: unsupported type {:?}", typ);
+            Const::Int(0)
+        }
+    }
 }
 
 fn decls_to_locals(locals: &[LocalDecl]) -> (PlaceMap, Vec<(VarName, Annotated)>) {
@@ -247,10 +245,6 @@ fn decls_to_locals(locals: &[LocalDecl]) -> (PlaceMap, Vec<(VarName, Annotated)>
         .enumerate()
         .map(|(place, local)| decl_to_local(place, local))
         .unzip()
-}
-
-fn fresh_id(i: usize) -> String {
-    format!("var_{i}")
 }
 
 fn decl_to_local(
