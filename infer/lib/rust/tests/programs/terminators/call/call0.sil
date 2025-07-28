@@ -13,13 +13,12 @@ define foo() : void {
     jmp node_1
 
   #node_1:
+
     ret var_0
 }
-
 define bar() : void {
   local var_0: void
   #node_0:
     store &var_0 <- null
     ret var_0
-
 }

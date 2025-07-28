@@ -1,0 +1,40 @@
+// WARNING: This output format is intended for human consumers only
+// and is subject to change without notice. Knock yourself out.
+// HINT: See also -Z dump-mir for MIR at specific points during compilation.
+fn test() -> () {
+    let mut _0: ();
+    let _1: (std::string::String, i32);
+    let mut _2: std::string::String;
+    scope 1 {
+        debug tup => _1;
+        let _3: std::string::String;
+        scope 2 {
+            debug s => _3;
+        }
+    }
+
+    bb0: {
+        StorageLive(_1);
+        StorageLive(_2);
+        _2 = <String as From<&str>>::from(const "hello") -> [return: bb1, unwind continue];
+    }
+
+    bb1: {
+        _1 = (move _2, const 42_i32);
+        StorageDead(_2);
+        StorageLive(_3);
+        _3 = move (_1.0: std::string::String);
+        _0 = const ();
+        drop(_3) -> [return: bb2, unwind: bb3];
+    }
+
+    bb2: {
+        StorageDead(_3);
+        StorageDead(_1);
+        return;
+    }
+
+    bb3 (cleanup): {
+        resume;
+    }
+}

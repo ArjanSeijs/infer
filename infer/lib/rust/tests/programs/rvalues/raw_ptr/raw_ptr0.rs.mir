@@ -1,0 +1,29 @@
+// WARNING: This output format is intended for human consumers only
+// and is subject to change without notice. Knock yourself out.
+// HINT: See also -Z dump-mir for MIR at specific points during compilation.
+fn test() -> () {
+    let mut _0: ();
+    let _1: i32;
+    let _3: &i32;
+    scope 1 {
+        debug y => _1;
+        let _2: *const i32;
+        scope 2 {
+            debug x => _2;
+        }
+    }
+
+    bb0: {
+        StorageLive(_1);
+        _1 = const 10_i32;
+        StorageLive(_2);
+        StorageLive(_3);
+        _3 = &_1;
+        _2 = &raw const (*_3);
+        StorageDead(_3);
+        _0 = const ();
+        StorageDead(_2);
+        StorageDead(_1);
+        return;
+    }
+}
