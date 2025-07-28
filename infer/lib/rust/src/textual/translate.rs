@@ -167,23 +167,70 @@ fn operand_to_exp(op: &Operand, place_map: &PlaceMap) -> (Exp, Option<Typ>) {
             Exp::LVar(VarName::from_place(place, place_map)),
             Some(Typ::Int),
         ),
-        Operand::Constant(const_operand) => (const_operand_to_exp(&const_operand), Some(Typ::Int)), //TODO Constant types
+        Operand::Constant(const_operand) => {
+            let (exp, typ) = const_operand_to_exp(const_operand);
+            (exp, typ)
+        }
     }
 }
 
-fn const_operand_to_exp(const_operand: &ConstOperand) -> Exp {
-    let const_ = const_operand.const_.kind();
-    let const_ = match const_ {
-        ConstantKind::Allocated(Allocation {
-            bytes,
-            provenance: _,
-            align: _,
-            mutability: _,
-        }) => Const::Int(bytes_to_int(bytes)),
-        ConstantKind::ZeroSized => Const::Null, //TODO Handling of unit type
-        s => todo!("Const to textual: {:?}", s),
+fn const_operand_to_exp(const_operand: &ConstOperand) -> (Exp, Option<Typ>) {
+    let const_kind = const_operand.const_.kind();
+    let typ = kind_to_textual(&const_operand.const_.ty().kind());
+
+    let const_ = match const_kind {
+        ConstantKind::Allocated(alloc) => {
+            decode_allocated(&alloc.bytes, &typ)
+        }
+
+        ConstantKind::ZeroSized => Const::Null,
+
+        ConstantKind::Value(val) => match val {
+            stable_mir::ty::Value::Scalar(scalar) => decode_scalar(&scalar, &typ),
+            _ => return (Exp::Unimplemented, Some(typ)),
+        },
+
+        ConstantKind::Unevaluated(_) |
+        ConstantKind::Param(_) |
+        ConstantKind::Ty(_) => return (Exp::Unimplemented, Some(typ)),
     };
-    Exp::Const(const_)
+
+    (Exp::Const(const_), Some(typ))
+}
+
+fn decode_allocated(bytes: &Vec<Option<u8>>, typ: &Typ) -> Const {
+    match typ {
+        // If it's a pointer to an array, assume it's a string literal
+        Typ::Ptr(inner) if matches!(**inner, Typ::Array(_)) => {
+            let s: String = bytes
+                .iter()
+                .take_while(|b| b.is_some() && **b != Some(0)) // null-terminated
+                .map(|b| b.unwrap_or(b'?') as char)
+                .collect();
+            Const::Str(s)
+        }
+        // Default fallback: interpret as integer
+        _ => Const::Int(bytes_to_int(bytes)),
+    }
+}
+
+fn decode_scalar(scalar: &stable_mir::ty::Scalar, typ: &Typ) -> Const {
+    match typ {
+        Typ::Float => {
+            let bits = scalar.to_bits(64).unwrap_or(0);
+            Const::Float(f64::from_bits(bits))
+        }
+        Typ::Int => {
+            let val = scalar.to_bits(128).unwrap_or(0);
+            Const::Int(val as i128)
+        }
+        Typ::Ptr(_) | Typ::Fun(_) => {
+            let val = scalar.to_bits(64).unwrap_or(0);
+            Const::Int(val as i128)
+        }
+        Typ::Null | Typ::Void => Const::Null,
+        _ => Const::Int(scalar.to_bits(64).unwrap_or(0) as i128)
+    }
 }
 
 fn bytes_to_int(bytes: &Vec<Option<u8>>) -> i128 {
