@@ -7,7 +7,7 @@ end
 type qualified_fieldname = {enclosing_class: TypeName.t; name: FieldName.t}
 */
 
-use crate::textual_defs::{attr, fieldname, typ, typename};
+use crate::textual_defs::{attr, fieldname, typ, typename, PrintTextual};
 
 #[derive(Debug)]
 pub struct QualifiedFieldname {
@@ -20,4 +20,15 @@ pub struct FieldDecl {
     pub qualified_name: QualifiedFieldname,
     pub typ: typ::Typ,
     pub attributes: Vec<attr::Attr>,
+}
+
+impl PrintTextual for FieldDecl {
+    fn pp(&self) -> String {
+        let annotated_typ = typ::Annotated {
+            typ: self.typ.clone(),
+            attributes: self.attributes.clone(),
+        };
+
+        format!("{}: {}", self.qualified_name.name.pp(), annotated_typ.pp())
+    }
 }

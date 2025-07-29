@@ -1,4 +1,4 @@
-use crate::textual_defs::name;
+use crate::textual_defs::{name, PrintTextual};
 
 /*
 [OCaml Definition]
@@ -8,4 +8,10 @@ use crate::textual_defs::name;
 #[derive(Debug)]
 pub struct FieldName {
     pub name: name::Name
+}
+
+impl PrintTextual for FieldName {
+    fn pp(&self) -> String {
+        self.name.pp()
+    }
 }

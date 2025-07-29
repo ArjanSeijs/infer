@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use stable_mir::{
-    mir::{BasicBlock, BinOp, ConstOperand, LocalDecl, Operand, Place, Rvalue, StatementKind}, ty::{ConstantKind, FnDef, RigidTy, Span, TyKind}, CrateDef, CrateItem
+    mir::{BasicBlock, BinOp, ConstOperand, LocalDecl, Operand, Place, Rvalue, StatementKind}, ty::{ConstantKind, FnDef, RigidTy, Span, TyKind}, CrateDef, CrateItem,
 };
 
 use crate::textual_defs::{
@@ -181,14 +181,17 @@ fn const_operand_to_exp(const_operand: &ConstOperand) -> (Exp, Option<Typ>) {
     let typ = kind_to_textual(&const_operand.const_.ty().kind());
 
     let const_ = match const_kind {
-        ConstantKind::Allocated(alloc) => decode_allocated(&alloc.bytes, &typ),
+        ConstantKind::Allocated(alloc) => {
+            decode_allocated(&alloc.bytes, &typ)
+        }
 
         ConstantKind::ZeroSized => Const::Null,
 
         ConstantKind::Unevaluated(_)
         | ConstantKind::Param(_)
         | ConstantKind::Ty(_) => {
-            // TODO: Replace panic with proper error handling (e.g., Result or warning + fallback)
+            // TODO: Extend later to support more constant kinds if needed
+            // TODO: Implement proper error handling
             debug_assert!(false, "Unsupported constant kind encountered: {:?}", const_kind);
             Const::Int(0)
         }
@@ -199,13 +202,12 @@ fn const_operand_to_exp(const_operand: &ConstOperand) -> (Exp, Option<Typ>) {
 
 pub fn decode_allocated(bytes: &Vec<Option<u8>>, typ: &Typ) -> Const {
     let raw_bytes: Vec<u8> = bytes.iter().map(|b| b.unwrap_or(0)).collect();
-
+    
     match typ {
-        // If it's a pointer to an array, assume it's a string literal
         Typ::Ptr(inner) if matches!(**inner, Typ::Array(_)) => {
             let s: String = raw_bytes
                 .iter()
-                .take_while(|b| **b != 0) // null-terminated
+                .take_while(|b| **b != 0)
                 .map(|b| *b as char)
                 .collect();
             Const::Str(s)
@@ -215,24 +217,18 @@ pub fn decode_allocated(bytes: &Vec<Option<u8>>, typ: &Typ) -> Const {
             if raw_bytes.len() >= 8 {
                 let mut arr = [0u8; 8];
                 arr.copy_from_slice(&raw_bytes[..8]);
-                let bits = u64::from_le_bytes(arr);
-                Const::Float(f64::from_bits(bits))
+                Const::Float(f64::from_bits(u64::from_le_bytes(arr)))
             } else {
-                // TODO: Consider returning a Result in the future
-                debug_assert!(
-                    false,
-                    "decode_allocated: not enough bytes to interpret as float"
-                );
                 Const::Float(0.0)
             }
         }
 
-        Typ::Int | Typ::Ptr(_) | Typ::Fun(_) => Const::Int(bytes_to_int(&bytes)),
+        Typ::Int | Typ::Ptr(_) | Typ::Fun(_) => Const::Int(bytes_to_int(bytes)),
 
         Typ::Null | Typ::Void => Const::Null,
 
+        // TODO: Implement proper exception handling
         _ => {
-            // TODO: Consider returning a Result in the future
             debug_assert!(false, "decode_allocated: unsupported type {:?}", typ);
             Const::Int(0)
         }

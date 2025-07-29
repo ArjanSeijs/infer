@@ -26,9 +26,9 @@ module Typ : sig
 end
  */
 
-use stable_mir::{mir::LocalDecl, ty::RigidTy};
+use stable_mir::{mir::LocalDecl, ty::{RigidTy, TyKind}, CrateDef};
 
-use crate::textual_defs::{attr, typename, PrintTextual, PrintTextualWithSeperator};
+use crate::textual_defs::{attr, typename, basetypename, PrintTextual, PrintTextualWithSeperator};
 
 #[derive(Debug,Clone)]
 pub enum Typ {
@@ -66,13 +66,13 @@ impl PrintTextual for Typ {
                     let param_types = prototype
                         .params_type.pp_comma_list();
                     let ret_type = prototype.return_type.pp();
-                    format!("(fun ({}) -> {}", param_types, ret_type)
+                    format!("(fun ({}) -> {})", param_types, ret_type)
                 }
                 None => String::from("(fun _ -> _)"),
             },
-            Typ::Ptr(t) => todo!(),
-            Typ::Struct(t) => todo!(),
-            Typ::Array(t) => todo!(),
+            Typ::Ptr(t) => format!("*{}", t.pp()),
+            Typ::Struct(t) => format!("{}", t.pp()),
+            Typ::Array(t) => format!("array<{}>", t.pp()),
         }
     }
 }
@@ -89,9 +89,22 @@ pub fn kind_to_textual(kind: &stable_mir::ty::TyKind) -> Typ {
             RigidTy::Bool | RigidTy::Char | RigidTy::Int(_) | RigidTy::Uint(_) => Typ::Int,
             RigidTy::Float(_) => Typ::Float,
             RigidTy::Array(ty, _) => Typ::Array(Box::new(kind_to_textual(&ty.kind()))),
-            RigidTy::RawPtr(ty, mutability) => Typ::Ptr(Box::new(kind_to_textual(&ty.kind()))),
-            RigidTy::Ref(_, ty, mutability) => Typ::Ptr(Box::new(kind_to_textual(&ty.kind()))),
-            RigidTy::Tuple(items) if items.is_empty() => Typ::Void,
+            RigidTy::RawPtr(ty, _) => Typ::Ptr(Box::new(kind_to_textual(&ty.kind()))),
+            RigidTy::Ref(_, ty, _) => Typ::Ptr(Box::new(kind_to_textual(&ty.kind()))),
+            RigidTy::Tuple(items) => {
+                if items.is_empty() {
+                    Typ::Void
+                } else {
+                    // TODO: We need to differentiate between tuple and struct, for now returns a dummy value
+                    Typ::Struct(typename::TypeName::new(basetypename::BaseTypeName::from_string("dummy-tuple".to_string())))
+                }
+            },
+            RigidTy::Adt(def, _) => {
+                let base_name = basetypename::BaseTypeName::from_string(def.name());
+                let type_name = typename::TypeName::new(base_name);
+            
+                Typ::Struct(type_name)
+            }
             s => todo!("kind_to_textual: {:?}", s),
         },
         s => todo!("kind_to_textual: {:?}", s),
