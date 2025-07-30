@@ -264,6 +264,13 @@ fn rvalue_to_exp(rvalue: &Rvalue, place_map: &PlaceMap) -> (Exp, Option<Typ>) {
             )
         }
 
+        Rvalue::Ref(_, _, place) | Rvalue::AddressOf(_, place) => {
+            let (var_name, typ) = place_to_id(place, place_map);
+            let exp = Exp::LVar(VarName::new(var_name.clone(), None));
+            let ptr_typ = Typ::Ptr(Box::new(typ.clone()));
+            (exp, Some(ptr_typ))
+        }        
+
         Rvalue::Use(op) => operand_to_exp(op, place_map),
         s => todo!("{:?}", s),
     }

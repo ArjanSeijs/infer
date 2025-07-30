@@ -6,15 +6,11 @@
 
 .source_language = "rust"
 
+// debug ptr => _1
+// debug x => _3
+// debug _z => _6
 define main() : void {
-  local var_0: void,
-        var_1: *int,
-        var_2: void,
-        var_3: int,
-        var_4: *int,
-        var_5: *int,
-        var_6: int
-
+  local var_0: void, var_1: *int, var_2: void, var_3: int, var_4: *int, var_5: *int, var_6: int
   #node_0:
     store &var_3 <- 50
     store &var_5 <- &var_3
