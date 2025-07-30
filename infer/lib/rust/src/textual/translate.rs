@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use stable_mir::{
-    mir::{BasicBlock, BinOp, ConstOperand, LocalDecl, Operand, Place, Rvalue, StatementKind}, ty::{ConstantKind, FnDef, RigidTy, Span, TyKind}, CrateDef, CrateItem,
+    mir::{BasicBlock, BinOp, ConstOperand, LocalDecl, Operand, Place, Rvalue, StatementKind, UnOp}, ty::{ConstantKind, FnDef, RigidTy, Span, TyKind}, CrateDef, CrateItem,
 };
 
 use crate::textual_defs::{
@@ -140,6 +140,20 @@ fn assign_statement_to_instr(
     }]
 }
 
+pub fn unop_to_proc_name(op: UnOp, typ: &Typ) -> String {
+    use UnOp::*;
+
+    match (op, typ) {
+        (Neg, Typ::Int(_)) => "__sil_neg".into(),
+        (Neg, Typ::Float) => "__sil_neg".into(), 
+
+        (Not, Typ::Int(IntKind::Bool)) => "__sil_lnot".into(), 
+        (Not, Typ::Int(_)) => "__sil_bnot".into(),      
+
+        _ => panic!("unsupported unop/type combo: {:?}, {:?}", op, typ),
+    }
+}
+
 pub fn binop_to_proc_name(op: BinOp, typ: &Typ) -> String {
     use BinOp::*;
 
@@ -234,6 +248,22 @@ fn rvalue_to_exp(rvalue: &Rvalue, place_map: &PlaceMap) -> (Exp, Option<Typ>) {
                 Some(typ),
             )
         }
+
+        Rvalue::UnaryOp(op, operand) => {
+            let (exp, typ) = operand_to_exp(operand, place_map);
+            let typ = typ.expect("UnaryOp must yield a type");
+            let proc_name = unop_to_proc_name(*op, &typ);
+
+            (
+                Exp::Call {
+                    proc: QualifiedProcName::new(proc_name, None),
+                    args: vec![exp],
+                    kind: CallKind::NonVirtual,
+                },
+                Some(typ),
+            )
+        }
+
         Rvalue::Use(op) => operand_to_exp(op, place_map),
         s => todo!("{:?}", s),
     }
