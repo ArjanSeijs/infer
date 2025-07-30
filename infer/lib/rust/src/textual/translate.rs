@@ -15,7 +15,7 @@ use crate::textual_defs::{
     procdesc::ProcDesc,
     qualifiedprocname::QualifiedProcName,
     terminator::Terminator,
-    typ::{Annotated, Typ, local_decl_to_annotated_typ, local_decl_to_type, kind_to_textual},
+    typ::{Annotated, Typ, local_decl_to_annotated_typ, local_decl_to_type, kind_to_textual, IntKind},
     varname::VarName,
 };
 
@@ -140,18 +140,98 @@ fn assign_statement_to_instr(
     }]
 }
 
+pub fn binop_to_proc_name(op: BinOp, typ: &Typ) -> String {
+    use BinOp::*;
+
+    match (op, typ) {
+        // Arithmetic: Add
+        (Add, Typ::Int(IntKind::I8)) | (Add, Typ::Int(IntKind::Char)) => "__sil_plusa_char".into(),
+        (Add, Typ::Int(IntKind::I16)) => "__sil_plusa_short".into(),
+        (Add, Typ::Int(IntKind::I32)) => "__sil_plusa_int".into(),
+        (Add, Typ::Int(IntKind::I64)) => "__sil_plusa_long".into(),
+        (Add, Typ::Int(IntKind::I128)) => "__sil_plusa_128".into(),
+        (Add, Typ::Int(IntKind::U8)) => "__sil_plusa_uchar".into(),
+        (Add, Typ::Int(IntKind::U16)) => "__sil_plusa_ushort".into(),
+        (Add, Typ::Int(IntKind::U32)) => "__sil_plusa_uint".into(),
+        (Add, Typ::Int(IntKind::U64)) => "__sil_plusa_ulong".into(),
+        (Add, Typ::Int(IntKind::U128)) => "__sil_plusa_u128".into(),
+        (Add, Typ::Int(IntKind::Bool)) => "__sil_plusa_bool".into(),
+
+        // Arithmetic: Sub
+        (Sub, Typ::Int(IntKind::I8)) | (Sub, Typ::Int(IntKind::Char)) => "__sil_minusa_char".into(),
+        (Sub, Typ::Int(IntKind::I16)) => "__sil_minusa_short".into(),
+        (Sub, Typ::Int(IntKind::I32)) => "__sil_minusa_int".into(),
+        (Sub, Typ::Int(IntKind::I64)) => "__sil_minusa_long".into(),
+        (Sub, Typ::Int(IntKind::I128)) => "__sil_minusa_128".into(),
+        (Sub, Typ::Int(IntKind::U8)) => "__sil_minusa_uchar".into(),
+        (Sub, Typ::Int(IntKind::U16)) => "__sil_minusa_ushort".into(),
+        (Sub, Typ::Int(IntKind::U32)) => "__sil_minusa_uint".into(),
+        (Sub, Typ::Int(IntKind::U64)) => "__sil_minusa_ulong".into(),
+        (Sub, Typ::Int(IntKind::U128)) => "__sil_minusa_u128".into(),
+        (Sub, Typ::Int(IntKind::Bool)) => "__sil_minusa_bool".into(),
+
+        // Arithmetic: Mul
+        (Mul, Typ::Int(IntKind::I8)) => "__sil_mult_char".into(),
+        (Mul, Typ::Int(IntKind::Char)) => "__sil_mult_char".into(),
+        (Mul, Typ::Int(IntKind::I16)) => "__sil_mult_short".into(),
+        (Mul, Typ::Int(IntKind::I32)) => "__sil_mult_int".into(),
+        (Mul, Typ::Int(IntKind::I64)) => "__sil_mult_long".into(),
+        (Mul, Typ::Int(IntKind::I128)) => "__sil_mult_128".into(),
+        (Mul, Typ::Int(IntKind::U8)) => "__sil_mult_uchar".into(),
+        (Mul, Typ::Int(IntKind::U16)) => "__sil_mult_ushort".into(),
+        (Mul, Typ::Int(IntKind::U32)) => "__sil_mult_uint".into(),
+        (Mul, Typ::Int(IntKind::U64)) => "__sil_mult_ulong".into(),
+        (Mul, Typ::Int(IntKind::U128)) => "__sil_mult_u128".into(),
+        (Mul, Typ::Int(IntKind::Bool)) => "__sil_mult_bool".into(),
+
+        // Division
+        (Div, Typ::Int(_)) => "__sil_divi".into(),
+        (Div, Typ::Float) => "__sil_divf".into(),
+
+        // Modulo
+        (Rem, _) => "__sil_mod".into(),
+
+        // Shifts
+        (Shl, _) => "__sil_shiftlt".into(),
+        (Shr, _) => "__sil_shiftrt".into(),
+
+        // Comparisons (type-agnostic)
+        (Lt, _) => "__sil_lt".into(),
+        (Gt, _) => "__sil_gt".into(),
+        (Le, _) => "__sil_le".into(),
+        (Ge, _) => "__sil_ge".into(),
+        (Eq, _) => "__sil_eq".into(),
+        (Ne, _) => "__sil_ne".into(),
+
+        // Bitwise
+        (BitAnd, _) => "__sil_band".into(),
+        (BitOr, _) => "__sil_bor".into(),
+        (BitXor, _) => "__sil_bxor".into(),
+
+        // Pointer arithmetic
+        (Add, Typ::Ptr(_)) => "__sil_pluspi".into(),     // Add pointer + int
+        (Sub, Typ::Ptr(_)) => "__sil_minuspi".into(),    // Sub pointer - int
+        (Sub, Typ::Struct(_)) => "__sil_minuspp".into(), // Sub ptr - ptr (assuming ptr-like Struct)
+
+        _ => panic!("unsupported binop/type combo: {:?}, {:?}", op, typ),
+    }
+}
+
 fn rvalue_to_exp(rvalue: &Rvalue, place_map: &PlaceMap) -> (Exp, Option<Typ>) {
     match rvalue {
-        Rvalue::BinaryOp(BinOp::Add, op1, op2) => {
+        Rvalue::BinaryOp(op, op1, op2) => {
             let (exp1, typ) = operand_to_exp(op1, place_map);
             let (exp2, _) = operand_to_exp(op2, place_map);
+            let typ = typ.expect("BinaryOp must yield a type");
+            let proc_name = binop_to_proc_name(*op, &typ);
+
             (
                 Exp::Call {
-                    proc: QualifiedProcName::new("__sil_plusa_int".to_string(), None), //TODO Generalize
+                    proc: QualifiedProcName::new(proc_name, None),
                     args: vec![exp1, exp2],
                     kind: CallKind::NonVirtual,
                 },
-                typ,
+                Some(typ),
             )
         }
         Rvalue::Use(op) => operand_to_exp(op, place_map),
@@ -163,11 +243,11 @@ fn operand_to_exp(op: &Operand, place_map: &PlaceMap) -> (Exp, Option<Typ>) {
     match op {
         Operand::Copy(place) => (
             Exp::LVar(VarName::from_place(place, place_map)),
-            Some(Typ::Int),
+            Some(Typ::Int(IntKind::I32)),
         ),
         Operand::Move(place) => (
             Exp::LVar(VarName::from_place(place, place_map)),
-            Some(Typ::Int),
+            Some(Typ::Int(IntKind::I32)),
         ),
         Operand::Constant(const_operand) => {
             let (exp, typ) = const_operand_to_exp(const_operand);
@@ -223,7 +303,7 @@ pub fn decode_allocated(bytes: &Vec<Option<u8>>, typ: &Typ) -> Const {
             }
         }
 
-        Typ::Int | Typ::Ptr(_) | Typ::Fun(_) => Const::Int(bytes_to_int(bytes)),
+        Typ::Int(_) | Typ::Ptr(_) | Typ::Fun(_) => Const::Int(bytes_to_int(bytes)),
 
         Typ::Null | Typ::Void => Const::Null,
 

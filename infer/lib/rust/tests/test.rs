@@ -53,6 +53,38 @@ fn print_mir(args: &mut Vec<String>) {
     args.push("unpretty=mir".to_string());
 }
 
+mod general {
+    use super::*;
+
+    #[test]
+    fn after_lifetime(){
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/general/after_lifetime.rs", "./tests/programs/general/after_lifetime.sil");
+    }
+
+    #[test]
+    fn null_latent(){
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/general/null_latent.rs", "./tests/programs/general/null_latent.sil");
+    }
+    
+    #[test]
+    fn null(){
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/general/null.rs", "./tests/programs/general/null.sil");
+    }
+    
+    #[test]
+    fn out_of_bounds(){
+        let args = &mut vec![];
+        default_args(args);
+        run_test(args, "./tests/programs/general/out_of_bounds.rs", "./tests/programs/general/out_of_bounds.sil");
+    }
+}
+
 mod operands {
     use super::*;
 
