@@ -77,24 +77,7 @@ pub struct Annotated {
 impl PrintTextual for Typ {
     fn pp(&self) -> String {
         match self {
-            Typ::Int(kind) => match kind {
-                IntKind::I8 => String::from("char") ,
-                IntKind::U8 => String::from("uchar"),
-                IntKind::I16 => String::from("short"),
-                IntKind::U16 => String::from("ushort"),
-                IntKind::I32 => String::from("int"),
-                IntKind::U32 => String::from("uint"),
-                IntKind::I64 => String::from("long"),
-                IntKind::U64 => String::from("ulong"),
-                IntKind::I128 => String::from("128"),
-                IntKind::U128 => String::from("u128"),
-                IntKind::ILongLong => String::from("longlong"),
-                IntKind::ULongLong => String::from("ulonglong"),
-                IntKind::Isize => String::from("long"),
-                IntKind::Usize => String::from("ulong"),
-                IntKind::Bool => String::from("bool"),
-                IntKind::Char => String::from("char"),
-            },
+            Typ::Int(_) => String::from("int"),
             Typ::Float => String::from("float"),
             Typ::Null => String::from("null"),
             Typ::Void => String::from("void"),
@@ -155,7 +138,7 @@ pub fn kind_to_textual(kind: &stable_mir::ty::TyKind) -> Typ {
                 if items.is_empty() {
                     Typ::Void
                 } else {
-                    // We can't use struct directly for tuples at the moment although they are similar
+                    // Can't use struct directly for tuples at the moment although they are similar
                     todo!("Non-empty tuple not implemented");
                     Typ::Void // Temporary dummy value
                 }

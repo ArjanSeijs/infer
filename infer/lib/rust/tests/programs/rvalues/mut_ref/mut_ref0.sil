@@ -1,14 +1,15 @@
 //
-// Copyright (c) Facebook, Inc. and its affiliates.
+// Copyright (c) Facebook, Inc. and its affiliates. 
 //
-// This source code is licensed under the MIT license found in the
-// LICENSE file in the root directory of this source tree.
+// This source code is licensed under the MIT license found in the 
+// LICENSE file in the root directory of this source tree. 
 
 .source_language = "rust"
 
+// debug y => _1
+// debug x => _2
 define test() : void {
   local var_0: void, var_1: int, var_2: *int
-
   #node_0:
     store &var_1 <- 10
     store &var_2 <- &var_1
