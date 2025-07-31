@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use stable_mir::{
-    mir::{BasicBlock, BinOp, ConstOperand, LocalDecl, Operand, Place, Rvalue, StatementKind, UnOp}, ty::{ConstantKind, FnDef, RigidTy, Span, TyKind}, CrateDef, CrateItem,
+    mir::{BasicBlock, BinOp, ConstOperand, LocalDecl, Operand, Place, Rvalue, StatementKind}, ty::{ConstantKind, FnDef, RigidTy, Span, TyKind}, CrateDef, CrateItem,
 };
 
 use crate::textual_defs::{
@@ -16,11 +16,11 @@ use crate::textual_defs::{
     procdesc::ProcDesc,
     qualifiedprocname::QualifiedProcName,
     terminator::Terminator,
-    typ::{Annotated, Typ, local_decl_to_annotated_typ, local_decl_to_type, kind_to_textual, IntKind},
+    typ::{Annotated, Typ, local_decl_to_annotated_typ, local_decl_to_type, kind_to_textual},
     varname::VarName,
 };
 
-use crate::utils::{fresh_id, bytes_to_int};
+use crate::utils::{fresh_id, bytes_to_int, bytes_to_float, bytes_to_cstr, binop_to_proc_name, unop_to_proc_name};
 
 type LabelMap = HashMap<usize, String>;
 type PlaceMap = HashMap<usize, (String, Typ)>;
@@ -141,99 +141,23 @@ fn assign_statement_to_instr(
     }]
 }
 
-pub fn unop_to_proc_name(op: UnOp, typ: &Typ) -> String {
-    use UnOp::*;
-
-    match (op, typ) {
-        (Neg, Typ::Int(_)) => "__sil_neg".into(),
-        (Neg, Typ::Float) => "__sil_neg".into(), 
-
-        (Not, Typ::Int(IntKind::Bool)) => "__sil_lnot".into(), 
-        (Not, Typ::Int(_)) => "__sil_bnot".into(),      
-
-        _ => panic!("unsupported unop/type combo: {:?}, {:?}", op, typ),
-    }
-}
-
-pub fn binop_to_proc_name(op: BinOp, typ: &Typ) -> String {
-    use BinOp::*;
-
-    match (op, typ) {
-        // Arithmetic: Add
-        (Add, Typ::Int(IntKind::I8)) | (Add, Typ::Int(IntKind::Char)) => "__sil_plusa_char".into(),
-        (Add, Typ::Int(IntKind::I16)) => "__sil_plusa_short".into(),
-        (Add, Typ::Int(IntKind::I32)) => "__sil_plusa_int".into(),
-        (Add, Typ::Int(IntKind::I64)) => "__sil_plusa_long".into(),
-        (Add, Typ::Int(IntKind::I128)) => "__sil_plusa_128".into(),
-        (Add, Typ::Int(IntKind::U8)) => "__sil_plusa_uchar".into(),
-        (Add, Typ::Int(IntKind::U16)) => "__sil_plusa_ushort".into(),
-        (Add, Typ::Int(IntKind::U32)) => "__sil_plusa_uint".into(),
-        (Add, Typ::Int(IntKind::U64)) => "__sil_plusa_ulong".into(),
-        (Add, Typ::Int(IntKind::U128)) => "__sil_plusa_u128".into(),
-        (Add, Typ::Int(IntKind::Bool)) => "__sil_plusa_bool".into(),
-
-        // Arithmetic: Sub
-        (Sub, Typ::Int(IntKind::I8)) | (Sub, Typ::Int(IntKind::Char)) => "__sil_minusa_char".into(),
-        (Sub, Typ::Int(IntKind::I16)) => "__sil_minusa_short".into(),
-        (Sub, Typ::Int(IntKind::I32)) => "__sil_minusa_int".into(),
-        (Sub, Typ::Int(IntKind::I64)) => "__sil_minusa_long".into(),
-        (Sub, Typ::Int(IntKind::I128)) => "__sil_minusa_128".into(),
-        (Sub, Typ::Int(IntKind::U8)) => "__sil_minusa_uchar".into(),
-        (Sub, Typ::Int(IntKind::U16)) => "__sil_minusa_ushort".into(),
-        (Sub, Typ::Int(IntKind::U32)) => "__sil_minusa_uint".into(),
-        (Sub, Typ::Int(IntKind::U64)) => "__sil_minusa_ulong".into(),
-        (Sub, Typ::Int(IntKind::U128)) => "__sil_minusa_u128".into(),
-        (Sub, Typ::Int(IntKind::Bool)) => "__sil_minusa_bool".into(),
-
-        // Arithmetic: Mul
-        (Mul, Typ::Int(IntKind::I8)) => "__sil_mult_char".into(),
-        (Mul, Typ::Int(IntKind::Char)) => "__sil_mult_char".into(),
-        (Mul, Typ::Int(IntKind::I16)) => "__sil_mult_short".into(),
-        (Mul, Typ::Int(IntKind::I32)) => "__sil_mult_int".into(),
-        (Mul, Typ::Int(IntKind::I64)) => "__sil_mult_long".into(),
-        (Mul, Typ::Int(IntKind::I128)) => "__sil_mult_128".into(),
-        (Mul, Typ::Int(IntKind::U8)) => "__sil_mult_uchar".into(),
-        (Mul, Typ::Int(IntKind::U16)) => "__sil_mult_ushort".into(),
-        (Mul, Typ::Int(IntKind::U32)) => "__sil_mult_uint".into(),
-        (Mul, Typ::Int(IntKind::U64)) => "__sil_mult_ulong".into(),
-        (Mul, Typ::Int(IntKind::U128)) => "__sil_mult_u128".into(),
-        (Mul, Typ::Int(IntKind::Bool)) => "__sil_mult_bool".into(),
-
-        // Division
-        (Div, Typ::Int(_)) => "__sil_divi".into(),
-        (Div, Typ::Float) => "__sil_divf".into(),
-
-        // Modulo
-        (Rem, _) => "__sil_mod".into(),
-
-        // Shifts
-        (Shl, _) => "__sil_shiftlt".into(),
-        (Shr, _) => "__sil_shiftrt".into(),
-
-        // Comparisons (type-agnostic)
-        (Lt, _) => "__sil_lt".into(),
-        (Gt, _) => "__sil_gt".into(),
-        (Le, _) => "__sil_le".into(),
-        (Ge, _) => "__sil_ge".into(),
-        (Eq, _) => "__sil_eq".into(),
-        (Ne, _) => "__sil_ne".into(),
-
-        // Bitwise
-        (BitAnd, _) => "__sil_band".into(),
-        (BitOr, _) => "__sil_bor".into(),
-        (BitXor, _) => "__sil_bxor".into(),
-
-        // Pointer arithmetic
-        (Add, Typ::Ptr(_)) => "__sil_pluspi".into(),     // Add pointer + int
-        (Sub, Typ::Ptr(_)) => "__sil_minuspi".into(),    // Sub pointer - int
-        (Sub, Typ::Struct(_)) => "__sil_minuspp".into(), // Sub ptr - ptr (assuming ptr-like Struct)
-
-        _ => panic!("unsupported binop/type combo: {:?}, {:?}", op, typ),
-    }
-}
-
 fn rvalue_to_exp(rvalue: &Rvalue, place_map: &PlaceMap) -> (Exp, Option<Typ>) {
     match rvalue {
+        Rvalue::UnaryOp(op, operand) => {
+            let (exp, typ) = operand_to_exp(operand, place_map);
+            let typ = typ.expect("UnaryOp must yield a type");
+            let proc_name = unop_to_proc_name(*op, &typ);
+
+            (
+                Exp::Call {
+                    proc: QualifiedProcName::new(proc_name, None),
+                    args: vec![exp],
+                    kind: CallKind::NonVirtual,
+                },
+                Some(typ),
+            )
+        }
+
         Rvalue::BinaryOp(op, op1, op2) => {
             let (exp1, typ) = operand_to_exp(op1, place_map);
             let (exp2, _) = operand_to_exp(op2, place_map);
@@ -250,21 +174,7 @@ fn rvalue_to_exp(rvalue: &Rvalue, place_map: &PlaceMap) -> (Exp, Option<Typ>) {
             )
         }
 
-        Rvalue::UnaryOp(op, operand) => {
-            let (exp, typ) = operand_to_exp(operand, place_map);
-            let typ = typ.expect("UnaryOp must yield a type");
-            let proc_name = unop_to_proc_name(*op, &typ);
-
-            (
-                Exp::Call {
-                    proc: QualifiedProcName::new(proc_name, None),
-                    args: vec![exp],
-                    kind: CallKind::NonVirtual,
-                },
-                Some(typ),
-            )
-        }
-
+        // TODO: Change here based on the updated translation rules
         Rvalue::Ref(_, _, place) | Rvalue::AddressOf(_, place) => {
             let (var_name, typ) = place_to_id(place, place_map);
             let exp = Exp::LVar(VarName::new(var_name.clone(), None));
@@ -279,20 +189,13 @@ fn rvalue_to_exp(rvalue: &Rvalue, place_map: &PlaceMap) -> (Exp, Option<Typ>) {
 
 fn operand_to_exp(op: &Operand, place_map: &PlaceMap) -> (Exp, Option<Typ>) {
     match op {
-        Operand::Copy(place) => (
-            // Instr::Load {
-            //     id: ,
-            //     exp: Exp::LVar(VarName::from_place(place, place_map)),
-            //     typ: None,
-            //     loc: Location::Unknown,
-            // },
-            Exp::LVar(VarName::from_place(place, place_map)),
-            Some(Typ::Int(IntKind::I32)),
-        ),
-        Operand::Move(place) => (
-            Exp::LVar(VarName::from_place(place, place_map)),
-            Some(Typ::Int(IntKind::I32)),
-        ),
+        Operand::Copy(place) | Operand::Move(place) => {
+            let typ = place_map.get(&place.local).expect("Place not found").1.clone();
+            (
+                Exp::LVar(VarName::from_place(place, place_map)),
+                Some(typ),
+            )
+        },
         Operand::Constant(const_operand) => {
             let (exp, typ) = const_operand_to_exp(const_operand);
             (exp, typ)
@@ -302,61 +205,40 @@ fn operand_to_exp(op: &Operand, place_map: &PlaceMap) -> (Exp, Option<Typ>) {
 
 fn const_operand_to_exp(const_operand: &ConstOperand) -> (Exp, Option<Typ>) {
     let const_kind = const_operand.const_.kind();
-    let typ = kind_to_textual(&const_operand.const_.ty().kind());
+    let ty_kind = const_operand.const_.ty().kind();
+    let typ = kind_to_textual(&ty_kind);
 
     let const_ = match const_kind {
-        ConstantKind::Allocated(alloc) => {
-            decode_allocated(&alloc.bytes, &typ)
-        }
+        ConstantKind::Allocated(alloc) => match &typ {
+            Typ::Ptr(inner) if matches!(**inner, Typ::Array(_)) => {
+                Const::Str(bytes_to_cstr(&alloc.bytes))
+            }
+
+            Typ::Float => {
+                Const::Float(bytes_to_float(&alloc.bytes))
+            }
+
+            Typ::Int(_) | Typ::Ptr(_) | Typ::Fun(_) => {
+                Const::Int(bytes_to_int(&alloc.bytes))
+            }
+
+            Typ::Null | Typ::Void => Const::Null,
+
+            other => {
+                todo!("Unsupported Allocated type in constant: {:?}", other)
+            }
+        },
 
         ConstantKind::ZeroSized => Const::Null,
 
         ConstantKind::Unevaluated(_)
         | ConstantKind::Param(_)
         | ConstantKind::Ty(_) => {
-            // TODO: Extend later to support more constant kinds if needed
-            // TODO: Implement proper error handling
-            debug_assert!(false, "Unsupported constant kind encountered: {:?}", const_kind);
-            Const::Int(0)
+            todo!("Unsupported constant kind: {:?}", const_kind)
         }
     };
 
     (Exp::Const(const_), Some(typ))
-}
-
-pub fn decode_allocated(bytes: &Vec<Option<u8>>, typ: &Typ) -> Const {
-    let raw_bytes: Vec<u8> = bytes.iter().map(|b| b.unwrap_or(0)).collect();
-    
-    match typ {
-        Typ::Ptr(inner) if matches!(**inner, Typ::Array(_)) => {
-            let s: String = raw_bytes
-                .iter()
-                .take_while(|b| **b != 0)
-                .map(|b| *b as char)
-                .collect();
-            Const::Str(s)
-        }
-
-        Typ::Float => {
-            if raw_bytes.len() >= 8 {
-                let mut arr = [0u8; 8];
-                arr.copy_from_slice(&raw_bytes[..8]);
-                Const::Float(f64::from_bits(u64::from_le_bytes(arr)))
-            } else {
-                Const::Float(0.0)
-            }
-        }
-
-        Typ::Int(_) | Typ::Ptr(_) | Typ::Fun(_) => Const::Int(bytes_to_int(bytes)),
-
-        Typ::Null | Typ::Void => Const::Null,
-
-        // TODO: Implement proper exception handling
-        _ => {
-            debug_assert!(false, "decode_allocated: unsupported type {:?}", typ);
-            Const::Int(0)
-        }
-    }
 }
 
 fn decls_to_locals(locals: &[LocalDecl]) -> (PlaceMap, Vec<(VarName, Annotated)>) {

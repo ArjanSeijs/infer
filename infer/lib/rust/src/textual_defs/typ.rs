@@ -46,7 +46,6 @@ pub enum IntKind {
     U128,
     Isize,
     Usize,
-    // optionally
     ILongLong,
     ULongLong,
 }
@@ -156,9 +155,9 @@ pub fn kind_to_textual(kind: &stable_mir::ty::TyKind) -> Typ {
                 if items.is_empty() {
                     Typ::Void
                 } else {
-                    Typ::Struct(typename::TypeName::new(
-                        basetypename::BaseTypeName::from_string("dummy-tuple".to_string()),
-                    ))
+                    // We can't use struct directly for tuples at the moment although they are similar
+                    todo!("Non-empty tuple not implemented");
+                    Typ::Void // Temporary dummy value
                 }
             }
 
