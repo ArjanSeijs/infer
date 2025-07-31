@@ -1,4 +1,4 @@
-use crate::textual_defs::exp;
+use crate::textual_defs::{exp, PrintTextual};
 
 /*
 [OCaml Definition]
@@ -14,4 +14,15 @@ pub enum BoolExp {
     Not(Box<BoolExp>),
     And(Box<BoolExp>,Box<BoolExp>),
     Or(Box<BoolExp>,Box<BoolExp>)
+}
+
+impl PrintTextual for BoolExp {
+  fn pp(&self) -> String {
+      match self {
+          BoolExp::Exp(exp) => exp.pp(),
+          BoolExp::Not(inner) => format!("!({})", inner.pp()),
+          BoolExp::And(lhs, rhs) => format!("({}) && ({})", lhs.pp(), rhs.pp()),
+          BoolExp::Or(lhs, rhs) => format!("({}) || ({})", lhs.pp(), rhs.pp()),
+      }
+  }
 }
