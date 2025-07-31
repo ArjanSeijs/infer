@@ -5,6 +5,7 @@ use stable_mir::{
 };
 
 use crate::textual_defs::{
+    boolexp::BoolExp,
     constant::Const,
     exp::{CallKind, Exp},
     instr::Instr,
@@ -279,6 +280,12 @@ fn rvalue_to_exp(rvalue: &Rvalue, place_map: &PlaceMap) -> (Exp, Option<Typ>) {
 fn operand_to_exp(op: &Operand, place_map: &PlaceMap) -> (Exp, Option<Typ>) {
     match op {
         Operand::Copy(place) => (
+            // Instr::Load {
+            //     id: ,
+            //     exp: Exp::LVar(VarName::from_place(place, place_map)),
+            //     typ: None,
+            //     loc: Location::Unknown,
+            // },
             Exp::LVar(VarName::from_place(place, place_map)),
             Some(Typ::Int(IntKind::I32)),
         ),
@@ -402,6 +409,51 @@ fn terminator_to_textual(
             },
             _ => todo!(),
         },
+        stable_mir::mir::TerminatorKind::SwitchInt { discr, targets } => {
+            let (cond_exp, typ) = operand_to_exp(discr, place_map);
+
+            let mut branches = targets.branches();
+            let (switch_val, target_then) = branches
+                .next()
+                .expect("Expected at least one branch in SwitchInt");
+
+            assert!(
+                branches.next().is_none(),
+                "Only binary SwitchInt supported for now"
+            );
+
+            let target_else = targets.otherwise();
+
+            let target_then_idx = Some(target_then);
+            let target_else_idx = Some(target_else);
+
+            let then_terminator = Terminator::jump(&target_then_idx, label_map);
+            let else_terminator = Terminator::jump(&target_else_idx, label_map);
+
+            let switch_val_i128 = i128::try_from(switch_val)
+                .expect("SwitchInt constant value too large for i128");
+
+            let proc_name = binop_to_proc_name(BinOp::Eq, typ.as_ref().expect("Expected type for switch discr"));
+
+            let eq_expr = Exp::Call {
+                proc: QualifiedProcName::new(proc_name, None),
+                args: vec![
+                    cond_exp,
+                    Exp::Const(Const::Int(switch_val_i128)),
+                ],
+                kind: CallKind::NonVirtual,
+            };
+
+            (
+                vec![],
+                Terminator::If {
+                    bexp: BoolExp::Exp(eq_expr),
+                    then: Box::new(then_terminator),
+                    else_: Box::new(else_terminator),
+                },
+            )
+        }
+                   
         term => todo!("{:?}", term),
     }
 }
