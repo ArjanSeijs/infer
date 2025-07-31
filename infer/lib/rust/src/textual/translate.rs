@@ -453,6 +453,11 @@ fn terminator_to_textual(
                 },
             )
         }
+        stable_mir::mir::TerminatorKind::Goto { target } => {
+            let target_idx = Some(*target);
+            let term = Terminator::jump(&target_idx, label_map);
+            (vec![], term)
+        }        
                    
         term => todo!("{:?}", term),
     }
