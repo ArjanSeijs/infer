@@ -46,12 +46,19 @@ pub enum Terminator {
 impl PrintTextual for Terminator {
     fn pp(&self) -> String {
         match self {
-            Terminator::If { bexp, then, else_ } => todo!(),
+            Terminator::If { bexp, then, else_ } => {
+                format!(
+                    "if {} then {} else {}",
+                    bexp.pp(),
+                    then.pp(),
+                    else_.pp()
+                )
+            },
             Terminator::Ret(Exp::LVar(varname)) => format!("ret {}", varname.pp()),
             Terminator::Ret(exp) => format!("ret {}", exp.pp()),
             Terminator::Jump(node_calls) => format!("jmp {}", node_calls.pp_comma_list()),
-            Terminator::Throw(exp) => todo!(),
-            Terminator::Unreachable => todo!(),
+            Terminator::Throw(exp) => format!("throw {}", exp.pp()),
+            Terminator::Unreachable => "unreachable".into(),
         }
     }
 }
