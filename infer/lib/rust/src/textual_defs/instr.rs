@@ -62,21 +62,21 @@ impl PrintTextual for Instr {
             Instr::Load {
                 id,
                 exp,
-                typ: None,
+                typ,
                 loc,
-            } => format!("{} = load {}{}", id.pp(), exp.pp(), loc.pp()),
-            Instr::Load {
-                id,
-                exp,
-                typ: Some(typ),
-                loc,
-            } => format!("{}:{} = load {}{}", id.pp(), typ.pp(), exp.pp(), loc.pp()),
+            } => match typ {
+                None => format!("{} = load {}{}", id.pp(), exp.pp(), loc.pp()),
+                Some(t) => format!("{}:{} = load {}{}", id.pp(), t.pp(), exp.pp(), loc.pp()),
+            }            
             Instr::Store {
                 exp1,
                 typ,
                 exp2,
                 loc,
-            } => format!("store {} <- {}{}", exp1.pp(), exp2.pp(), loc.pp()),
+            } => match typ {
+                None => format!("store {} <- {}{}", exp1.pp(), exp2.pp(), loc.pp()),
+                Some(t) => format!("store {} <- {}:{}{}", exp1.pp(), exp2.pp(), t.pp(), loc.pp()),
+            }
             Instr::Prune { exp, loc } => todo!(),
             Instr::Let { id, exp, loc } => todo!(),
         }

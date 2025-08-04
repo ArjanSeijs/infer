@@ -181,12 +181,19 @@ fn rvalue_to_exp(rvalue: &Rvalue, place_map: &PlaceMap) -> (Vec<Instr>, Exp, Opt
         }
 
         Rvalue::Ref(_, _, place) | Rvalue::AddressOf(_, place) => {
+            use stable_mir::mir::ProjectionElem;
+        
+            if let [ProjectionElem::Deref] = place.projection.as_slice() {
+                // It's just *x —> &(*x) → same as Copy
+                return operand_to_exp(&Operand::Copy(place.clone()), place_map);
+            }
+    
             let (id, typ) = place_to_id(place, place_map);
             let base = Exp::LVar(VarName::new(id.clone(), None));
             let ref_exp = Exp::Ref(Box::new(base));
             let ref_typ = Typ::Ptr(Box::new(typ.clone()));
             (vec![], ref_exp, Some(ref_typ))
-        }
+        }        
 
         Rvalue::Use(op) => operand_to_exp(op, place_map),
 

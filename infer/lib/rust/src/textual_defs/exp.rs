@@ -79,7 +79,7 @@ impl PrintTextual for Exp {
                     (_, Some(t)) => format!("[{}:{}]", exp.pp(), t.pp()),
                 }
             }
-            Exp::LVar(var_name) => var_name.pp(),
+            Exp::LVar(var_name) => format!("&{}", var_name.pp()),
             Exp::Field { exp, field } => todo!(),
             Exp::Index(exp, exp1) => todo!(),
             Exp::Const(t) => t.pp(),
@@ -93,7 +93,10 @@ impl PrintTextual for Exp {
                 params,
                 attributes,
             } => todo!(),
-            Exp::Ref(inner) => format!("&{}", inner.pp()),
+            Exp::Ref(inner) => match &**inner {
+                Exp::LVar(x) => format!("&{}", x.pp()),
+                _ => format!("&({})", inner.pp()),
+            }
             Exp::Apply { closure, args } => todo!(),
             Exp::Typ(typ) => todo!(),
         }
