@@ -132,19 +132,19 @@ fn assign_statement_to_instr(
     rvalue: &Rvalue,
     place_map: &PlaceMap,
 ) -> Vec<Instr> {
-    let (id, _) = place_to_id(place, place_map);
-
-    let (mut instrs, exp2, typ) = rvalue_to_exp(rvalue, place_map);
+    let (mut lhs_instrs, exp1, _typ1) = place_to_exp(place, place_map);
+    let (mut rhs_instrs, exp2, typ2) = rvalue_to_exp(rvalue, place_map);
 
     let store = Instr::Store {
-        exp1: Exp::LVar(VarName::new(id.clone(), None)),
-        typ,
+        exp1,
+        typ: typ2.clone(),
         exp2,
         loc: Location::Unknown,
     };
 
-    instrs.push(store);
-    instrs
+    lhs_instrs.append(&mut rhs_instrs);
+    lhs_instrs.push(store);
+    lhs_instrs
 }
 
 fn rvalue_to_exp(rvalue: &Rvalue, place_map: &PlaceMap) -> (Vec<Instr>, Exp, Option<Typ>) {
@@ -182,18 +182,23 @@ fn rvalue_to_exp(rvalue: &Rvalue, place_map: &PlaceMap) -> (Vec<Instr>, Exp, Opt
 
         Rvalue::Ref(_, _, place) | Rvalue::AddressOf(_, place) => {
             use stable_mir::mir::ProjectionElem;
-        
+
+            // &*x → eliminate both → equivalent to Copy(x)
             if let [ProjectionElem::Deref] = place.projection.as_slice() {
-                // It's just *x —> &(*x) → same as Copy
-                return operand_to_exp(&Operand::Copy(place.clone()), place_map);
+                let stripped_place = Place {
+                    local: place.local,
+                    projection: vec![],
+                };
+                return operand_to_exp(&Operand::Copy(stripped_place), place_map);
             }
-    
-            let (id, typ) = place_to_id(place, place_map);
-            let base = Exp::LVar(VarName::new(id.clone(), None));
-            let ref_exp = Exp::Ref(Box::new(base));
+
+            // General case: convert place into Exp, then wrap in Ref
+            let (instrs, exp, typ) = place_to_exp(place, place_map);
+            let ref_exp = Exp::Ref(Box::new(exp));
             let ref_typ = Typ::Ptr(Box::new(typ.clone()));
-            (vec![], ref_exp, Some(ref_typ))
-        }        
+
+            (instrs, ref_exp, Some(ref_typ))
+        }
 
         Rvalue::Use(op) => operand_to_exp(op, place_map),
 
@@ -204,20 +209,22 @@ fn rvalue_to_exp(rvalue: &Rvalue, place_map: &PlaceMap) -> (Vec<Instr>, Exp, Opt
 fn operand_to_exp(op: &Operand, place_map: &PlaceMap) -> (Vec<Instr>, Exp, Option<Typ>) {
     match op {
         Operand::Copy(place) | Operand::Move(place) => {
-            let (var_id, typ) = place_to_id(place, place_map);
-            let addr = Exp::LVar(VarName::new(var_id.clone(), None));
+            let (instrs, exp, typ) = place_to_exp(place, place_map);
 
-            let tmp_id = Ident::from_name(&format!("tmp_load_{}", var_id));
-            let tmp = Exp::Var(tmp_id.clone());
+            let tmp_id = Ident::fresh();
+            let tmp_exp = Exp::Var(tmp_id.clone());
 
             let load_instr = Instr::Load {
                 loc: Location::Unknown,
                 id: tmp_id,
-                exp: addr,
+                exp: *Box::new(exp),
                 typ: Some(typ.clone()),
             };
 
-            (vec![load_instr], tmp, Some(typ.clone()))
+            let mut all_instrs = instrs;
+            all_instrs.push(load_instr);
+
+            (all_instrs, tmp_exp, Some(typ))
         }
 
         Operand::Constant(const_operand) => {
@@ -301,19 +308,45 @@ fn terminator_to_textual(
                     user_ty: _,
                     const_,
                 }),
-            args:_,
+            args,
             destination,
             target,
             unwind:_,
         } => match const_.ty().kind() {
             TyKind::RigidTy(RigidTy::FnDef(FnDef(def), _)) => {
-                let exp2 = Exp::Call { proc: QualifiedProcName::new(def.name(), Some(terminator.span)), args: vec![], kind: CallKind::NonVirtual};
-                let term = Terminator::jump(target, &label_map);
-                let (_, typ) = place_to_id(destination, place_map);
-                let store = Instr::Store { exp1: Exp::LVar(VarName::from_place(&destination, place_map)), typ: Some(typ.clone()), exp2, loc: Location::from_span(Some(terminator.span))};
-                (vec![store],term)
+                let mut instrs = vec![];
+                let mut arg_exps = vec![];
+
+                for arg in args {
+                    let (arg_instrs, arg_exp, _) = operand_to_exp(arg, place_map);
+                    instrs.extend(arg_instrs);
+                    arg_exps.push(arg_exp);
+                }
+
+                let (place_instrs, exp1, typ) = place_to_exp(destination, place_map);
+                instrs.extend(place_instrs);
+
+                let call = Exp::Call {
+                    proc: QualifiedProcName::new(def.name(), Some(terminator.span)),
+                    args: arg_exps,
+                    kind: CallKind::NonVirtual,
+                };
+
+                let store = Instr::Store {
+                    exp1,
+                    exp2: call,
+                    typ: Some(typ.clone()),
+                    loc: Location::from_span(Some(terminator.span)),
+                };
+
+                instrs.push(store);
+
+                let term = Terminator::jump(target, label_map);
+
+                (instrs, term)
             },
-            _ => todo!(),
+
+            _ => todo!("Unsupported call target type: {:?}", const_.ty()),
         },
         stable_mir::mir::TerminatorKind::SwitchInt { discr, targets } => {
             let (instrs, cond_exp, typ) = operand_to_exp(discr, place_map);
@@ -361,7 +394,44 @@ fn terminator_to_textual(
     }
 }
 
-fn place_to_id<'a>(place: &Place, place_map: &'a PlaceMap) -> (&'a String, &'a Typ) {
+fn place_to_id<'a>(place: &'a Place, place_map: &'a PlaceMap) -> (&'a String, &'a Typ) {
     let (expr, typ) = place_map.get(&place.local).unwrap();
     (expr, typ)
+}
+
+fn place_to_exp(place: &Place, place_map: &PlaceMap) -> (Vec<Instr>, Exp, Typ) {
+    use stable_mir::mir::ProjectionElem;
+
+    // Base case: _n
+    if place.projection.is_empty() {
+        let (id, typ) = place_to_id(place, place_map);
+        let var = VarName::new(id.clone(), None);
+        return (vec![], Exp::LVar(var), typ.clone());
+    }
+
+    // Recursive case: handle projection chain
+    let mut projections = place.projection.clone();
+    let last_proj = projections.pop().unwrap();
+    let base_place = Place {
+        local: place.local,
+        projection: projections,
+    };
+
+    let (mut _instrs, _base_exp, _base_typ) = place_to_exp(&base_place, place_map);
+
+    match last_proj {
+        ProjectionElem::Deref => {
+            todo!("place_to_exp: ProjectionElem::Deref")
+        }
+
+        ProjectionElem::Field(_field, _ty) => {
+            todo!("place_to_exp: ProjectionElem::Field")
+        }
+
+        ProjectionElem::Index(_) => {
+            todo!("place_to_exp: ProjectionElem::Index")
+        }
+
+        other => todo!("Unsupported projection: {:?}", other),
+    }
 }
