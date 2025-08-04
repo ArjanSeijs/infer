@@ -9,7 +9,7 @@ use crate::textual_defs::PrintTextual;
     type t = {value: string; loc: Location.t} [@@deriving compare, equal, hash] 
 */
 
-#[derive(Debug,Clone)]
+#[derive(Debug, Clone)]
 pub struct  Name {
     pub value : String,
     pub loc: Location

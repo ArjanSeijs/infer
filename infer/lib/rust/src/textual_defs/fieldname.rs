@@ -5,7 +5,7 @@ use crate::textual_defs::{name, PrintTextual};
     module FieldName : NAME 
 */
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct FieldName {
     pub name: name::Name
 }

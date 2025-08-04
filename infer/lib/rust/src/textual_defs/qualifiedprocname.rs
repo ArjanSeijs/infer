@@ -8,13 +8,13 @@ type enclosing_class = TopLevel | Enclosing of TypeName.t
 type t = {enclosing_class: enclosing_class; name: ProcName.t} [@@deriving compare, equal, hash]
 */
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum EnclosingClass {
     TopLevel,
     Enclosing(typename::TypeName),
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct QualifiedProcName {
     pub enclosing_class: EnclosingClass,
     pub name: procname::ProcName,

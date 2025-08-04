@@ -5,6 +5,7 @@ use stable_mir::{
 };
 
 use crate::textual_defs::{
+    ident::Ident,
     boolexp::BoolExp,
     constant::Const,
     exp::{CallKind, Exp},
@@ -132,73 +133,89 @@ fn assign_statement_to_instr(
     place_map: &PlaceMap,
 ) -> Vec<Instr> {
     let (id, _) = place_to_id(place, place_map);
-    let (exp2, typ) = rvalue_to_exp(rvalue, place_map);
-    vec![Instr::Store {
+
+    let (mut instrs, exp2, typ) = rvalue_to_exp(rvalue, place_map);
+
+    let store = Instr::Store {
         exp1: Exp::LVar(VarName::new(id.clone(), None)),
         typ,
         exp2,
         loc: Location::Unknown,
-    }]
+    };
+
+    instrs.push(store);
+    instrs
 }
 
-fn rvalue_to_exp(rvalue: &Rvalue, place_map: &PlaceMap) -> (Exp, Option<Typ>) {
+fn rvalue_to_exp(rvalue: &Rvalue, place_map: &PlaceMap) -> (Vec<Instr>, Exp, Option<Typ>) {
     match rvalue {
         Rvalue::UnaryOp(op, operand) => {
-            let (exp, typ) = operand_to_exp(operand, place_map);
+            let (instrs, exp, typ) = operand_to_exp(operand, place_map);
             let typ = typ.expect("UnaryOp must yield a type");
             let proc_name = unop_to_proc_name(*op, &typ);
 
-            (
-                Exp::Call {
-                    proc: QualifiedProcName::new(proc_name, None),
-                    args: vec![exp],
-                    kind: CallKind::NonVirtual,
-                },
-                Some(typ),
-            )
+            let call = Exp::Call {
+                proc: QualifiedProcName::new(proc_name, None),
+                args: vec![exp],
+                kind: CallKind::NonVirtual,
+            };
+
+            (instrs, call, Some(typ))
         }
 
         Rvalue::BinaryOp(op, op1, op2) => {
-            let (exp1, typ) = operand_to_exp(op1, place_map);
-            let (exp2, _) = operand_to_exp(op2, place_map);
+            let (instrs1, exp1, typ) = operand_to_exp(op1, place_map);
+            let (instrs2, exp2, _) = operand_to_exp(op2, place_map);
             let typ = typ.expect("BinaryOp must yield a type");
             let proc_name = binop_to_proc_name(*op, &typ);
 
-            (
-                Exp::Call {
-                    proc: QualifiedProcName::new(proc_name, None),
-                    args: vec![exp1, exp2],
-                    kind: CallKind::NonVirtual,
-                },
-                Some(typ),
-            )
+            let call = Exp::Call {
+                proc: QualifiedProcName::new(proc_name, None),
+                args: vec![exp1, exp2],
+                kind: CallKind::NonVirtual,
+            };
+
+            let mut instrs = instrs1;
+            instrs.extend(instrs2);
+            (instrs, call, Some(typ))
         }
 
-        // TODO: Change here based on the updated translation rules
         Rvalue::Ref(_, _, place) | Rvalue::AddressOf(_, place) => {
-            let (var_name, typ) = place_to_id(place, place_map);
-            let exp = Exp::LVar(VarName::new(var_name.clone(), None));
-            let ptr_typ = Typ::Ptr(Box::new(typ.clone()));
-            (exp, Some(ptr_typ))
-        }        
+            let (id, typ) = place_to_id(place, place_map);
+            let base = Exp::LVar(VarName::new(id.clone(), None));
+            let ref_exp = Exp::Ref(Box::new(base));
+            let ref_typ = Typ::Ptr(Box::new(typ.clone()));
+            (vec![], ref_exp, Some(ref_typ))
+        }
 
         Rvalue::Use(op) => operand_to_exp(op, place_map),
-        s => todo!("{:?}", s),
+
+        r => todo!("rvalue_to_exp: {:?}", r),
     }
 }
 
-fn operand_to_exp(op: &Operand, place_map: &PlaceMap) -> (Exp, Option<Typ>) {
+fn operand_to_exp(op: &Operand, place_map: &PlaceMap) -> (Vec<Instr>, Exp, Option<Typ>) {
     match op {
         Operand::Copy(place) | Operand::Move(place) => {
-            let typ = place_map.get(&place.local).expect("Place not found").1.clone();
-            (
-                Exp::LVar(VarName::from_place(place, place_map)),
-                Some(typ),
-            )
-        },
+            let (var_id, typ) = place_to_id(place, place_map);
+            let addr = Exp::LVar(VarName::new(var_id.clone(), None));
+
+            let tmp_id = Ident::from_name(&format!("tmp_load_{}", var_id));
+            let tmp = Exp::Var(tmp_id.clone());
+
+            let load_instr = Instr::Load {
+                loc: Location::Unknown,
+                id: tmp_id,
+                exp: addr,
+                typ: Some(typ.clone()),
+            };
+
+            (vec![load_instr], tmp, Some(typ.clone()))
+        }
+
         Operand::Constant(const_operand) => {
             let (exp, typ) = const_operand_to_exp(const_operand);
-            (exp, typ)
+            (vec![], exp, typ.clone())
         }
     }
 }
@@ -292,47 +309,39 @@ fn terminator_to_textual(
             _ => todo!(),
         },
         stable_mir::mir::TerminatorKind::SwitchInt { discr, targets } => {
-            let (cond_exp, typ) = operand_to_exp(discr, place_map);
-
+            let (instrs, cond_exp, typ) = operand_to_exp(discr, place_map);
+        
             let mut branches = targets.branches();
             let (switch_val, target_then) = branches
                 .next()
                 .expect("Expected at least one branch in SwitchInt");
-
-            assert!(
-                branches.next().is_none(),
-                "Only binary SwitchInt supported for now"
-            );
-
+            assert!(branches.next().is_none(), "Only binary SwitchInt supported");
+        
             let target_else = targets.otherwise();
-
+        
             let target_then_idx = Some(target_then);
             let target_else_idx = Some(target_else);
-
+        
             let then_terminator = Terminator::jump(&target_then_idx, label_map);
             let else_terminator = Terminator::jump(&target_else_idx, label_map);
-
-            let switch_val_i128 = i128::try_from(switch_val)
-                .expect("SwitchInt constant value too large for i128");
-
-            let proc_name = binop_to_proc_name(BinOp::Eq, typ.as_ref().expect("Expected type for switch discr"));
-
-            let eq_expr = Exp::Call {
+        
+            let proc_name = binop_to_proc_name(BinOp::Eq, typ.as_ref().expect("Expected type"));
+            let cmp_exp = Exp::Call {
                 proc: QualifiedProcName::new(proc_name, None),
                 args: vec![
                     cond_exp,
-                    Exp::Const(Const::Int(switch_val_i128)),
+                    Exp::Const(Const::Int(switch_val as i128)),
                 ],
                 kind: CallKind::NonVirtual,
             };
-
+        
             (
-                vec![],
+                instrs,
                 Terminator::If {
-                    bexp: BoolExp::Exp(eq_expr),
+                    bexp: BoolExp::Exp(cmp_exp),
                     then: Box::new(then_terminator),
                     else_: Box::new(else_terminator),
-                },
+                }
             )
         }
         stable_mir::mir::TerminatorKind::Goto { target } => {

@@ -15,7 +15,7 @@ module VarName : sig
   include NAME
 */
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct VarName {
     pub(crate) name: name::Name,
 }

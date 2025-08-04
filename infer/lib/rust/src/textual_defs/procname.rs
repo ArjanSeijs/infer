@@ -7,7 +7,7 @@ use crate::textual_defs::{name::{self, Name}, PrintTextual};
 module ProcName : NAME 
 */
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ProcName {
     pub name: name::Name
 }

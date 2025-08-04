@@ -23,19 +23,19 @@ module Exp : sig
     | Apply of {closure: t; args: t list}
     | Typ of Typ.t
 */
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum CallKind {
     Virtual,
     NonVirtual,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct QualifiedFieldname {
     pub enclosing_class: TypeName,
     pub name: FieldName,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Exp {
     Var(ident::Ident),
     Load {
@@ -60,6 +60,7 @@ pub enum Exp {
         params: Vec<VarName>,
         attributes: Vec<Attr>,
     },
+    Ref(Box<Exp>), 
     Apply {
         closure: Box<Exp>,
         args: Vec<Exp>,
@@ -71,8 +72,14 @@ impl PrintTextual for Exp {
     fn pp(&self) -> String {
         match self {
             Exp::Var(id) => id.pp(),
-            Exp::Load { exp, typ } => todo!(),
-            Exp::LVar(var_name) => format!("&{}", var_name.pp()),
+            Exp::Load { exp, typ } => {
+                match (&**exp, typ) {
+                    (Exp::LVar(x), None) => x.pp(),
+                    (_, None) => format!("[{}]", exp.pp()), 
+                    (_, Some(t)) => format!("[{}:{}]", exp.pp(), t.pp()),
+                }
+            }
+            Exp::LVar(var_name) => var_name.pp(),
             Exp::Field { exp, field } => todo!(),
             Exp::Index(exp, exp1) => todo!(),
             Exp::Const(t) => t.pp(),
@@ -86,6 +93,7 @@ impl PrintTextual for Exp {
                 params,
                 attributes,
             } => todo!(),
+            Exp::Ref(inner) => format!("&{}", inner.pp()),
             Exp::Apply { closure, args } => todo!(),
             Exp::Typ(typ) => todo!(),
         }

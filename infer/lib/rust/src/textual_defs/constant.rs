@@ -10,7 +10,7 @@ module Const : sig
     | Float of float  (** float constants *)
 end
 */
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Const {
     Int(i128),
     Null,
