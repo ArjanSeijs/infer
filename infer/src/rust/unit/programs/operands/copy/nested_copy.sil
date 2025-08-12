@@ -1,0 +1,10 @@
+.source_language = "Rust"
+
+define nested_copy::main() : void {
+  local var_0: int, var_1: int
+  #node_0:
+      store &var_0 <- 100
+      store &var_1 <- var_0
+      ret
+
+}

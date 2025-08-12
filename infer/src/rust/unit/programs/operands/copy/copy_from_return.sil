@@ -1,0 +1,21 @@
+.source_language = "Rust"
+
+define copy_from_return::make() : int {
+  local var_0: int
+  #node_0:
+    store &var_0 <- 5
+    ret var_0
+
+}
+
+define copy_from_return::main() : void {
+  var_0: int, var_1: int
+  #node_0:
+      store &var_0 <- make()
+      jmp node_1
+
+  #node_1:
+      store &var_1 <- var_0
+      ret
+
+}

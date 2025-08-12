@@ -1,0 +1,20 @@
+.source_language = "Rust"
+
+type tuple_string_int = { f0: *String; f1: int }
+
+define move_from_tuple::main() : void {
+  local var_0: tuple_string_int, var_1: *String, var_2: *String
+  #node_0:
+      store &var_1 <- "hello"
+      store &var_0.tuple_string_int.f0 <- var_1
+      store &var_0.tuple_string_int.f1 <- 42
+
+      n2 = var_0.tuple_string_int.f0
+      store &var_2 <- n2
+
+      n3 = load &var_2
+      n4 = __sil_free(n3)
+
+      ret
+
+}

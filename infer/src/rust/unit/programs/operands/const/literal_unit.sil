@@ -1,0 +1,9 @@
+.source_language = "Rust"
+
+define literal_unit::main() : void {
+  local var_0: void
+  #node_0:
+      store &var_0 <- null
+      ret
+      
+}

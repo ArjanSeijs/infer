@@ -1,0 +1,23 @@
+.source_language = "Rust"
+
+define move_from_return::make_string() : *String {
+  local var_0: *String
+  #node_0:
+      n0 = "hello"
+      store &var_0 <- n0
+      ret var_0
+
+}
+
+define move_from_return::main() : void {
+  local var_0: *String
+  #node_0:
+      n0 = make_string()
+      store &var_0 <- n0
+
+      n1 = load &var_0
+      n2 = __sil_free(n1)
+
+      ret
+
+}

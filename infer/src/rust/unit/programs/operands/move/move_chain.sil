@@ -1,0 +1,13 @@
+.source_language = "Rust"
+
+define move_chain::main() : void {
+  var_0: *String, var_1: *String, var_2: *String
+  #node_0:
+      store &var_0 <- "hello"
+      store &var_1 <- var_0
+      store &var_2 <- var_1
+      n0 = load &var_2
+      n1 = __sil_free(n0)
+      ret
+      
+}

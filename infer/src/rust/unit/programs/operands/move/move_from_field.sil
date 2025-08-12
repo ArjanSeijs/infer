@@ -1,0 +1,18 @@
+.source_language = "Rust"
+
+type Wrapper = { val: *String }
+
+define move_from_field::main() : void {
+  local var_0: Wrapper, var_1: *String, var_2: *String
+
+  #node_0:
+      n0 = "hi"
+      store &var_1 <- n0
+      store &var_0.Wrapper.val <- var_1
+      n2 = var_0.Wrapper.val
+      store &var_2 <- n2
+      n3 = load &var_2
+      n4 = __sil_free(n3)
+      ret
+      
+}

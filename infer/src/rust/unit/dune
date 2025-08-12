@@ -3,29 +3,17 @@
 ; This source code is licensed under the MIT license found in the
 ; LICENSE file in the root directory of this source tree.
 
+; ===== Test library (exclude the runner module so it doesn't get compiled twice) =====
 (library
  (name RustFrontendTest)
- (flags
-  (:standard
-   -open
-   Core
-   -open
-   IStdlib
-   -open
-   IStd
-   -open
-   IBase
-   -open
-   Textuallib))
- (libraries
-  core
-  charon
-  zarith
-  IStdlib
-  IBase
-  Textuallib
-  RustFrontend
-  ppx_show.runtime)
- (preprocess
-  (pps ppx_expect ppx_inline_test))
+ (modules :standard \ RustMir2TextualTest)
+ (flags (:standard -open Core -open IStdlib -open IStd -open IBase -open Textuallib))
+ (libraries core charon zarith IStdlib IBase Textuallib RustFrontend ppx_show.runtime)
+ (preprocess (pps ppx_expect ppx_inline_test))
  (inline_tests (deps (glob_files programs/*))))
+
+; ===== Build the CLI runner from RustMir2TextualTest.ml =====
+(executable
+ (name RustMir2TextualTest)
+ (modules RustMir2TextualTest)
+ (libraries yojson core charon zarith IStdlib IBase Textuallib RustFrontend))

@@ -1,0 +1,8 @@
+.source_language = "Rust"
+
+define literal_float::main() : void {
+  local var_0: float,
+  #node_0:
+      store &var_0 <- 3.14
+      ret
+}

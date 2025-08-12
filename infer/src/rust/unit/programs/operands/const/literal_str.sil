@@ -1,0 +1,9 @@
+.source_language = "Rust"
+
+define literal_str::main() : void {
+  local var_0: *String
+  #node_0:
+      store &var_0 <- "hello"
+      ret
+      
+}

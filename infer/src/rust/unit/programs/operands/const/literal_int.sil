@@ -1,0 +1,9 @@
+.source_language = "Rust"
+
+define literal_int::main() : void {
+  local var_0: int
+  #node_0:
+      store &var_0 <- 42
+      ret
+      
+}

@@ -1,0 +1,11 @@
+.source_language = "Rust"
+
+define literal_mixed::main() : void {
+  local var_0: int, var_1: float, var_2: *String
+  #node_0:
+      store &var_0 <- 42
+      store &var_1 <- 3.14
+      store &var_2 <- "hi"
+      ret
+      
+}

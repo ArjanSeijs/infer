@@ -1,0 +1,15 @@
+.source_language = "Rust"
+
+type Point = { x: int; y: int }
+
+define struct_move::main() : void {
+  local var_0: Point, var_1: Point
+
+  #node_0:
+      n0 = &var_0
+      store &var_0.Point.x <- 1
+      store &var_0.Point.y <- 2
+      store &var_1 <- var_0
+      ret
+
+}
