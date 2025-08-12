@@ -1,0 +1,11 @@
+.source_language = "Rust"
+
+define mut_ref0::main() : void {
+  local var_0: int, var_1: *int
+
+  #node_0:
+      store &var_0 <- 10
+      store &var_1 <- &var_0
+      ret 
+
+}

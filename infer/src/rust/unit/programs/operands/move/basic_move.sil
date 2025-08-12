@@ -1,6 +1,6 @@
 .source_language = "Rust"
 
-define basic_move::smain() : void {
+define basic_move::main() : void {
   local var_0: *String, var_1: *String
   #node_0:
       store &var_0 <- "hello"

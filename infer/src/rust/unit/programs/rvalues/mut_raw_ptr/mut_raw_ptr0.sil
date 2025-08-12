@@ -1,0 +1,11 @@
+.source_language = "Rust"
+
+define mut_raw_ptr0::main() : void {
+  var_0: int, var_1: *int, var_2: *int
+  #node_0:
+      store &var_0 <- 10
+      store &var_2 <- &var_1
+      store &var_1 <- var_3
+      ret
+
+}

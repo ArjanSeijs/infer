@@ -1,0 +1,9 @@
+.source_language = "Rust"
+
+define add_i16::main() : void {
+  local var_0: int
+  #node_0:
+      store &var_0 <- __sil_plusa_short(1,2)
+      ret
+
+}

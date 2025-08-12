@@ -1,0 +1,9 @@
+.source_language = "Rust"
+
+define sub_u128::main() : void {
+  local var_0: int
+  #node_0:
+      store &var_0 <- __sil_minusa_u128(100, 1)
+      ret
+
+}

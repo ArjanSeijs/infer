@@ -1,0 +1,9 @@
+.source_language = "Rust"
+
+define add_i32::main() : void {
+  local var_0: int
+  #node_0:
+      store &var_0 <- __sil_plusa_int(3,4)
+      ret
+
+}
