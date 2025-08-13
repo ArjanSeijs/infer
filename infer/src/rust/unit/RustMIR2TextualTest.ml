@@ -2,16 +2,20 @@ open Core
 open Textuallib
 module F = Format
 
+(* Root dir for .ullbc files *)
 let program_root = "./programs"
 
+(* Read file to string *)
 let read_file path = In_channel.read_all path
 
+(* Normalize: drop CRs and trim *)
 let normalize s =
   let buf = Buffer.create (String.length s) in
   String.iter s ~f:(fun c ->
       if not (Char.equal c '\r') then Buffer.add_char buf c);
   String.strip (Buffer.contents buf)
 
+(* Translate <stem>.ullbc to a Textual string *)
 let translate_stem stem =
   let ullbc = Filename.concat program_root (stem ^ ".ullbc") in
   let json = Yojson.Basic.from_file ullbc in
@@ -23,6 +27,7 @@ let translate_stem stem =
       in
       F.asprintf "%a@?" (Textual.Module.pp ~show_location:false) m
 
+(* Recursively list stems (paths without .ullbc) under start_rel *)
 let list_stems_under start_rel =
   let start_abs =
     if String.is_empty start_rel then program_root
@@ -53,7 +58,7 @@ let list_stems_under start_rel =
   then []
   else List.sort ~compare:String.compare (walk ~rel_dir:start_rel ~abs_dir:start_abs [])
 
-(* Print a unified diff to the console without keeping files *)
+(* Show unified diff using temp files *)
 let show_console_diff ~expected ~actual =
   let write_tmp ~prefix ~suffix ~data =
     let path = Stdlib.Filename.temp_file prefix suffix in
@@ -68,21 +73,24 @@ let show_console_diff ~expected ~actual =
   Stdlib.Sys.remove tmp_exp;
   Stdlib.Sys.remove tmp_act
 
+(* Console helpers *)
 let print_separator () =
   print_endline (String.make 70 '-')
 
+(* Print status block: OK | MISS | DIFF | ERR *)
 let print_block ~status ~stem ?details () =
   print_endline "";
   Printf.printf "%-5s %s\n" status stem;
   print_separator ();
   Option.iter details ~f:(fun d -> Printf.printf "%s\n" d)
 
-(* Read subfolder filter from env var RUN_UNDER; empty means “run all”. *)
+(* RUN_UNDER filter; empty = all *)
 let get_under_arg () =
   match Stdlib.Sys.getenv_opt "RUN_UNDER" with
   | Some s when not (String.is_empty s) -> s
   | _ -> ""
 
+(* Walk stems, translate, diff, summarize; exit non-zero on issues *)
 let () =
   let under = get_under_arg () in
   let stems = list_stems_under under in
