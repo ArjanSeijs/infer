@@ -1,0 +1,103 @@
+.source_language = "Rust"
+
+define fn_complex(a: int, b: int) : int {
+  local var_0: void, var_1: int, var_2: int, var_3: *String,
+        var_4: *String, var_5: int, var_6: int, var_7: bool
+
+  #node_0:
+      n0 = __sil_str_literal("Start")
+      store &var_4 <- n0
+      jmp node_1
+
+  #node_1:
+      n1 = 0
+      store &var_5 <- n1
+      jmp node_2
+
+  #node_2:
+      n2 = load &var_5
+      n3 = __sil_lt(n2, 3)
+      if n3 then jmp node_3 else jmp node_8
+
+  #node_3:
+      n4 = load &a
+      n5 = load &b
+      n6 = __sil_plus_int(n4, n5)
+      n7 = __sil_mod_int(n6, 4)
+      store &var_6 <- n7
+      n8 = load &var_6
+      switch n8: 0 -> node_4, 1 -> node_5, 2 -> node_6, default -> node_7
+
+  #node_4:
+      n9 = load &a
+      n10 = call helper(n9)
+      n11 = load &a
+      n12 = __sil_plus_int(n11, n10)
+      store &a <- n12
+      jmp node_9
+
+  #node_5:
+      n13 = load &b
+      n14 = call helper(n13)
+      n15 = load &b
+      n16 = __sil_plus_int(n15, n14)
+      store &b <- n16
+      n17 = load &var_4
+      n18 = __sil_clone_string(n17)
+      __sil_drop_string(n18)
+      jmp node_9
+
+  #node_6:
+      n19 = load &a
+      n20 = __sil_minus_int(n19, 1)
+      store &a <- n20
+      n21 = __sil_lt(n20, 0)
+      if n21 then jmp node_8 else jmp node_9
+
+  #node_7:
+      n22 = load &b
+      n23 = __sil_minus_int(n22, 1)
+      store &b <- n23
+      n24 = __sil_lt(n23, 0)
+      if n24 then jmp node_9 else jmp node_9
+
+  #node_8:
+      n25 = load &var_4
+      store &var_3 <- n25
+      n26 = __sil_drop_string(var_3)
+      n27 = load &a
+      n28 = load &b
+      n29 = __sil_plus_int(n27, n28)
+      ret n29
+
+  #node_9:
+      n30 = load &var_5
+      n31 = __sil_plus_int(n30, 1)
+      store &var_5 <- n31
+      jmp node_2
+}
+
+define helper(x: int) : int {
+  local var_0: void, var_1: int
+
+  #node_0:
+      n0 = load &x
+      n1 = __sil_mul_int(n0, 2)
+      ret n1
+
+}
+
+define main() : void {
+  local x: int, y: int, var_0: int, var_1: int
+
+  #node_0:
+      store &x <- 0
+      store &y <- 1
+      n0 = load &x
+      store &var_0 <- n0
+      n1 = load &y
+      store &var_1 <- n1
+      n2 = fn_complex(var_0, var_1)  // result ignored
+      ret
+
+}

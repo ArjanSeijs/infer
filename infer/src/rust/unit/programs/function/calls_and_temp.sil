@@ -1,0 +1,33 @@
+.source_language = "Rust"
+
+define callee(n: int) : int {
+  local var_0: void, var_1: int
+
+  #node_0:
+      n0 = load &n
+      n1 = __sil_mult_int(n0, 2)
+      ret n1
+
+}
+
+define fn_calls_and_temp() : int {
+  local var_0: void, var_1: int
+
+  #node_0:
+      n0 = 3
+      n1 = callee(n0)
+      store &var_1 <- n1
+      n2 = load &var_1
+      ret n2
+
+}
+
+define main() : void {
+  local var_0: int
+
+  #node_0:
+      n0 = fn_calls_and_temp()
+      store &var_0 <- n0   // result ignored
+      ret
+      
+}
