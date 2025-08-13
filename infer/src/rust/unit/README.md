@@ -17,7 +17,7 @@ Inside each test subfolder, there are **three files** for each test case:
 The `.ullbc` file for a given Rust program is generated through the following command:
 
 ```
-charon --ullbc --no-cargo path/to/program.rs -o path/to/output.ullbc
+RUSTFLAGS="-A warnings" path-to-charon rustc --ullbc -- path-to-rust-program      
 ```
 
 ---
