@@ -27,6 +27,6 @@ define main() : void {
       store &var_0 <- n0
       n1 = load &y
       store &var_1 <- n1
-      n2 = swi_cmp(var_0, var_1)  // result ignored
+      n2 = swi_cmp(var_0, var_1)
       ret
 }

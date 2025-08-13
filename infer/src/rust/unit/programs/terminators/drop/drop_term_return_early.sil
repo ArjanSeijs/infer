@@ -49,7 +49,7 @@ define main() : void {
       store &x <- false
       n0 = load &x
       store &var_0 <- n0
-      n1 = drop_term_return_early(var_0)  // result ignored
+      n1 = drop_term_return_early(var_0)
       ret
-      
+
 }

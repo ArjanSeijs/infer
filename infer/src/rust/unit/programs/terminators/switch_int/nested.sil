@@ -23,7 +23,7 @@ define swi_nested(a: int, b: int) : int {
 
   #node_5:
       ret 3
-      
+
 }
 
 define main() : void {
@@ -36,7 +36,7 @@ define main() : void {
       store &var_0 <- n0
       n1 = load &y
       store &var_1 <- n1
-      n2 = swi_nested(var_0, var_1)  // result ignored
+      n2 = swi_nested(var_0, var_1)
       ret
 
 }

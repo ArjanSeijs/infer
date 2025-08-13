@@ -12,7 +12,7 @@ define swi_not(b: bool) : int {
 
   #node_2:
       ret 20
-      
+
 }
 
 define main() : void {
@@ -22,7 +22,7 @@ define main() : void {
       store &x <- false
       n0 = load &x
       store &var_0 <- n0
-      n1 = swi_not(var_0)  // result ignored
+      n1 = swi_not(var_0)
       ret
 
 }
