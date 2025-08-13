@@ -1,0 +1,11 @@
+.source_language = "Rust"
+
+define storeage_dead_shadow::main() : void {
+  local var_0: int, var_1: void, var_2: int
+  #node_0:
+      store &var_0 <- 1
+      store &var_2 <- 2
+      store &var_1 <- null
+      ret
+
+}

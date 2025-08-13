@@ -1,0 +1,12 @@
+.source_language = "Rust"
+
+type tuple_int_int = { f0: int; f1: int }
+
+define assign_tuple::main() : void {
+  local var_0: tuple_int_int
+  #node_0:
+      store &var_0.tuple_int_int.f0 <- 1
+      store &var_0.tuple_int_int.f1 <- 2
+      ret
+      
+}

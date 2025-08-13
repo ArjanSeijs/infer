@@ -1,0 +1,8 @@
+.source_language = "Rust"
+
+define storage_live::main() : void {
+  local var_0: int
+  #node_0:
+      store &var_0 <- 1
+      ret
+}

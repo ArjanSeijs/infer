@@ -1,0 +1,11 @@
+.source_language = "Rust"
+
+define assign_cast::main() : void {
+  local var_0: long, var_1: int
+  #node_0:
+      store &var_0 <- 5
+      store &var_2 <- var_0
+      store &var_1 <- __sil_cast(<long>,var_2)
+      ret
+      
+}
