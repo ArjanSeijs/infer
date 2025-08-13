@@ -1,0 +1,39 @@
+.source_language = "Rust"
+
+define goto_with_continue(x: int, y: int) : int {
+  local var_0: void, var_1: void, var_2: bool, var_3: int, var_4: int
+
+  #node_0:
+      jmp node_1
+
+  #node_1:
+      n0 = load &x
+      n1 = load &y
+      n2 = __sil_lt(n0, n1)
+      if n2 then jmp node_2 else jmp node_3
+
+  #node_2:
+      n3 = load &x
+      n4 = __sil_plusa_int(n3, 1)
+      store &x <- n4
+      jmp node_1
+
+  #node_3:
+      ret x
+      
+}
+
+define main() : void {
+  local x: int, y: int, var_0: int, var_1: int
+
+  #node_0:
+      store &x <- 0
+      store &y <- 1
+      n0 = load &x
+      store &var_0 <- n0
+      n1 = load &y
+      store &var_1 <- n1
+      n2 = goto_with_continue(var_0, var_1)
+      ret
+
+}

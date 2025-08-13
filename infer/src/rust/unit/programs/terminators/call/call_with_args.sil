@@ -1,0 +1,42 @@
+.source_language = "Rust"
+
+define call_with_args(x: int, y: int) : int {
+  local var_3: int, var_4: int
+
+  #node_0:
+      n0 = load &x
+      store &var_3 <- n0
+      n1 = load &y
+      store &var_4 <- n1
+      n2 = add(var_3, var_4)
+      ret n2
+      
+}
+
+define add(a: int, b: int) : int {
+  local var_3: int, var_4: int
+
+  #node_0:
+      n0 = load &a
+      store &var_3 <- n0
+      n1 = load &b
+      store &var_4 <- n1
+      n2 = __sil_plusa_int(var_3, var_4)
+      ret n2
+
+}
+
+define main() : void {
+  local x: int, y: int, var_3: int, var_4: int
+
+  #node_0:
+      store &x <- 0
+      store &y <- 1
+      n0 = load &x
+      store &var_3 <- n0
+      n1 = load &y
+      store &var_4 <- n1
+      n2 = call_with_args(var_3, var_4)
+      ret
+
+}

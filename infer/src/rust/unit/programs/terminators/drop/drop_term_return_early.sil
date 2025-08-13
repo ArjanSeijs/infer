@@ -1,0 +1,55 @@
+.source_language = "Rust"
+
+define drop_term_return_early(flag: bool) : int {
+  local var_2: *String, var_3: *String, var_4: void, var_5: void
+
+  #node_0:
+      n0 = "A"
+      store &var_2 <- n0
+      n1 = "B"
+      store &var_3 <- n1
+      jmp node_1
+
+  #node_1:
+      n2 = load &flag
+      if n2 then jmp node_2 else jmp node_4
+
+  #node_2:
+      n3 = load &var_3
+      store &var_4 <- n3
+      n4 = __sil_free(var_4)
+      jmp node_3
+
+  #node_3:
+      n5 = load &var_2
+      store &var_5 <- n5
+      n6 = __sil_free(var_5)
+      jmp node_6
+
+  #node_4:
+      n7 = load &var_2
+      store &var_4 <- n7
+      n8 = __sil_free(var_4)
+      n9 = load &var_3
+      store &var_5 <- n9
+      n10 = __sil_free(var_5)
+      jmp node_5
+
+  #node_5:
+      ret 0
+
+  #node_6:
+      ret 1
+  }
+
+define main() : void {
+  local x: bool, var_0: bool
+
+  #node_0:
+      store &x <- false
+      n0 = load &x
+      store &var_0 <- n0
+      n1 = drop_term_return_early(var_0)  // result ignored
+      ret
+      
+}

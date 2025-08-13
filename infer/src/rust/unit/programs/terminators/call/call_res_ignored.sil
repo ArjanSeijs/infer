@@ -1,0 +1,20 @@
+.source_language = "Rust"
+
+define call_res_ignored::main() : void {
+  local x: int
+  local tmp: int
+  #node_0:
+      store &x <- 0
+      n0 = load &x
+      store &tmp <- n0
+      call log_value(tmp)
+      n1 = __sil_plusa_int(tmp, 1)
+      ret
+      
+}
+
+define log_value(v: int) : void {
+  #node_0:
+      ret
+      
+}

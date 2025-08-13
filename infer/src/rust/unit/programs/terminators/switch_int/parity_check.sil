@@ -1,0 +1,23 @@
+.source_language = "Rust"
+
+define swi_parity(x: int) : int {
+  local var_2: bool, var_3: int, var_4: int, var_9: int
+
+  #node_0:
+      n0 = load &x
+      store &var_4 <- n0
+      n1 = __sil_rem(var_4, 2)
+      store &var_3 <- n1
+      n2 = __sil_eq(var_3, 0)
+      if n2 then jmp node_3 else jmp node_4
+
+  #node_3:
+      n3 = load &x
+      ret n3
+
+  #node_4:
+      n4 = load &x
+      n5 = __sil_neg(n4)
+      ret n5
+      
+}

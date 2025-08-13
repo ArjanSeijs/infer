@@ -1,0 +1,28 @@
+.source_language = "Rust"
+
+define swi_not(b: bool) : int {
+  local var_2: bool
+  #node_0:
+      n0 = load &b
+      store &var_2 <- n0
+      if var_2 then jmp node_2 else jmp node_1
+
+  #node_1:
+      ret 10
+
+  #node_2:
+      ret 20
+      
+}
+
+define main() : void {
+  local x: bool, var_0: bool
+
+  #node_0:
+      store &x <- false
+      n0 = load &x
+      store &var_0 <- n0
+      n1 = swi_not(var_0)  // result ignored
+      ret
+
+}

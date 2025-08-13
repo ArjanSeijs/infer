@@ -1,0 +1,68 @@
+.source_language = "Rust"
+
+define drop_term_continue_local(n: int) : int {
+  local var_0: void, var_1: void, var_2: *String, var_3: void, var_4: bool, var_5: int, var_6: void, var_7: void, var_8: void
+
+  #node_0:
+      jmp node_1
+
+  #node_1:
+      n0 = "x"
+      store &var_2 <- n0
+      jmp node_2
+
+  #node_2:
+      n1 = load &n
+      n2 = __sil_mod(n1, 2)
+      n3 = __sil_eq(n2, 0)
+      if n3 then jmp node_3 else jmp node_4
+
+  #node_3:
+      n4 = load &n
+      n5 = __sil_plusa_int(n4, 1)
+      store &n <- n5
+      n6 = load &var_2
+      store &var_6 <- n6
+      n7 = __sil_free(var_6)
+      jmp node_9
+
+  #node_4:
+      n8 = load &n
+      n9 = __sil_plusa_int(n8, 1)
+      store &n <- n9
+      n10 = load &n
+      n11 = __sil_gt(n10, 10)
+      if n11 then jmp node_5 else jmp node_6
+
+  #node_5:
+      n12 = load &var_2
+      store &var_7 <- n12
+      n13 = __sil_free(var_7)
+      jmp node_8
+
+  #node_6:
+      n12 = load &var_2
+      store &var_8 <- n12
+      n13 = __sil_free(var_8)
+      jmp node_7
+
+  #node_7:
+      jmp node_1
+
+  #node_8:
+      ret n
+
+  #node_9:
+      jmp node_1
+}
+
+define main() : void {
+  local x: int, var_0: int
+
+  #node_0:
+      store &x <- 0
+      n0 = load &x
+      store &var_0 <- n0
+      n1 = drop_term_continue_local(var_0)
+      ret
+}

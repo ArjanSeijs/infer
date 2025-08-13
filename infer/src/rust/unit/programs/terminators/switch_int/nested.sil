@@ -1,0 +1,42 @@
+.source_language = "Rust"
+
+define swi_nested(a: int, b: int) : int {
+  local var_3: bool, var_4: int, var_5: bool, var_6: int
+
+  #node_0:
+      n0 = load &a
+      store &var_4 <- n0
+      n1 = __sil_ge(var_4, 0)
+      if n1 then jmp node_1 else jmp node_5
+
+  #node_1:
+      n2 = load &b
+      store &var_6 <- n2
+      n3 = __sil_eq(var_6, 0)
+      if n3 then jmp node_2 else jmp node_3
+
+  #node_2:
+      ret 1
+
+  #node_3:
+      ret 2
+
+  #node_5:
+      ret 3
+      
+}
+
+define main() : void {
+  local x: int, y: int, var_0: int, var_1: int
+
+  #node_0:
+      store &x <- 0
+      store &y <- 1
+      n0 = load &x
+      store &var_0 <- n0
+      n1 = load &y
+      store &var_1 <- n1
+      n2 = swi_nested(var_0, var_1)  // result ignored
+      ret
+
+}

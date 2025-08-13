@@ -1,0 +1,42 @@
+.source_language = "Rust"
+
+define goto_with_break_outer(a: int, b: int) : int {
+  local var_0: void, var_1: void, var_2: bool, var_3: int, var_4: int, var_5: int, var_6: int
+
+  #node_0:
+      jmp node_1
+
+  #node_1:
+      n0 = load &a
+      n1 = load &b
+      n2 = __sil_gt(n0, n1)
+      if n2 then jmp node_2 else jmp node_3
+
+  #node_2:
+      n3 = load &a
+      n4 = load &b
+      n5 = __sil_plusa_int(n3, n4)
+      ret n5
+
+  #node_3:
+      n6 = load &b
+      n7 = __sil_plusa_int(n6, 1)
+      store &b <- n7
+      jmp node_1
+      
+}
+
+define main() : void {
+  local x: int, y: int, var_0: int, var_1: int, var_2: int
+
+  #node_0:
+      store &x <- 0
+      store &y <- 1
+      n0 = load &x
+      store &var_0 <- n0
+      n1 = load &y
+      store &var_1 <- n1
+      n2 = goto_with_break_outer(var_0, var_1)  // result ignored
+      ret
+
+}
