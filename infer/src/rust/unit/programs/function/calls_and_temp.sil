@@ -27,7 +27,7 @@ define main() : void {
 
   #node_0:
       n0 = fn_calls_and_temp()
-      store &var_0 <- n0   // result ignored
+      store &var_0 <- n0
       ret
       
 }
