@@ -1,0 +1,31 @@
+# Final ULLBC before control-flow reconstruction:
+
+// Full name: literal_mixed::main
+fn main()
+{
+    let @0: (); // return
+    let @1: i32; // anonymous local
+    let @2: f64; // anonymous local
+    let @3: &'_ (Str); // anonymous local
+    let @4: (); // anonymous local
+    let @5: (); // anonymous local
+
+    bb0: {
+        storage_live(@1);
+        @1 := const (42 : i32);
+        storage_dead(@1);
+        storage_live(@2);
+        @2 := const (3.1400000000000001 : f64);
+        storage_dead(@2);
+        storage_live(@3);
+        @3 := const ("hi");
+        storage_dead(@3);
+        storage_live(@4);
+        nop;
+        storage_dead(@4);
+        nop;
+        @0 := ();
+        @0 := ();
+        return;
+    }
+}

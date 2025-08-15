@@ -1,0 +1,208 @@
+# Final ULLBC before control-flow reconstruction:
+
+// Full name: alloc::string::String
+#[lang_item("String")]
+pub opaque type String
+
+// Full name: core::convert::From
+#[lang_item("From")]
+pub trait From<Self, T>
+{
+    parent_clause0 : [@TraitClause0]: Sized<Self>
+    parent_clause1 : [@TraitClause1]: Sized<T>
+    fn from = core::convert::From::from<Self, T>[Self]
+    non-dyn-compatible
+}
+
+// Full name: core::ops::drop::Drop
+#[lang_item("drop")]
+pub trait Drop<Self>
+{
+    parent_clause0 : [@TraitClause0]: MetaSized<Self>
+    fn drop<'_0> = core::ops::drop::Drop::drop<'_0_0, Self>[Self]
+    vtable: core::ops::drop::Drop::{vtable}
+}
+
+// Full name: core::marker::Sized
+#[lang_item("sized")]
+pub trait Sized<Self>
+{
+    parent_clause0 : [@TraitClause0]: MetaSized<Self>
+    non-dyn-compatible
+}
+
+// Full name: core::marker::MetaSized
+#[lang_item("meta_sized")]
+pub trait MetaSized<Self>
+
+// Full name: alloc::string::{impl From<&'_0 (Str)> for String}
+impl<'_0> From<&'_0 (Str)> for String {
+    parent_clause0 = Sized<String>
+    parent_clause1 = Sized<&'_ (Str)>
+    fn from = {impl From<&'_0 (Str)> for String}::from<'_0>
+    non-dyn-compatible
+}
+
+// Full name: alloc::string::String::{impl Drop for String}
+impl Drop for String {
+    parent_clause0 = MetaSized<String>
+    fn drop<'_0> = {impl Drop for String}::drop<'_0_0>
+    non-dyn-compatible
+}
+
+// Full name: drop_continue::drop_term_continue_local
+pub fn drop_term_continue_local(@1: i32) -> i32
+{
+    let @0: i32; // return
+    let n@1: i32; // arg #1
+    let @2: (); // anonymous local
+    let @3: (); // anonymous local
+    let s@4: String; // local
+    let @5: (); // anonymous local
+    let @6: bool; // anonymous local
+    let @7: i32; // anonymous local
+    let @8: i32; // anonymous local
+    let @9: bool; // anonymous local
+    let @10: bool; // anonymous local
+    let @11: bool; // anonymous local
+    let @12: bool; // anonymous local
+    let @13: !; // anonymous local
+    let @14: i32; // anonymous local
+    let @15: i32; // anonymous local
+    let @16: bool; // anonymous local
+    let @17: i32; // anonymous local
+    let @18: !; // anonymous local
+    let @19: (); // anonymous local
+    let @20: (); // anonymous local
+    let @21: (); // anonymous local
+
+    bb0: {
+        storage_live(@2);
+        goto bb1;
+    }
+
+    bb1: {
+        storage_live(s@4);
+        s@4 := {impl From<&'_0 (Str)> for String}::from<'_>(const ("x")) -> bb2 (unwind: bb3);
+    }
+
+    bb2: {
+        storage_live(@5);
+        storage_live(@6);
+        storage_live(@7);
+        storage_live(@8);
+        @8 := copy (n@1);
+        nop;
+        nop;
+        nop;
+        nop;
+        nop;
+        nop;
+        @7 := move (@8) panic.% const (2 : i32);
+        storage_dead(@8);
+        @6 := move (@7) == const (0 : i32);
+        if move (@6) -> bb4 else -> bb5;
+    }
+
+    bb3: {
+        unwind_continue;
+    }
+
+    bb4: {
+        storage_dead(@7);
+        @14 := copy (n@1) panic.+ const (1 : i32);
+        nop;
+        n@1 := move (@14);
+        storage_dead(@6);
+        storage_dead(@5);
+        drop[{impl Drop for String}] s@4;
+        storage_dead(s@4);
+        goto bb1;
+    }
+
+    bb5: {
+        storage_dead(@7);
+        nop;
+        nop;
+        storage_dead(@6);
+        storage_dead(@5);
+        @15 := copy (n@1) panic.+ const (1 : i32);
+        nop;
+        n@1 := move (@15);
+        storage_live(@16);
+        storage_live(@17);
+        @17 := copy (n@1);
+        @16 := move (@17) > const (10 : i32);
+        if move (@16) -> bb6 else -> bb7;
+    }
+
+    bb6: {
+        storage_dead(@17);
+        nop;
+        nop;
+        storage_dead(@16);
+        drop[{impl Drop for String}] s@4;
+        storage_dead(s@4);
+        storage_dead(@2);
+        @0 := copy (n@1);
+        return;
+    }
+
+    bb7: {
+        storage_dead(@17);
+        nop;
+        nop;
+        storage_dead(@16);
+        drop[{impl Drop for String}] s@4;
+        storage_dead(s@4);
+        goto bb1;
+    }
+}
+
+// Full name: drop_continue::main
+fn main()
+{
+    let @0: (); // return
+    let x@1: i32; // local
+    let @2: i32; // anonymous local
+    let @3: i32; // anonymous local
+    let @4: (); // anonymous local
+
+    bb0: {
+        storage_live(x@1);
+        x@1 := const (0 : i32);
+        storage_live(@2);
+        storage_live(@3);
+        @3 := copy (x@1);
+        @2 := drop_term_continue_local(move (@3)) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(@3);
+        storage_dead(@2);
+        nop;
+        @0 := ();
+        storage_dead(x@1);
+        @0 := ();
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}
+
+#[lang_item("from_fn")]
+pub fn core::convert::From::from<Self, T>(@1: T) -> Self
+where
+    [@TraitClause0]: From<Self, T>,
+
+pub fn core::ops::drop::Drop::drop<'_0, Self>(@1: &'_0 mut (Self))
+where
+    [@TraitClause0]: Drop<Self>,
+
+// Full name: alloc::string::{impl From<&'_0 (Str)> for String}::from
+pub fn {impl From<&'_0 (Str)> for String}::from<'_0>(@1: &'_0 (Str)) -> String
+
+// Full name: alloc::string::String::{impl Drop for String}::drop
+fn {impl Drop for String}::drop<'_0>(@1: &'_0 mut (String))

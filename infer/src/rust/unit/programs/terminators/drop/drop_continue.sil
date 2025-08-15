@@ -1,6 +1,6 @@
 .source_language = "Rust"
 
-define drop_term_continue_local(n: int) : int {
+define drop_continue::drop_term_continue_local(n: int) : int {
   local var_0: void, var_1: void, var_2: *String, var_3: void, var_4: bool, var_5: int, var_6: void, var_7: void, var_8: void
 
   #node_0:
@@ -56,13 +56,14 @@ define drop_term_continue_local(n: int) : int {
       jmp node_1
 }
 
-define main() : void {
-  local x: int, var_0: int
+define drop_continue::main() : void {
+  local var_0: void, var_1: int, var_2: int
 
   #node_0:
-      store &x <- 0
-      n0 = load &x
-      store &var_0 <- n0
-      n1 = drop_term_continue_local(var_0)
-      ret
+      store &var_1 <- 0
+      n0 = load &var_1
+      store &var_2 <- n0
+      n1 = drop_continue::drop_term_continue_local(var_2)
+      store &var_0 <- null
+      ret var_0
 }

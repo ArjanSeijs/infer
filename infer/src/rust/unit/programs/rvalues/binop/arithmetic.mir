@@ -1,0 +1,1165 @@
+# Final ULLBC before control-flow reconstruction:
+
+// Full name: core::panicking::AssertKind
+pub enum AssertKind {
+  Eq,
+  Ne,
+  Match,
+}
+
+// Full name: core::option::Option
+#[lang_item("Option")]
+pub enum Option<T>
+where
+    [@TraitClause0]: Sized<T>,
+{
+  None,
+  Some(T),
+}
+
+// Full name: core::fmt::Arguments
+#[lang_item("format_arguments")]
+pub opaque type Arguments<'a>
+where
+    'a : 'a,
+
+pub const core::num::{u128}::MAX: u128 = core::num::{u128}::MAX()
+
+// Full name: core::num::{i128}::MIN
+pub const MIN: i128 = MIN()
+
+pub const core::num::{i128}::MAX: i128 = core::num::{i128}::MAX()
+
+// Full name: core::marker::Sized
+#[lang_item("sized")]
+pub trait Sized<Self>
+{
+    parent_clause0 : [@TraitClause0]: MetaSized<Self>
+    non-dyn-compatible
+}
+
+// Full name: core::marker::MetaSized
+#[lang_item("meta_sized")]
+pub trait MetaSized<Self>
+
+// Full name: arithmetic::plus_minus_mult_basic
+fn plus_minus_mult_basic()
+{
+    let @0: (); // return
+    let a@1: i32; // local
+    let b@2: i32; // local
+    let @3: (); // anonymous local
+    let @4: (&'_ (i32), &'_ (i32)); // anonymous local
+    let @5: &'_ (i32); // anonymous local
+    let @6: i32; // anonymous local
+    let @7: i32; // anonymous local
+    let @8: i32; // anonymous local
+    let @9: i32; // anonymous local
+    let @10: &'_ (i32); // anonymous local
+    let @11: i32; // anonymous local
+    let left_val@12: &'_ (i32); // local
+    let right_val@13: &'_ (i32); // local
+    let @14: bool; // anonymous local
+    let @15: i32; // anonymous local
+    let @16: i32; // anonymous local
+    let @17: !; // anonymous local
+    let kind@18: AssertKind; // local
+    let @19: !; // anonymous local
+    let @20: AssertKind; // anonymous local
+    let @21: &'_ (i32); // anonymous local
+    let @22: &'_ (i32); // anonymous local
+    let @23: &'_ (i32); // anonymous local
+    let @24: &'_ (i32); // anonymous local
+    let @25: Option<Arguments<'_>>[Sized<Arguments<'_>>]; // anonymous local
+    let @26: (); // anonymous local
+    let @27: (&'_ (i32), &'_ (i32)); // anonymous local
+    let @28: &'_ (i32); // anonymous local
+    let @29: i32; // anonymous local
+    let @30: i32; // anonymous local
+    let @31: i32; // anonymous local
+    let @32: i32; // anonymous local
+    let @33: &'_ (i32); // anonymous local
+    let @34: i32; // anonymous local
+    let left_val@35: &'_ (i32); // local
+    let right_val@36: &'_ (i32); // local
+    let @37: bool; // anonymous local
+    let @38: i32; // anonymous local
+    let @39: i32; // anonymous local
+    let @40: !; // anonymous local
+    let kind@41: AssertKind; // local
+    let @42: !; // anonymous local
+    let @43: AssertKind; // anonymous local
+    let @44: &'_ (i32); // anonymous local
+    let @45: &'_ (i32); // anonymous local
+    let @46: &'_ (i32); // anonymous local
+    let @47: &'_ (i32); // anonymous local
+    let @48: Option<Arguments<'_>>[Sized<Arguments<'_>>]; // anonymous local
+    let @49: (); // anonymous local
+    let @50: (&'_ (i32), &'_ (i32)); // anonymous local
+    let @51: &'_ (i32); // anonymous local
+    let @52: i32; // anonymous local
+    let @53: i32; // anonymous local
+    let @54: i32; // anonymous local
+    let @55: i32; // anonymous local
+    let @56: &'_ (i32); // anonymous local
+    let @57: i32; // anonymous local
+    let left_val@58: &'_ (i32); // local
+    let right_val@59: &'_ (i32); // local
+    let @60: bool; // anonymous local
+    let @61: i32; // anonymous local
+    let @62: i32; // anonymous local
+    let @63: !; // anonymous local
+    let kind@64: AssertKind; // local
+    let @65: !; // anonymous local
+    let @66: AssertKind; // anonymous local
+    let @67: &'_ (i32); // anonymous local
+    let @68: &'_ (i32); // anonymous local
+    let @69: &'_ (i32); // anonymous local
+    let @70: &'_ (i32); // anonymous local
+    let @71: Option<Arguments<'_>>[Sized<Arguments<'_>>]; // anonymous local
+    let x@72: u32; // local
+    let y@73: u32; // local
+    let @74: (); // anonymous local
+    let @75: (&'_ (u32), &'_ (u32)); // anonymous local
+    let @76: &'_ (u32); // anonymous local
+    let @77: u32; // anonymous local
+    let @78: u32; // anonymous local
+    let @79: u32; // anonymous local
+    let @80: u32; // anonymous local
+    let @81: &'_ (u32); // anonymous local
+    let @82: u32; // anonymous local
+    let left_val@83: &'_ (u32); // local
+    let right_val@84: &'_ (u32); // local
+    let @85: bool; // anonymous local
+    let @86: u32; // anonymous local
+    let @87: u32; // anonymous local
+    let @88: !; // anonymous local
+    let kind@89: AssertKind; // local
+    let @90: !; // anonymous local
+    let @91: AssertKind; // anonymous local
+    let @92: &'_ (u32); // anonymous local
+    let @93: &'_ (u32); // anonymous local
+    let @94: &'_ (u32); // anonymous local
+    let @95: &'_ (u32); // anonymous local
+    let @96: Option<Arguments<'_>>[Sized<Arguments<'_>>]; // anonymous local
+    let @97: (); // anonymous local
+    let @98: (&'_ (u32), &'_ (u32)); // anonymous local
+    let @99: &'_ (u32); // anonymous local
+    let @100: u32; // anonymous local
+    let @101: u32; // anonymous local
+    let @102: u32; // anonymous local
+    let @103: u32; // anonymous local
+    let @104: &'_ (u32); // anonymous local
+    let @105: u32; // anonymous local
+    let left_val@106: &'_ (u32); // local
+    let right_val@107: &'_ (u32); // local
+    let @108: bool; // anonymous local
+    let @109: u32; // anonymous local
+    let @110: u32; // anonymous local
+    let @111: !; // anonymous local
+    let kind@112: AssertKind; // local
+    let @113: !; // anonymous local
+    let @114: AssertKind; // anonymous local
+    let @115: &'_ (u32); // anonymous local
+    let @116: &'_ (u32); // anonymous local
+    let @117: &'_ (u32); // anonymous local
+    let @118: &'_ (u32); // anonymous local
+    let @119: Option<Arguments<'_>>[Sized<Arguments<'_>>]; // anonymous local
+    let @120: (); // anonymous local
+    let @121: (&'_ (u32), &'_ (u32)); // anonymous local
+    let @122: &'_ (u32); // anonymous local
+    let @123: u32; // anonymous local
+    let @124: u32; // anonymous local
+    let @125: u32; // anonymous local
+    let @126: u32; // anonymous local
+    let @127: &'_ (u32); // anonymous local
+    let @128: u32; // anonymous local
+    let left_val@129: &'_ (u32); // local
+    let right_val@130: &'_ (u32); // local
+    let @131: bool; // anonymous local
+    let @132: u32; // anonymous local
+    let @133: u32; // anonymous local
+    let @134: !; // anonymous local
+    let kind@135: AssertKind; // local
+    let @136: !; // anonymous local
+    let @137: AssertKind; // anonymous local
+    let @138: &'_ (u32); // anonymous local
+    let @139: &'_ (u32); // anonymous local
+    let @140: &'_ (u32); // anonymous local
+    let @141: &'_ (u32); // anonymous local
+    let @142: Option<Arguments<'_>>[Sized<Arguments<'_>>]; // anonymous local
+    let t@143: bool; // local
+    let f@144: bool; // local
+    let @145: (); // anonymous local
+    let @146: (&'_ (u8), &'_ (u8)); // anonymous local
+    let @147: &'_ (u8); // anonymous local
+    let @148: u8; // anonymous local
+    let @149: u8; // anonymous local
+    let @150: bool; // anonymous local
+    let @151: u8; // anonymous local
+    let @152: bool; // anonymous local
+    let @153: u8; // anonymous local
+    let @154: &'_ (u8); // anonymous local
+    let @155: u8; // anonymous local
+    let left_val@156: &'_ (u8); // local
+    let right_val@157: &'_ (u8); // local
+    let @158: bool; // anonymous local
+    let @159: u8; // anonymous local
+    let @160: u8; // anonymous local
+    let @161: !; // anonymous local
+    let kind@162: AssertKind; // local
+    let @163: !; // anonymous local
+    let @164: AssertKind; // anonymous local
+    let @165: &'_ (u8); // anonymous local
+    let @166: &'_ (u8); // anonymous local
+    let @167: &'_ (u8); // anonymous local
+    let @168: &'_ (u8); // anonymous local
+    let @169: Option<Arguments<'_>>[Sized<Arguments<'_>>]; // anonymous local
+    let @170: (); // anonymous local
+    let @171: (&'_ (u8), &'_ (u8)); // anonymous local
+    let @172: &'_ (u8); // anonymous local
+    let @173: u8; // anonymous local
+    let @174: u8; // anonymous local
+    let @175: bool; // anonymous local
+    let @176: u8; // anonymous local
+    let @177: bool; // anonymous local
+    let @178: u8; // anonymous local
+    let @179: &'_ (u8); // anonymous local
+    let @180: u8; // anonymous local
+    let left_val@181: &'_ (u8); // local
+    let right_val@182: &'_ (u8); // local
+    let @183: bool; // anonymous local
+    let @184: u8; // anonymous local
+    let @185: u8; // anonymous local
+    let @186: !; // anonymous local
+    let kind@187: AssertKind; // local
+    let @188: !; // anonymous local
+    let @189: AssertKind; // anonymous local
+    let @190: &'_ (u8); // anonymous local
+    let @191: &'_ (u8); // anonymous local
+    let @192: &'_ (u8); // anonymous local
+    let @193: &'_ (u8); // anonymous local
+    let @194: Option<Arguments<'_>>[Sized<Arguments<'_>>]; // anonymous local
+    let c@195: char; // local
+    let @196: (); // anonymous local
+    let @197: (&'_ (u32), &'_ (u32)); // anonymous local
+    let @198: &'_ (u32); // anonymous local
+    let @199: u32; // anonymous local
+    let @200: u32; // anonymous local
+    let @201: char; // anonymous local
+    let @202: u32; // anonymous local
+    let @203: &'_ (u32); // anonymous local
+    let @204: u32; // anonymous local
+    let left_val@205: &'_ (u32); // local
+    let right_val@206: &'_ (u32); // local
+    let @207: bool; // anonymous local
+    let @208: u32; // anonymous local
+    let @209: u32; // anonymous local
+    let @210: !; // anonymous local
+    let kind@211: AssertKind; // local
+    let @212: !; // anonymous local
+    let @213: AssertKind; // anonymous local
+    let @214: &'_ (u32); // anonymous local
+    let @215: &'_ (u32); // anonymous local
+    let @216: &'_ (u32); // anonymous local
+    let @217: &'_ (u32); // anonymous local
+    let @218: Option<Arguments<'_>>[Sized<Arguments<'_>>]; // anonymous local
+    let @219: (); // anonymous local
+    let @220: (); // anonymous local
+    let @221: (); // anonymous local
+    let @222: (); // anonymous local
+    let @223: (); // anonymous local
+    let @224: (); // anonymous local
+    let @225: (); // anonymous local
+    let @226: (); // anonymous local
+    let @227: (); // anonymous local
+    let @228: (); // anonymous local
+
+    bb0: {
+        storage_live(a@1);
+        a@1 := const (-7 : i32);
+        storage_live(b@2);
+        b@2 := const (3 : i32);
+        storage_live(@3);
+        storage_live(@4);
+        storage_live(@5);
+        storage_live(@6);
+        storage_live(@7);
+        @7 := copy (a@1);
+        storage_live(@8);
+        @8 := copy (b@2);
+        @9 := copy (@7) panic.+ copy (@8);
+        nop;
+        @6 := move (@9);
+        storage_dead(@8);
+        storage_dead(@7);
+        @5 := &@6;
+        storage_live(@10);
+        storage_live(@11);
+        @11 := const (-4 : i32);
+        @10 := &@11;
+        @4 := (move (@5), move (@10));
+        storage_dead(@10);
+        storage_dead(@5);
+        storage_live(left_val@12);
+        left_val@12 := copy ((@4).0);
+        storage_live(right_val@13);
+        right_val@13 := copy ((@4).1);
+        storage_live(@14);
+        storage_live(@15);
+        @15 := copy (*(left_val@12));
+        storage_live(@16);
+        @16 := copy (*(right_val@13));
+        @14 := move (@15) == move (@16);
+        if move (@14) -> bb1 else -> bb2;
+    }
+
+    bb1: {
+        storage_dead(@16);
+        storage_dead(@15);
+        nop;
+        nop;
+        storage_dead(@14);
+        storage_dead(right_val@13);
+        storage_dead(left_val@12);
+        storage_dead(@11);
+        storage_dead(@6);
+        storage_dead(@4);
+        storage_dead(@3);
+        storage_live(@26);
+        storage_live(@27);
+        storage_live(@28);
+        storage_live(@29);
+        storage_live(@30);
+        @30 := copy (a@1);
+        storage_live(@31);
+        @31 := copy (b@2);
+        @32 := copy (@30) panic.- copy (@31);
+        nop;
+        @29 := move (@32);
+        storage_dead(@31);
+        storage_dead(@30);
+        @28 := &@29;
+        storage_live(@33);
+        storage_live(@34);
+        @34 := const (-10 : i32);
+        @33 := &@34;
+        @27 := (move (@28), move (@33));
+        storage_dead(@33);
+        storage_dead(@28);
+        storage_live(left_val@35);
+        left_val@35 := copy ((@27).0);
+        storage_live(right_val@36);
+        right_val@36 := copy ((@27).1);
+        storage_live(@37);
+        storage_live(@38);
+        @38 := copy (*(left_val@35));
+        storage_live(@39);
+        @39 := copy (*(right_val@36));
+        @37 := move (@38) == move (@39);
+        if move (@37) -> bb3 else -> bb4;
+    }
+
+    bb2: {
+        storage_dead(@16);
+        storage_dead(@15);
+        storage_live(kind@18);
+        kind@18 := AssertKind::Eq {  };
+        nop;
+        storage_live(@20);
+        @20 := move (kind@18);
+        storage_live(@21);
+        storage_live(@22);
+        @22 := &*(left_val@12);
+        @21 := &*(@22);
+        storage_live(@23);
+        storage_live(@24);
+        @24 := &*(right_val@13);
+        @23 := &*(@24);
+        storage_live(@25);
+        @25 := Option::None {  };
+        panic(core::panicking::assert_failed);
+    }
+
+    bb3: {
+        storage_dead(@39);
+        storage_dead(@38);
+        nop;
+        nop;
+        storage_dead(@37);
+        storage_dead(right_val@36);
+        storage_dead(left_val@35);
+        storage_dead(@34);
+        storage_dead(@29);
+        storage_dead(@27);
+        storage_dead(@26);
+        storage_live(@49);
+        storage_live(@50);
+        storage_live(@51);
+        storage_live(@52);
+        storage_live(@53);
+        @53 := copy (a@1);
+        storage_live(@54);
+        @54 := copy (b@2);
+        @55 := copy (@53) panic.* copy (@54);
+        nop;
+        @52 := move (@55);
+        storage_dead(@54);
+        storage_dead(@53);
+        @51 := &@52;
+        storage_live(@56);
+        storage_live(@57);
+        @57 := const (-21 : i32);
+        @56 := &@57;
+        @50 := (move (@51), move (@56));
+        storage_dead(@56);
+        storage_dead(@51);
+        storage_live(left_val@58);
+        left_val@58 := copy ((@50).0);
+        storage_live(right_val@59);
+        right_val@59 := copy ((@50).1);
+        storage_live(@60);
+        storage_live(@61);
+        @61 := copy (*(left_val@58));
+        storage_live(@62);
+        @62 := copy (*(right_val@59));
+        @60 := move (@61) == move (@62);
+        if move (@60) -> bb5 else -> bb6;
+    }
+
+    bb4: {
+        storage_dead(@39);
+        storage_dead(@38);
+        storage_live(kind@41);
+        kind@41 := AssertKind::Eq {  };
+        nop;
+        storage_live(@43);
+        @43 := move (kind@41);
+        storage_live(@44);
+        storage_live(@45);
+        @45 := &*(left_val@35);
+        @44 := &*(@45);
+        storage_live(@46);
+        storage_live(@47);
+        @47 := &*(right_val@36);
+        @46 := &*(@47);
+        storage_live(@48);
+        @48 := Option::None {  };
+        panic(core::panicking::assert_failed);
+    }
+
+    bb5: {
+        storage_dead(@62);
+        storage_dead(@61);
+        nop;
+        nop;
+        storage_dead(@60);
+        storage_dead(right_val@59);
+        storage_dead(left_val@58);
+        storage_dead(@57);
+        storage_dead(@52);
+        storage_dead(@50);
+        storage_dead(@49);
+        storage_live(x@72);
+        x@72 := const (2 : u32);
+        storage_live(y@73);
+        y@73 := const (5 : u32);
+        storage_live(@74);
+        storage_live(@75);
+        storage_live(@76);
+        storage_live(@77);
+        storage_live(@78);
+        @78 := copy (x@72);
+        storage_live(@79);
+        @79 := copy (y@73);
+        @80 := copy (@78) panic.+ copy (@79);
+        nop;
+        @77 := move (@80);
+        storage_dead(@79);
+        storage_dead(@78);
+        @76 := &@77;
+        storage_live(@81);
+        storage_live(@82);
+        @82 := const (7 : u32);
+        @81 := &@82;
+        @75 := (move (@76), move (@81));
+        storage_dead(@81);
+        storage_dead(@76);
+        storage_live(left_val@83);
+        left_val@83 := copy ((@75).0);
+        storage_live(right_val@84);
+        right_val@84 := copy ((@75).1);
+        storage_live(@85);
+        storage_live(@86);
+        @86 := copy (*(left_val@83));
+        storage_live(@87);
+        @87 := copy (*(right_val@84));
+        @85 := move (@86) == move (@87);
+        if move (@85) -> bb7 else -> bb8;
+    }
+
+    bb6: {
+        storage_dead(@62);
+        storage_dead(@61);
+        storage_live(kind@64);
+        kind@64 := AssertKind::Eq {  };
+        nop;
+        storage_live(@66);
+        @66 := move (kind@64);
+        storage_live(@67);
+        storage_live(@68);
+        @68 := &*(left_val@58);
+        @67 := &*(@68);
+        storage_live(@69);
+        storage_live(@70);
+        @70 := &*(right_val@59);
+        @69 := &*(@70);
+        storage_live(@71);
+        @71 := Option::None {  };
+        panic(core::panicking::assert_failed);
+    }
+
+    bb7: {
+        storage_dead(@87);
+        storage_dead(@86);
+        nop;
+        nop;
+        storage_dead(@85);
+        storage_dead(right_val@84);
+        storage_dead(left_val@83);
+        storage_dead(@82);
+        storage_dead(@77);
+        storage_dead(@75);
+        storage_dead(@74);
+        storage_live(@97);
+        storage_live(@98);
+        storage_live(@99);
+        storage_live(@100);
+        storage_live(@101);
+        @101 := copy (y@73);
+        storage_live(@102);
+        @102 := copy (x@72);
+        @103 := copy (@101) panic.- copy (@102);
+        nop;
+        @100 := move (@103);
+        storage_dead(@102);
+        storage_dead(@101);
+        @99 := &@100;
+        storage_live(@104);
+        storage_live(@105);
+        @105 := const (3 : u32);
+        @104 := &@105;
+        @98 := (move (@99), move (@104));
+        storage_dead(@104);
+        storage_dead(@99);
+        storage_live(left_val@106);
+        left_val@106 := copy ((@98).0);
+        storage_live(right_val@107);
+        right_val@107 := copy ((@98).1);
+        storage_live(@108);
+        storage_live(@109);
+        @109 := copy (*(left_val@106));
+        storage_live(@110);
+        @110 := copy (*(right_val@107));
+        @108 := move (@109) == move (@110);
+        if move (@108) -> bb9 else -> bb10;
+    }
+
+    bb8: {
+        storage_dead(@87);
+        storage_dead(@86);
+        storage_live(kind@89);
+        kind@89 := AssertKind::Eq {  };
+        nop;
+        storage_live(@91);
+        @91 := move (kind@89);
+        storage_live(@92);
+        storage_live(@93);
+        @93 := &*(left_val@83);
+        @92 := &*(@93);
+        storage_live(@94);
+        storage_live(@95);
+        @95 := &*(right_val@84);
+        @94 := &*(@95);
+        storage_live(@96);
+        @96 := Option::None {  };
+        panic(core::panicking::assert_failed);
+    }
+
+    bb9: {
+        storage_dead(@110);
+        storage_dead(@109);
+        nop;
+        nop;
+        storage_dead(@108);
+        storage_dead(right_val@107);
+        storage_dead(left_val@106);
+        storage_dead(@105);
+        storage_dead(@100);
+        storage_dead(@98);
+        storage_dead(@97);
+        storage_live(@120);
+        storage_live(@121);
+        storage_live(@122);
+        storage_live(@123);
+        storage_live(@124);
+        @124 := copy (x@72);
+        storage_live(@125);
+        @125 := copy (y@73);
+        @126 := copy (@124) panic.* copy (@125);
+        nop;
+        @123 := move (@126);
+        storage_dead(@125);
+        storage_dead(@124);
+        @122 := &@123;
+        storage_live(@127);
+        storage_live(@128);
+        @128 := const (10 : u32);
+        @127 := &@128;
+        @121 := (move (@122), move (@127));
+        storage_dead(@127);
+        storage_dead(@122);
+        storage_live(left_val@129);
+        left_val@129 := copy ((@121).0);
+        storage_live(right_val@130);
+        right_val@130 := copy ((@121).1);
+        storage_live(@131);
+        storage_live(@132);
+        @132 := copy (*(left_val@129));
+        storage_live(@133);
+        @133 := copy (*(right_val@130));
+        @131 := move (@132) == move (@133);
+        if move (@131) -> bb11 else -> bb12;
+    }
+
+    bb10: {
+        storage_dead(@110);
+        storage_dead(@109);
+        storage_live(kind@112);
+        kind@112 := AssertKind::Eq {  };
+        nop;
+        storage_live(@114);
+        @114 := move (kind@112);
+        storage_live(@115);
+        storage_live(@116);
+        @116 := &*(left_val@106);
+        @115 := &*(@116);
+        storage_live(@117);
+        storage_live(@118);
+        @118 := &*(right_val@107);
+        @117 := &*(@118);
+        storage_live(@119);
+        @119 := Option::None {  };
+        panic(core::panicking::assert_failed);
+    }
+
+    bb11: {
+        storage_dead(@133);
+        storage_dead(@132);
+        nop;
+        nop;
+        storage_dead(@131);
+        storage_dead(right_val@130);
+        storage_dead(left_val@129);
+        storage_dead(@128);
+        storage_dead(@123);
+        storage_dead(@121);
+        storage_dead(@120);
+        storage_live(t@143);
+        t@143 := const (true);
+        storage_live(f@144);
+        f@144 := const (false);
+        storage_live(@145);
+        storage_live(@146);
+        storage_live(@147);
+        storage_live(@148);
+        storage_live(@149);
+        storage_live(@150);
+        @150 := copy (t@143);
+        @149 := cast<bool, u8>(move (@150));
+        storage_dead(@150);
+        storage_live(@151);
+        storage_live(@152);
+        @152 := copy (f@144);
+        @151 := cast<bool, u8>(move (@152));
+        storage_dead(@152);
+        @153 := copy (@149) panic.+ copy (@151);
+        nop;
+        @148 := move (@153);
+        storage_dead(@151);
+        storage_dead(@149);
+        @147 := &@148;
+        storage_live(@154);
+        storage_live(@155);
+        @155 := const (1 : u8);
+        @154 := &@155;
+        @146 := (move (@147), move (@154));
+        storage_dead(@154);
+        storage_dead(@147);
+        storage_live(left_val@156);
+        left_val@156 := copy ((@146).0);
+        storage_live(right_val@157);
+        right_val@157 := copy ((@146).1);
+        storage_live(@158);
+        storage_live(@159);
+        @159 := copy (*(left_val@156));
+        storage_live(@160);
+        @160 := copy (*(right_val@157));
+        @158 := move (@159) == move (@160);
+        if move (@158) -> bb13 else -> bb14;
+    }
+
+    bb12: {
+        storage_dead(@133);
+        storage_dead(@132);
+        storage_live(kind@135);
+        kind@135 := AssertKind::Eq {  };
+        nop;
+        storage_live(@137);
+        @137 := move (kind@135);
+        storage_live(@138);
+        storage_live(@139);
+        @139 := &*(left_val@129);
+        @138 := &*(@139);
+        storage_live(@140);
+        storage_live(@141);
+        @141 := &*(right_val@130);
+        @140 := &*(@141);
+        storage_live(@142);
+        @142 := Option::None {  };
+        panic(core::panicking::assert_failed);
+    }
+
+    bb13: {
+        storage_dead(@160);
+        storage_dead(@159);
+        nop;
+        nop;
+        storage_dead(@158);
+        storage_dead(right_val@157);
+        storage_dead(left_val@156);
+        storage_dead(@155);
+        storage_dead(@148);
+        storage_dead(@146);
+        storage_dead(@145);
+        storage_live(@170);
+        storage_live(@171);
+        storage_live(@172);
+        storage_live(@173);
+        storage_live(@174);
+        storage_live(@175);
+        @175 := copy (t@143);
+        @174 := cast<bool, u8>(move (@175));
+        storage_dead(@175);
+        storage_live(@176);
+        storage_live(@177);
+        @177 := copy (t@143);
+        @176 := cast<bool, u8>(move (@177));
+        storage_dead(@177);
+        @178 := copy (@174) panic.* copy (@176);
+        nop;
+        @173 := move (@178);
+        storage_dead(@176);
+        storage_dead(@174);
+        @172 := &@173;
+        storage_live(@179);
+        storage_live(@180);
+        @180 := const (1 : u8);
+        @179 := &@180;
+        @171 := (move (@172), move (@179));
+        storage_dead(@179);
+        storage_dead(@172);
+        storage_live(left_val@181);
+        left_val@181 := copy ((@171).0);
+        storage_live(right_val@182);
+        right_val@182 := copy ((@171).1);
+        storage_live(@183);
+        storage_live(@184);
+        @184 := copy (*(left_val@181));
+        storage_live(@185);
+        @185 := copy (*(right_val@182));
+        @183 := move (@184) == move (@185);
+        if move (@183) -> bb15 else -> bb16;
+    }
+
+    bb14: {
+        storage_dead(@160);
+        storage_dead(@159);
+        storage_live(kind@162);
+        kind@162 := AssertKind::Eq {  };
+        nop;
+        storage_live(@164);
+        @164 := move (kind@162);
+        storage_live(@165);
+        storage_live(@166);
+        @166 := &*(left_val@156);
+        @165 := &*(@166);
+        storage_live(@167);
+        storage_live(@168);
+        @168 := &*(right_val@157);
+        @167 := &*(@168);
+        storage_live(@169);
+        @169 := Option::None {  };
+        panic(core::panicking::assert_failed);
+    }
+
+    bb15: {
+        storage_dead(@185);
+        storage_dead(@184);
+        nop;
+        nop;
+        storage_dead(@183);
+        storage_dead(right_val@182);
+        storage_dead(left_val@181);
+        storage_dead(@180);
+        storage_dead(@173);
+        storage_dead(@171);
+        storage_dead(@170);
+        storage_live(c@195);
+        c@195 := const (A);
+        storage_live(@196);
+        storage_live(@197);
+        storage_live(@198);
+        storage_live(@199);
+        storage_live(@200);
+        storage_live(@201);
+        @201 := copy (c@195);
+        @200 := cast<char, u32>(move (@201));
+        storage_dead(@201);
+        @202 := copy (@200) panic.+ const (1 : u32);
+        nop;
+        @199 := move (@202);
+        storage_dead(@200);
+        @198 := &@199;
+        storage_live(@203);
+        storage_live(@204);
+        @204 := const (66 : u32);
+        @203 := &@204;
+        @197 := (move (@198), move (@203));
+        storage_dead(@203);
+        storage_dead(@198);
+        storage_live(left_val@205);
+        left_val@205 := copy ((@197).0);
+        storage_live(right_val@206);
+        right_val@206 := copy ((@197).1);
+        storage_live(@207);
+        storage_live(@208);
+        @208 := copy (*(left_val@205));
+        storage_live(@209);
+        @209 := copy (*(right_val@206));
+        @207 := move (@208) == move (@209);
+        if move (@207) -> bb17 else -> bb18;
+    }
+
+    bb16: {
+        storage_dead(@185);
+        storage_dead(@184);
+        storage_live(kind@187);
+        kind@187 := AssertKind::Eq {  };
+        nop;
+        storage_live(@189);
+        @189 := move (kind@187);
+        storage_live(@190);
+        storage_live(@191);
+        @191 := &*(left_val@181);
+        @190 := &*(@191);
+        storage_live(@192);
+        storage_live(@193);
+        @193 := &*(right_val@182);
+        @192 := &*(@193);
+        storage_live(@194);
+        @194 := Option::None {  };
+        panic(core::panicking::assert_failed);
+    }
+
+    bb17: {
+        storage_dead(@209);
+        storage_dead(@208);
+        nop;
+        nop;
+        storage_dead(@207);
+        storage_dead(right_val@206);
+        storage_dead(left_val@205);
+        storage_dead(@204);
+        storage_dead(@199);
+        storage_dead(@197);
+        storage_dead(@196);
+        nop;
+        @0 := ();
+        storage_dead(c@195);
+        storage_dead(f@144);
+        storage_dead(t@143);
+        storage_dead(y@73);
+        storage_dead(x@72);
+        storage_dead(b@2);
+        storage_dead(a@1);
+        @0 := ();
+        return;
+    }
+
+    bb18: {
+        storage_dead(@209);
+        storage_dead(@208);
+        storage_live(kind@211);
+        kind@211 := AssertKind::Eq {  };
+        nop;
+        storage_live(@213);
+        @213 := move (kind@211);
+        storage_live(@214);
+        storage_live(@215);
+        @215 := &*(left_val@205);
+        @214 := &*(@215);
+        storage_live(@216);
+        storage_live(@217);
+        @217 := &*(right_val@206);
+        @216 := &*(@217);
+        storage_live(@218);
+        @218 := Option::None {  };
+        panic(core::panicking::assert_failed);
+    }
+}
+
+// Full name: arithmetic::arithmetic_edges_i128_u128
+fn arithmetic_edges_i128_u128()
+{
+    let @0: (); // return
+    let max_u128@1: u128; // local
+    let @2: (); // anonymous local
+    let @3: (&'_ (u128), &'_ (u128)); // anonymous local
+    let @4: &'_ (u128); // anonymous local
+    let @5: u128; // anonymous local
+    let @6: u128; // anonymous local
+    let @7: &'_ (u128); // anonymous local
+    let @8: u128; // anonymous local
+    let left_val@9: &'_ (u128); // local
+    let right_val@10: &'_ (u128); // local
+    let @11: bool; // anonymous local
+    let @12: u128; // anonymous local
+    let @13: u128; // anonymous local
+    let @14: !; // anonymous local
+    let kind@15: AssertKind; // local
+    let @16: !; // anonymous local
+    let @17: AssertKind; // anonymous local
+    let @18: &'_ (u128); // anonymous local
+    let @19: &'_ (u128); // anonymous local
+    let @20: &'_ (u128); // anonymous local
+    let @21: &'_ (u128); // anonymous local
+    let @22: Option<Arguments<'_>>[Sized<Arguments<'_>>]; // anonymous local
+    let min_i128@23: i128; // local
+    let @24: (); // anonymous local
+    let @25: (&'_ (i128), &'_ (i128)); // anonymous local
+    let @26: &'_ (i128); // anonymous local
+    let @27: i128; // anonymous local
+    let @28: i128; // anonymous local
+    let @29: &'_ (i128); // anonymous local
+    let @30: i128; // anonymous local
+    let left_val@31: &'_ (i128); // local
+    let right_val@32: &'_ (i128); // local
+    let @33: bool; // anonymous local
+    let @34: i128; // anonymous local
+    let @35: i128; // anonymous local
+    let @36: !; // anonymous local
+    let kind@37: AssertKind; // local
+    let @38: !; // anonymous local
+    let @39: AssertKind; // anonymous local
+    let @40: &'_ (i128); // anonymous local
+    let @41: &'_ (i128); // anonymous local
+    let @42: &'_ (i128); // anonymous local
+    let @43: &'_ (i128); // anonymous local
+    let @44: Option<Arguments<'_>>[Sized<Arguments<'_>>]; // anonymous local
+    let @45: (); // anonymous local
+    let @46: (); // anonymous local
+    let @47: (); // anonymous local
+
+    bb0: {
+        storage_live(max_u128@1);
+        max_u128@1 := copy (core::num::{u128}::MAX);
+        storage_live(@2);
+        storage_live(@3);
+        storage_live(@4);
+        storage_live(@5);
+        storage_live(@6);
+        @6 := copy (max_u128@1);
+        @5 := wrapping_add(move (@6), const (1 : u128)) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(@6);
+        @4 := &@5;
+        storage_live(@7);
+        storage_live(@8);
+        @8 := const (0 : u128);
+        @7 := &@8;
+        @3 := (move (@4), move (@7));
+        storage_dead(@7);
+        storage_dead(@4);
+        storage_live(left_val@9);
+        left_val@9 := copy ((@3).0);
+        storage_live(right_val@10);
+        right_val@10 := copy ((@3).1);
+        storage_live(@11);
+        storage_live(@12);
+        @12 := copy (*(left_val@9));
+        storage_live(@13);
+        @13 := copy (*(right_val@10));
+        @11 := move (@12) == move (@13);
+        if move (@11) -> bb3 else -> bb4;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(@13);
+        storage_dead(@12);
+        nop;
+        nop;
+        storage_dead(@11);
+        storage_dead(right_val@10);
+        storage_dead(left_val@9);
+        storage_dead(@8);
+        storage_dead(@5);
+        storage_dead(@3);
+        storage_dead(@2);
+        storage_live(min_i128@23);
+        min_i128@23 := copy (MIN);
+        storage_live(@24);
+        storage_live(@25);
+        storage_live(@26);
+        storage_live(@27);
+        storage_live(@28);
+        @28 := copy (min_i128@23);
+        @27 := wrapping_sub(move (@28), const (1 : i128)) -> bb5 (unwind: bb2);
+    }
+
+    bb4: {
+        storage_dead(@13);
+        storage_dead(@12);
+        storage_live(kind@15);
+        kind@15 := AssertKind::Eq {  };
+        nop;
+        storage_live(@17);
+        @17 := move (kind@15);
+        storage_live(@18);
+        storage_live(@19);
+        @19 := &*(left_val@9);
+        @18 := &*(@19);
+        storage_live(@20);
+        storage_live(@21);
+        @21 := &*(right_val@10);
+        @20 := &*(@21);
+        storage_live(@22);
+        @22 := Option::None {  };
+        panic(core::panicking::assert_failed);
+    }
+
+    bb5: {
+        storage_dead(@28);
+        @26 := &@27;
+        storage_live(@29);
+        storage_live(@30);
+        @30 := copy (core::num::{i128}::MAX);
+        @29 := &@30;
+        @25 := (move (@26), move (@29));
+        storage_dead(@29);
+        storage_dead(@26);
+        storage_live(left_val@31);
+        left_val@31 := copy ((@25).0);
+        storage_live(right_val@32);
+        right_val@32 := copy ((@25).1);
+        storage_live(@33);
+        storage_live(@34);
+        @34 := copy (*(left_val@31));
+        storage_live(@35);
+        @35 := copy (*(right_val@32));
+        @33 := move (@34) == move (@35);
+        if move (@33) -> bb6 else -> bb7;
+    }
+
+    bb6: {
+        storage_dead(@35);
+        storage_dead(@34);
+        nop;
+        nop;
+        storage_dead(@33);
+        storage_dead(right_val@32);
+        storage_dead(left_val@31);
+        storage_dead(@30);
+        storage_dead(@27);
+        storage_dead(@25);
+        storage_dead(@24);
+        nop;
+        @0 := ();
+        storage_dead(min_i128@23);
+        storage_dead(max_u128@1);
+        @0 := ();
+        return;
+    }
+
+    bb7: {
+        storage_dead(@35);
+        storage_dead(@34);
+        storage_live(kind@37);
+        kind@37 := AssertKind::Eq {  };
+        nop;
+        storage_live(@39);
+        @39 := move (kind@37);
+        storage_live(@40);
+        storage_live(@41);
+        @41 := &*(left_val@31);
+        @40 := &*(@41);
+        storage_live(@42);
+        storage_live(@43);
+        @43 := &*(right_val@32);
+        @42 := &*(@43);
+        storage_live(@44);
+        @44 := Option::None {  };
+        panic(core::panicking::assert_failed);
+    }
+}
+
+// Full name: arithmetic::main
+fn main()
+{
+    let @0: (); // return
+    let @1: (); // anonymous local
+    let @2: (); // anonymous local
+    let @3: (); // anonymous local
+
+    bb0: {
+        storage_live(@1);
+        @1 := plus_minus_mult_basic() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(@1);
+        storage_live(@2);
+        @2 := arithmetic_edges_i128_u128() -> bb3 (unwind: bb2);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(@2);
+        nop;
+        @0 := ();
+        @0 := ();
+        return;
+    }
+}
+
+// Full name: core::num::{u128}::wrapping_add
+pub fn wrapping_add(@1: u128, @2: u128) -> u128
+
+// Full name: core::num::{i128}::wrapping_sub
+pub fn wrapping_sub(@1: i128, @2: i128) -> i128
+
+// Full name: core::num::{i128}::MIN
+pub fn MIN() -> i128
+
+pub fn core::num::{i128}::MAX() -> i128
+
+pub fn core::num::{u128}::MAX() -> u128

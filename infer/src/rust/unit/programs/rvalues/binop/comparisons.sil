@@ -1,0 +1,73 @@
+.source_language = "Rust"
+
+define comparisons::comparisons_ints_and_128() : void {
+    local var_0: void, var_1: int, var_2: int, var_3: int, var_4: int, var_5: int, var_6: int, var_7: int, var_8: int, var_9: int, var_10: int
+    #node_0:
+        store &var_1 <- 3
+        store &var_2 <- 5
+        n0:int = load &var_0
+        n1:int = load &var_1
+        n2 = __sil_lt(n0, n1)
+
+        store &var_3 <- 5
+        store &var_4 <- 5
+        n3:int = load &var_3
+        n4:int = load &var_4
+        n5 = __sil_ge(n3, n4)
+
+        store &var_5 <- 170141183460469231731687303715884105727
+        store &var_6 <- 0
+        n6:int = load &var_5
+        n7:int = load &var_6
+        n8 = __sil_gt(n6, n7)
+
+        store &var_7 <- 340282366920938463463374607431768211455
+        store &var_8 <- 0
+        n9:int  = load &var_7
+        n10:int = load &var_8
+        n11 = __sil_gt(n9, n10)
+
+        store &var_9 <- 10
+        store &var_10 <- -10
+        n12:int = load &var_9
+        n13:int = load &var_10
+        n14 = __sil_ne(n12, n13)
+        store &var_0 <- null
+        ret var_0
+
+}
+
+define comparisons::comparisons_floats_with_nan() : void {
+    local var_0: void, var_1: float, var_2: float
+    #node_0:
+        store &var_1 <- 0.0:float
+        n0:float = load &var_1
+        n1 = __sil_divf(n0, n0)
+
+        store &var_2 <- 1.0:float
+        n2:float = load &var_2
+
+        n3 = __sil_lt(n1, n2)
+        n4 = __sil_lnot(n3)
+
+        n5 = __sil_gt(n1, n2)
+        n6 = __sil_lnot(n5)
+
+        n7 = __sil_eq(n1, n1)
+        n8 = __sil_lnot(n7)
+
+        n9 = __sil_ne(n1, n1)
+        store &var_0 <- null
+        ret var_0
+
+}
+
+define comparisons::main() : void {
+    local var_0: void
+    #node_0:
+        n0 = comparisons::comparisons_ints_and_128()
+        n1 = comparisons::comparisons_floats_with_nan()
+        store &var_0 <- null
+        ret var_0
+
+}

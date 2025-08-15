@@ -27,9 +27,10 @@ define null_latent::latent(i: int) : void {
 
     #node_4:
         n4:*int = load &var_3
-        n5:int  = load n4:*int
+        n5:int  = load n4
         store &var_1 <- n5
-        ret
+        store &var_0 <- null
+        ret var_0
 
 }
 
@@ -37,7 +38,8 @@ define null_latent::main() : void {
     local var_0: void
 
     #node_0:
-        call latent(-1)
-        ret
+        n0 = null_latent::latent(-1)
+        store &var_0 <- null
+        ret var_0
 
 }

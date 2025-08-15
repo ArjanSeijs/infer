@@ -1,0 +1,403 @@
+# Final ULLBC before control-flow reconstruction:
+
+// Full name: core::panicking::AssertKind
+pub enum AssertKind {
+  Eq,
+  Ne,
+  Match,
+}
+
+// Full name: core::option::Option
+#[lang_item("Option")]
+pub enum Option<T>
+where
+    [@TraitClause0]: Sized<T>,
+{
+  None,
+  Some(T),
+}
+
+// Full name: core::fmt::Arguments
+#[lang_item("format_arguments")]
+pub opaque type Arguments<'a>
+where
+    'a : 'a,
+
+// Full name: core::marker::Sized
+#[lang_item("sized")]
+pub trait Sized<Self>
+{
+    parent_clause0 : [@TraitClause0]: MetaSized<Self>
+    non-dyn-compatible
+}
+
+// Full name: core::marker::MetaSized
+#[lang_item("meta_sized")]
+pub trait MetaSized<Self>
+
+// Full name: bitwise::bitwise_ops
+fn bitwise_ops()
+{
+    let @0: (); // return
+    let @1: (); // anonymous local
+    let @2: (&'_ (u8), &'_ (u8)); // anonymous local
+    let @3: &'_ (u8); // anonymous local
+    let @4: u8; // anonymous local
+    let @5: &'_ (u8); // anonymous local
+    let @6: u8; // anonymous local
+    let left_val@7: &'_ (u8); // local
+    let right_val@8: &'_ (u8); // local
+    let @9: bool; // anonymous local
+    let @10: u8; // anonymous local
+    let @11: u8; // anonymous local
+    let @12: !; // anonymous local
+    let kind@13: AssertKind; // local
+    let @14: !; // anonymous local
+    let @15: AssertKind; // anonymous local
+    let @16: &'_ (u8); // anonymous local
+    let @17: &'_ (u8); // anonymous local
+    let @18: &'_ (u8); // anonymous local
+    let @19: &'_ (u8); // anonymous local
+    let @20: Option<Arguments<'_>>[Sized<Arguments<'_>>]; // anonymous local
+    let @21: (); // anonymous local
+    let @22: (&'_ (u8), &'_ (u8)); // anonymous local
+    let @23: &'_ (u8); // anonymous local
+    let @24: u8; // anonymous local
+    let @25: &'_ (u8); // anonymous local
+    let @26: u8; // anonymous local
+    let left_val@27: &'_ (u8); // local
+    let right_val@28: &'_ (u8); // local
+    let @29: bool; // anonymous local
+    let @30: u8; // anonymous local
+    let @31: u8; // anonymous local
+    let @32: !; // anonymous local
+    let kind@33: AssertKind; // local
+    let @34: !; // anonymous local
+    let @35: AssertKind; // anonymous local
+    let @36: &'_ (u8); // anonymous local
+    let @37: &'_ (u8); // anonymous local
+    let @38: &'_ (u8); // anonymous local
+    let @39: &'_ (u8); // anonymous local
+    let @40: Option<Arguments<'_>>[Sized<Arguments<'_>>]; // anonymous local
+    let @41: (); // anonymous local
+    let @42: (&'_ (u8), &'_ (u8)); // anonymous local
+    let @43: &'_ (u8); // anonymous local
+    let @44: u8; // anonymous local
+    let @45: &'_ (u8); // anonymous local
+    let @46: u8; // anonymous local
+    let left_val@47: &'_ (u8); // local
+    let right_val@48: &'_ (u8); // local
+    let @49: bool; // anonymous local
+    let @50: u8; // anonymous local
+    let @51: u8; // anonymous local
+    let @52: !; // anonymous local
+    let kind@53: AssertKind; // local
+    let @54: !; // anonymous local
+    let @55: AssertKind; // anonymous local
+    let @56: &'_ (u8); // anonymous local
+    let @57: &'_ (u8); // anonymous local
+    let @58: &'_ (u8); // anonymous local
+    let @59: &'_ (u8); // anonymous local
+    let @60: Option<Arguments<'_>>[Sized<Arguments<'_>>]; // anonymous local
+    let a@61: i8; // local
+    let @62: (); // anonymous local
+    let @63: (&'_ (i8), &'_ (i8)); // anonymous local
+    let @64: &'_ (i8); // anonymous local
+    let @65: i8; // anonymous local
+    let @66: i8; // anonymous local
+    let @67: &'_ (i8); // anonymous local
+    let @68: i8; // anonymous local
+    let left_val@69: &'_ (i8); // local
+    let right_val@70: &'_ (i8); // local
+    let @71: bool; // anonymous local
+    let @72: i8; // anonymous local
+    let @73: i8; // anonymous local
+    let @74: !; // anonymous local
+    let kind@75: AssertKind; // local
+    let @76: !; // anonymous local
+    let @77: AssertKind; // anonymous local
+    let @78: &'_ (i8); // anonymous local
+    let @79: &'_ (i8); // anonymous local
+    let @80: &'_ (i8); // anonymous local
+    let @81: &'_ (i8); // anonymous local
+    let @82: Option<Arguments<'_>>[Sized<Arguments<'_>>]; // anonymous local
+    let @83: (); // anonymous local
+    let @84: (); // anonymous local
+    let @85: (); // anonymous local
+    let @86: (); // anonymous local
+    let @87: (); // anonymous local
+
+    bb0: {
+        storage_live(@1);
+        storage_live(@2);
+        storage_live(@3);
+        storage_live(@4);
+        @4 := const (10 : u8) & const (12 : u8);
+        @3 := &@4;
+        storage_live(@5);
+        storage_live(@6);
+        @6 := const (8 : u8);
+        @5 := &@6;
+        @2 := (move (@3), move (@5));
+        storage_dead(@5);
+        storage_dead(@3);
+        storage_live(left_val@7);
+        left_val@7 := copy ((@2).0);
+        storage_live(right_val@8);
+        right_val@8 := copy ((@2).1);
+        storage_live(@9);
+        storage_live(@10);
+        @10 := copy (*(left_val@7));
+        storage_live(@11);
+        @11 := copy (*(right_val@8));
+        @9 := move (@10) == move (@11);
+        if move (@9) -> bb1 else -> bb2;
+    }
+
+    bb1: {
+        storage_dead(@11);
+        storage_dead(@10);
+        nop;
+        nop;
+        storage_dead(@9);
+        storage_dead(right_val@8);
+        storage_dead(left_val@7);
+        storage_dead(@6);
+        storage_dead(@4);
+        storage_dead(@2);
+        storage_dead(@1);
+        storage_live(@21);
+        storage_live(@22);
+        storage_live(@23);
+        storage_live(@24);
+        @24 := const (10 : u8) | const (5 : u8);
+        @23 := &@24;
+        storage_live(@25);
+        storage_live(@26);
+        @26 := const (15 : u8);
+        @25 := &@26;
+        @22 := (move (@23), move (@25));
+        storage_dead(@25);
+        storage_dead(@23);
+        storage_live(left_val@27);
+        left_val@27 := copy ((@22).0);
+        storage_live(right_val@28);
+        right_val@28 := copy ((@22).1);
+        storage_live(@29);
+        storage_live(@30);
+        @30 := copy (*(left_val@27));
+        storage_live(@31);
+        @31 := copy (*(right_val@28));
+        @29 := move (@30) == move (@31);
+        if move (@29) -> bb3 else -> bb4;
+    }
+
+    bb2: {
+        storage_dead(@11);
+        storage_dead(@10);
+        storage_live(kind@13);
+        kind@13 := AssertKind::Eq {  };
+        nop;
+        storage_live(@15);
+        @15 := move (kind@13);
+        storage_live(@16);
+        storage_live(@17);
+        @17 := &*(left_val@7);
+        @16 := &*(@17);
+        storage_live(@18);
+        storage_live(@19);
+        @19 := &*(right_val@8);
+        @18 := &*(@19);
+        storage_live(@20);
+        @20 := Option::None {  };
+        panic(core::panicking::assert_failed);
+    }
+
+    bb3: {
+        storage_dead(@31);
+        storage_dead(@30);
+        nop;
+        nop;
+        storage_dead(@29);
+        storage_dead(right_val@28);
+        storage_dead(left_val@27);
+        storage_dead(@26);
+        storage_dead(@24);
+        storage_dead(@22);
+        storage_dead(@21);
+        storage_live(@41);
+        storage_live(@42);
+        storage_live(@43);
+        storage_live(@44);
+        @44 := const (15 : u8) ^ const (5 : u8);
+        @43 := &@44;
+        storage_live(@45);
+        storage_live(@46);
+        @46 := const (10 : u8);
+        @45 := &@46;
+        @42 := (move (@43), move (@45));
+        storage_dead(@45);
+        storage_dead(@43);
+        storage_live(left_val@47);
+        left_val@47 := copy ((@42).0);
+        storage_live(right_val@48);
+        right_val@48 := copy ((@42).1);
+        storage_live(@49);
+        storage_live(@50);
+        @50 := copy (*(left_val@47));
+        storage_live(@51);
+        @51 := copy (*(right_val@48));
+        @49 := move (@50) == move (@51);
+        if move (@49) -> bb5 else -> bb6;
+    }
+
+    bb4: {
+        storage_dead(@31);
+        storage_dead(@30);
+        storage_live(kind@33);
+        kind@33 := AssertKind::Eq {  };
+        nop;
+        storage_live(@35);
+        @35 := move (kind@33);
+        storage_live(@36);
+        storage_live(@37);
+        @37 := &*(left_val@27);
+        @36 := &*(@37);
+        storage_live(@38);
+        storage_live(@39);
+        @39 := &*(right_val@28);
+        @38 := &*(@39);
+        storage_live(@40);
+        @40 := Option::None {  };
+        panic(core::panicking::assert_failed);
+    }
+
+    bb5: {
+        storage_dead(@51);
+        storage_dead(@50);
+        nop;
+        nop;
+        storage_dead(@49);
+        storage_dead(right_val@48);
+        storage_dead(left_val@47);
+        storage_dead(@46);
+        storage_dead(@44);
+        storage_dead(@42);
+        storage_dead(@41);
+        storage_live(a@61);
+        a@61 := const (-1 : i8);
+        storage_live(@62);
+        storage_live(@63);
+        storage_live(@64);
+        storage_live(@65);
+        storage_live(@66);
+        @66 := copy (a@61);
+        @65 := move (@66) & const (15 : i8);
+        storage_dead(@66);
+        @64 := &@65;
+        storage_live(@67);
+        storage_live(@68);
+        @68 := const (15 : i8);
+        @67 := &@68;
+        @63 := (move (@64), move (@67));
+        storage_dead(@67);
+        storage_dead(@64);
+        storage_live(left_val@69);
+        left_val@69 := copy ((@63).0);
+        storage_live(right_val@70);
+        right_val@70 := copy ((@63).1);
+        storage_live(@71);
+        storage_live(@72);
+        @72 := copy (*(left_val@69));
+        storage_live(@73);
+        @73 := copy (*(right_val@70));
+        @71 := move (@72) == move (@73);
+        if move (@71) -> bb7 else -> bb8;
+    }
+
+    bb6: {
+        storage_dead(@51);
+        storage_dead(@50);
+        storage_live(kind@53);
+        kind@53 := AssertKind::Eq {  };
+        nop;
+        storage_live(@55);
+        @55 := move (kind@53);
+        storage_live(@56);
+        storage_live(@57);
+        @57 := &*(left_val@47);
+        @56 := &*(@57);
+        storage_live(@58);
+        storage_live(@59);
+        @59 := &*(right_val@48);
+        @58 := &*(@59);
+        storage_live(@60);
+        @60 := Option::None {  };
+        panic(core::panicking::assert_failed);
+    }
+
+    bb7: {
+        storage_dead(@73);
+        storage_dead(@72);
+        nop;
+        nop;
+        storage_dead(@71);
+        storage_dead(right_val@70);
+        storage_dead(left_val@69);
+        storage_dead(@68);
+        storage_dead(@65);
+        storage_dead(@63);
+        storage_dead(@62);
+        nop;
+        @0 := ();
+        storage_dead(a@61);
+        @0 := ();
+        return;
+    }
+
+    bb8: {
+        storage_dead(@73);
+        storage_dead(@72);
+        storage_live(kind@75);
+        kind@75 := AssertKind::Eq {  };
+        nop;
+        storage_live(@77);
+        @77 := move (kind@75);
+        storage_live(@78);
+        storage_live(@79);
+        @79 := &*(left_val@69);
+        @78 := &*(@79);
+        storage_live(@80);
+        storage_live(@81);
+        @81 := &*(right_val@70);
+        @80 := &*(@81);
+        storage_live(@82);
+        @82 := Option::None {  };
+        panic(core::panicking::assert_failed);
+    }
+}
+
+// Full name: bitwise::main
+fn main()
+{
+    let @0: (); // return
+    let @1: (); // anonymous local
+    let @2: (); // anonymous local
+
+    bb0: {
+        storage_live(@1);
+        @1 := bitwise_ops() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(@1);
+        nop;
+        @0 := ();
+        @0 := ();
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}

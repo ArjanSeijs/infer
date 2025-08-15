@@ -3,13 +3,14 @@
 type Point = { x: int; y: int }
 
 define struct_move::main() : void {
-  local var_0: Point, var_1: Point
+  local var_0: void, var_1: Point, var_2: Point
 
   #node_0:
-      n0 = &var_0
-      store &var_0.Point.x <- 1
-      store &var_0.Point.y <- 2
-      store &var_1 <- var_0
-      ret
+      n0 = &var_1
+      store &var_1.Point.x <- 1
+      store &var_1.Point.y <- 2
+      store &var_2 <- var_1
+      store &var_0 <- null
+      ret var_0
 
 }

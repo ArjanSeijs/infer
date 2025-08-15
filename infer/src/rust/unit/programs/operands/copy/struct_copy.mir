@@ -1,0 +1,29 @@
+# Final ULLBC before control-flow reconstruction:
+
+// Full name: struct_copy::Point
+struct Point {
+  x: i32,
+  y: i32,
+}
+
+// Full name: struct_copy::main
+fn main()
+{
+    let @0: (); // return
+    let p@1: Point; // local
+    let a@2: i32; // local
+    let @3: (); // anonymous local
+
+    bb0: {
+        storage_live(p@1);
+        p@1 := Point { x: const (1 : i32), y: const (2 : i32) };
+        storage_live(a@2);
+        a@2 := copy ((p@1).x);
+        nop;
+        @0 := ();
+        storage_dead(a@2);
+        storage_dead(p@1);
+        @0 := ();
+        return;
+    }
+}

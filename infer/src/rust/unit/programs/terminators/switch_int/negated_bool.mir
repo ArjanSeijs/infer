@@ -1,0 +1,63 @@
+# Final ULLBC before control-flow reconstruction:
+
+// Full name: negated_bool::swi_not
+pub fn swi_not(@1: bool) -> i32
+{
+    let @0: i32; // return
+    let b@1: bool; // arg #1
+    let @2: bool; // anonymous local
+
+    bb0: {
+        storage_live(@2);
+        @2 := copy (b@1);
+        if move (@2) -> bb1 else -> bb2;
+    }
+
+    bb1: {
+        @0 := const (20 : i32);
+        goto bb3;
+    }
+
+    bb2: {
+        @0 := const (10 : i32);
+        goto bb3;
+    }
+
+    bb3: {
+        storage_dead(@2);
+        return;
+    }
+}
+
+// Full name: negated_bool::main
+fn main()
+{
+    let @0: (); // return
+    let x@1: bool; // local
+    let @2: i32; // anonymous local
+    let @3: bool; // anonymous local
+    let @4: (); // anonymous local
+
+    bb0: {
+        storage_live(x@1);
+        x@1 := const (false);
+        storage_live(@2);
+        storage_live(@3);
+        @3 := copy (x@1);
+        @2 := swi_not(move (@3)) -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(@3);
+        storage_dead(@2);
+        nop;
+        @0 := ();
+        storage_dead(x@1);
+        @0 := ();
+        return;
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+}

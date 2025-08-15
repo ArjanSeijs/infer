@@ -11,9 +11,9 @@ define after_lifetime::main() : void {
         store &var_1 <- n1:*int
         store &var_2 <- null:void
         n2:*int = load &var_1
-        n3:int  = load n2:*int
+        n3:int  = load n2
         store &var_6 <- n3:int
         store &var_0 <- null:void
-        ret
+        ret var_0
 
 }

@@ -1,0 +1,29 @@
+# Final ULLBC before control-flow reconstruction:
+
+// Full name: struct_move::Point
+struct Point {
+  x: i32,
+  y: i32,
+}
+
+// Full name: struct_move::main
+fn main()
+{
+    let @0: (); // return
+    let p1@1: Point; // local
+    let p2@2: Point; // local
+    let @3: (); // anonymous local
+
+    bb0: {
+        storage_live(p1@1);
+        p1@1 := Point { x: const (1 : i32), y: const (2 : i32) };
+        storage_live(p2@2);
+        p2@2 := move (p1@1);
+        nop;
+        @0 := ();
+        storage_dead(p2@2);
+        storage_dead(p1@1);
+        @0 := ();
+        return;
+    }
+}
