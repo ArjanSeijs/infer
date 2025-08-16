@@ -3,15 +3,26 @@
 ; This source code is licensed under the MIT license found in the
 ; LICENSE file in the root directory of this source tree.
 
+(include_subdirs unqualified)
+
 (library
  (name RustFrontendTest)
- (modules :standard \ RustMir2TextualTest)
- (flags (:standard -open Core -open IStdlib -open IStd -open IBase -open Textuallib))
- (libraries core charon zarith IStdlib IBase Textuallib RustFrontend ppx_show.runtime)
- (preprocess (pps ppx_expect ppx_inline_test))
- (inline_tests (deps (glob_files programs/*))))
-
-(executable
- (name RustMir2TextualTest)
- (modules RustMir2TextualTest)
- (libraries yojson core charon zarith IStdlib IBase Textuallib RustFrontend))
+ (modules :standard)
+ (flags
+  (:standard
+   -open
+   IStdlib
+   -open
+   Unix
+   -open
+   IStd
+   -open
+   IBase
+   -open
+   Textuallib))
+ (libraries charon zarith IStdlib IBase Textuallib RustFrontend yojson)
+ (preprocess
+  (pps ppx_expect))
+ (inline_tests
+  (deps
+   (source_tree programs))))

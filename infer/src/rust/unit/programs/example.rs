@@ -1,4 +1,4 @@
 #[allow(unused)]
-fn foo() {
+fn main() {
     let x = 42;
 }

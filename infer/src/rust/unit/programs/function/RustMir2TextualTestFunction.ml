@@ -1,0 +1,157 @@
+(*
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *)
+
+open RustMir2TextualTest
+
+let%expect_test "function/calls_and_temp" =
+  test "./function/calls_and_temp.ullbc" ;
+  [%expect
+    {|
+    .source_language = "Rust"
+
+    define calls_and_temp::callee(n: int) : int {
+    local var_0: void, var_1: int
+
+    #node_0:
+        n0 = load &n
+        n1 = __sil_mult_int(n0, 2)
+        ret n1
+
+    }
+
+    define calls_and_temp::calls_and_temp() : int {
+    local var_0: void, var_1: int
+
+    #node_0:
+        n0 = 3
+        n1 = calls_and_temp::callee(n0)
+        store &var_1 <- n1
+        n2 = load &var_1
+        ret n2
+
+    }
+
+    define calls_and_temp::main() : void {
+    local var_0: void, var_1: int
+
+    #node_0:
+        n0 = calls_and_temp::calls_and_temp()
+        store &var_1 <- n0
+        store &var_0 <- null
+        ret var_0
+        
+    }
+
+    |}]
+
+
+let%expect_test "function/complex" =
+  test "./function/complex.ullbc" ;
+  [%expect
+    {|
+    .source_language = "Rust"
+
+    define complex::fn_complex(a: int, b: int) : int {
+        local var_0: int, var_1: int
+
+        #node_0:
+            store &var_0 <- 0:int
+            jmp node_1
+
+        #node_1:
+            n0:int = load &var_0
+            n1 = __sil_lt(n0, 3)
+            if n1 then jmp node_2 else jmp node_11
+
+        #node_2:
+            n0:int = load &a
+            n1:int = load &b
+            n2 = __sil_plusa_int(n0, n1)
+            n3 = __sil_mod(n2, 4)
+            store &var_1 <- n3
+            jmp node_3
+
+        #node_3:
+            n0:int = load &var_1
+            n1 = __sil_eq(n0, 0)
+            if n1 then jmp node_4 else jmp node_5
+
+        #node_4:
+            n0:int = load &a
+            n1 = complex::helper(n0)
+            n2:int = load &a
+            n3 = __sil_plusa_int(n2, n1)
+            store &a <- n3:int
+            jmp node_10
+
+        #node_5:
+            n0:int = load &var_1
+            n1 = __sil_eq(n0, 1)
+            if n1 then jmp node_6 else jmp node_7
+
+        #node_6:
+            n0:int = load &b
+            n1 = complex::helper(n0)
+            n2:int = load &b
+            n3 = __sil_plusa_int(n2, n1)
+            store &b <- n3:int
+            jmp node_10
+
+        #node_7:
+            n0:int = load &var_1
+            n1 = __sil_eq(n0, 2)
+            if n1 then jmp node_8 else jmp node_9
+
+        #node_8:
+            n0:int = load &a
+            n1 = __sil_minusa_int(n0, 1)
+            store &a <- n1:int
+            n2 = __sil_lt(n1, 0)
+            if n2 then jmp node_11 else jmp node_10
+
+        #node_9:
+            n0:int = load &b
+            n1 = __sil_minusa_int(n0, 1)
+            store &b <- n1
+            jmp node_10
+
+        #node_10:
+            n0:int = load &var_0
+            n1 = __sil_plusa_int(n0, 1)
+            store &var_0 <- n1
+            jmp node_1
+
+        #node_11:
+            n0:int = load &a
+            n1:int = load &b
+            n2 = __sil_plusa_int(n0, n1)
+            ret n2
+
+    }
+
+    define complex::helper(x: int) : int {
+        #node_0:
+            n0:int = load &x
+            n1 = __sil_mult_int(n0, 2)
+            ret n1
+
+    }
+
+    define complex::main() : void {
+        local var_0: void, var_1: int, var_2: int
+        #node_0:
+            store &var_1 <- 0
+            store &var_2 <- 1
+            n0:int = load &var_1
+            n1:int = load &var_2
+            n2 = complex::fn_complex(n0, n1)
+            store &var_0 <- null
+            ret var_0
+
+    }
+
+    |}]

@@ -61,7 +61,7 @@
                     },
                     {
                         "Ident": [
-                            "foo",
+                            "main",
                             0
                         ]
                     }
@@ -76,7 +76,7 @@
                 "value": [
                     {
                         "Ident": [
-                            "foo",
+                            "main",
                             0
                         ]
                     }
@@ -89,7 +89,7 @@
                     "Local": "./example.rs"
                 },
                 "crate_name": "example",
-                "contents": "#[allow(unused)]\nfn foo() {\n    let x = 42;\n}"
+                "contents": "#[allow(unused)]\nfn main() {\n    let x = 42;\n}"
             }
         ],
         "type_decls": [],
@@ -106,7 +106,7 @@
                         },
                         {
                             "Ident": [
-                                "foo",
+                                "main",
                                 0
                             ]
                         }
@@ -125,7 +125,7 @@
                         },
                         "generated_from_span": null
                     },
-                    "source_text": "fn foo() {\n    let x = 42;\n}",
+                    "source_text": "fn main() {\n    let x = 42;\n}",
                     "attr_info": {
                         "attributes": [
                             {

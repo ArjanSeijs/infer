@@ -1,14 +1,15 @@
-This folder contains automated tests for converting Rust programs into Textual IR using `RustMir2TextualTest.exe`.
-
 ### Folder Structure
 
 The `programs` directory contains subfolders for different Rust constructs (e.g., `operands`, `statements`, `rvalues`, etc.).
 
-Inside each test subfolder, there are **three files** for each test case:
+Inside each test subfolder, there are **four files** for each test case:
 
+* **`.mir`** - Final ULLBC before control flow reconstruction.
 * **`.rs`** — The Rust program being tested.
-* **`.ullbc`** — The output from Charon when processing the MIR of the Rust program.
 * **`.sil`** — The expected Textual IR output for comparison.
+* **`.ullbc`** — The output from Charon after processing the MIR of the Rust program.
+
+Additionally, there is an .ml file in each subfolder that handles running the tests for that subfolder. 
 
 ---
 
@@ -22,48 +23,17 @@ RUSTFLAGS="-A warnings" path-to-charon rustc --ullbc -- path-to-rust-program
 
 ---
 
+### Generating `.mir` Files
+
+```
+RUSTFLAGS="-A warnings" path-to-charon rustc --print-ullbc -- path-to-rust-program
+```
+
+---
+
 ### Running the Tests
-
-First, navigate to the `unit` folder:
-
-```bash
-cd infer/src/rust/unit
-```
-
-Build the test runner:
+To run all tests:
 
 ```bash
-dune build ./RustMir2TextualTest.exe
+dune runtest
 ```
-
----
-
-#### Run **all** tests:
-
-```bash
-dune exec ./RustMir2TextualTest.exe
-```
-
----
-
-#### Run tests for a specific subfolder:
-
-You can filter tests by setting the `RUN_UNDER` environment variable to the relative path under `programs`.
-
-For example, to run only the tests in `operands/const`:
-
-```bash
-RUN_UNDER=operands/const dune exec ./RustMir2TextualTest.exe
-```
-
----
-
-### Output
-
-* Results and diffs are printed directly to the terminal.
-* Output statuses:
-
-  * `OK` — Output matches the expected `.sil`
-  * `MISS` — Missing `.sil` file
-  * `DIFF` — Output differs from the expected `.sil`
-  * `ERR` — Error occurred during translation
