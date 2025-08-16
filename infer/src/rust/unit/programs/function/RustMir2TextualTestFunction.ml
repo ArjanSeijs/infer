@@ -5,9 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  *)
 
+open IStd
 open RustMir2TextualTest
 
-let%expect_test "function/calls_and_temp" =
+let%expect_test "calls_and_temp" =
   test "./function/calls_and_temp.ullbc" ;
   [%expect
     {|
@@ -49,7 +50,7 @@ let%expect_test "function/calls_and_temp" =
     |}]
 
 
-let%expect_test "function/complex" =
+let%expect_test "complex" =
   test "./function/complex.ullbc" ;
   [%expect
     {|

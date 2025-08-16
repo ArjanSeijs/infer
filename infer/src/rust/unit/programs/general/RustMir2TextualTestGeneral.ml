@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *)
 
+open IStd
 open RustMir2TextualTest
 
 let%expect_test "after_lifetime" =
