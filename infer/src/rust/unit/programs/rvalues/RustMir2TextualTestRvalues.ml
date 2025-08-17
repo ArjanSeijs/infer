@@ -465,13 +465,13 @@ let%expect_test "mut_raw_ptr0" =
     .source_language = "Rust"
 
     define mut_raw_ptr0::main() : void {
-    local var_0: void, var_1: int, var_2: *int, var_3: *int
-    #node_0:
-        store &var_0 <- 10
-        store &var_2 <- &var_1
-        store &var_1 <- var_3
-        store &var_0 <- null
-        ret var_0
+      local var_0: void, var_1: int, var_2: *int, var_3: *int
+      #node_0:
+          store &var_0 <- 10
+          store &var_2 <- &var_1
+          store &var_1 <- var_3
+          store &var_0 <- null
+          ret var_0
 
     }
 
@@ -486,13 +486,12 @@ let%expect_test "mut_ref0" =
     .source_language = "Rust"
 
     define mut_ref0::main() : void {
-    local var_0: void, var_1: int, var_2: *int
-
-    #node_0:
-        store &var_1 <- 10
-        store &var_2 <- &var_1
-        store &var_0 <- null
-        ret var_0
+      local var_0: void, var_1: int, var_2: *int
+      #node_0:
+          store &var_1 <- 10
+          store &var_2 <- &var_1
+          store &var_0 <- null
+          ret var_0
 
     }
 
@@ -507,14 +506,13 @@ let%expect_test "raw_ptr0" =
     .source_language = "Rust"
 
     define raw_ptr0::main() : void {
-    local var_0: void, var_1: int, var_2: *int, var_3: *int
-
-    #node_0:
-        store &var_0 <- 10
-        store &var_2 <- &var_0
-        store &var_1 <- var_2
-        store &var_0 <- null
-        ret var_0
+      local var_0: void, var_1: int, var_2: *int, var_3: *int
+      #node_0:
+          store &var_0 <- 10
+          store &var_2 <- &var_0
+          store &var_1 <- var_2
+          store &var_0 <- null
+          ret var_0
 
     }
 
@@ -529,14 +527,13 @@ let%expect_test "ref0" =
     .source_language = "Rust"
 
     define ref0::main() : void {
-    local var_0: void, var_1: int, var_2: *int
-
-    #node_0:
-        store &var_1 <- 10
-        n0 = &var_1
-        store &var_2 <- n0
-        store &var_0 <- null
-        ret var_0
+      local var_0: void, var_1: int, var_2: *int
+      #node_0:
+          store &var_1 <- 10
+          n0 = &var_1
+          store &var_2 <- n0
+          store &var_0 <- null
+          ret var_0
 
     }
 
@@ -552,7 +549,6 @@ let%expect_test "bitwise_not" =
 
     define bitwise_not::test_bitwise_not_u32() : void {
       local var_0: void, var_1: int, var_2: int, var_3: int, var_4: void
-
       #node_0:
           store &var_1 <- 170
           n0 = load &var_1
@@ -564,7 +560,6 @@ let%expect_test "bitwise_not" =
 
     define bitwise_not::test_bitwise_not_i32() : void {
       local var_0: void, var_1: int, var_2: int, var_3: int, var_4: void
-
       #node_0:
           store &var_1 <- -1
           n0 = load &var_1
@@ -576,7 +571,6 @@ let%expect_test "bitwise_not" =
 
     define bitwise_not::main() : void {
       local var_0: void, var_1: void, var_2: void
-
       #node_0:
           n0 = bitwise_not::test_bitwise_not_u32()
           store &var_1 <- null
@@ -597,7 +591,6 @@ let%expect_test "bitwise_not" =
 
     define bitwise_not::test_bitwise_not_u32() : void {
       local var_0: void, var_1: int, var_2: int, var_3: int, var_4: void
-
       #node_0:
           store &var_1 <- 170
           n0 = load &var_1
@@ -609,7 +602,6 @@ let%expect_test "bitwise_not" =
 
     define bitwise_not::test_bitwise_not_i32() : void {
       local var_0: void, var_1: int, var_2: int, var_3: int, var_4: void
-
       #node_0:
           store &var_1 <- -1
           n0 = load &var_1
@@ -621,7 +613,6 @@ let%expect_test "bitwise_not" =
 
     define bitwise_not::main() : void {
       local var_0: void, var_1: void, var_2: void
-
       #node_0:
           n0 = bitwise_not::test_bitwise_not_u32()
           store &var_1 <- null
@@ -642,7 +633,6 @@ let%expect_test "logical_not" =
 
     define logical_not::main() : void {
       local var_0: void, var_1: bool, var_2: bool, var_3: bool, var_4: void
-
       #node_0:
           store &var_1 <- true
           n0 = load &var_1
