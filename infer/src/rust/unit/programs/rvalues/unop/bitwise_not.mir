@@ -1,0 +1,85 @@
+# Final ULLBC before control-flow reconstruction:
+
+// Full name: bitwise_not::test_bitwise_not_u32
+fn test_bitwise_not_u32()
+{
+    let @0: (); // return
+    let x@1: u32; // local
+    let y@2: u32; // local
+    let @3: u32; // anonymous local
+    let @4: (); // anonymous local
+
+    bb0: {
+        storage_live(x@1);
+        x@1 := const (170 : u32);
+        storage_live(y@2);
+        storage_live(@3);
+        @3 := copy (x@1);
+        y@2 := ~(move (@3));
+        storage_dead(@3);
+        nop;
+        @0 := ();
+        storage_dead(y@2);
+        storage_dead(x@1);
+        @0 := ();
+        return;
+    }
+}
+
+// Full name: bitwise_not::test_bitwise_not_i32
+fn test_bitwise_not_i32()
+{
+    let @0: (); // return
+    let x@1: i32; // local
+    let y@2: i32; // local
+    let @3: i32; // anonymous local
+    let @4: (); // anonymous local
+
+    bb0: {
+        storage_live(x@1);
+        x@1 := const (-1 : i32);
+        storage_live(y@2);
+        storage_live(@3);
+        @3 := copy (x@1);
+        y@2 := ~(move (@3));
+        storage_dead(@3);
+        nop;
+        @0 := ();
+        storage_dead(y@2);
+        storage_dead(x@1);
+        @0 := ();
+        return;
+    }
+}
+
+// Full name: bitwise_not::main
+fn main()
+{
+    let @0: (); // return
+    let @1: (); // anonymous local
+    let @2: (); // anonymous local
+    let @3: (); // anonymous local
+
+    bb0: {
+        storage_live(@1);
+        @1 := test_bitwise_not_u32() -> bb1 (unwind: bb2);
+    }
+
+    bb1: {
+        storage_dead(@1);
+        storage_live(@2);
+        @2 := test_bitwise_not_i32() -> bb3 (unwind: bb2);
+    }
+
+    bb2: {
+        unwind_continue;
+    }
+
+    bb3: {
+        storage_dead(@2);
+        nop;
+        @0 := ();
+        @0 := ();
+        return;
+    }
+}

@@ -1,7 +1,7 @@
 {
     "charon_version": "0.1.123",
     "translated": {
-        "crate_name": "unop0",
+        "crate_name": "neg_int",
         "options": {
             "ullbc": true,
             "lib": false,
@@ -55,7 +55,7 @@
                 "value": [
                     {
                         "Ident": [
-                            "unop0",
+                            "neg_int",
                             0
                         ]
                     },
@@ -86,9 +86,9 @@
         "files": [
             {
                 "name": {
-                    "Local": "./unop/unop0.rs"
+                    "Local": "./unop/neg_int.rs"
                 },
-                "crate_name": "unop0",
+                "crate_name": "neg_int",
                 "contents": "fn main() {\n    let y = 1;\n    let x = -y;\n}"
             }
         ],
@@ -100,7 +100,7 @@
                     "name": [
                         {
                             "Ident": [
-                                "unop0",
+                                "neg_int",
                                 0
                             ]
                         },

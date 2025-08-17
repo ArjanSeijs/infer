@@ -1,6 +1,6 @@
 # Final ULLBC before control-flow reconstruction:
 
-// Full name: unop0::main
+// Full name: neg_int::main
 fn main()
 {
     let @0: (); // return

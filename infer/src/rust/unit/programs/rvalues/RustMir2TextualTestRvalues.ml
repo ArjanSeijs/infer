@@ -544,22 +544,131 @@ let%expect_test "ref0" =
 
 
 (* Tests for unary operators *)
-let%expect_test "unop0" =
-  test "./rvalues/unop/unop0.ullbc" ;
+let%expect_test "bitwise_not" =
+  test "./rvalues/unop/bitwise_not.ullbc" ;
   [%expect
     {|
     .source_language = "Rust"
 
-    define unop0::main() : void {
-    local var_0: void, var_1: int, var_2: int
+    define bitwise_not::test_bitwise_not_u32() : void {
+      local var_0: void, var_1: int, var_2: int, var_3: int, var_4: void
 
-    #node_0:
-        store &var_1 <- 1
-        n0:int = load &var_1
-        n1 = __sil_neg(n0)
-        store &var_2 <- n1
-        store &var_0 <- null
-        ret var_0
+      #node_0:
+          store &var_1 <- 170
+          n0 = load &var_1
+          n1 = __sil_bnot(n0)
+          store &var_2 <- n1
+          store &var_0 <- null
+          ret var_0
     }
 
+    define bitwise_not::test_bitwise_not_i32() : void {
+      local var_0: void, var_1: int, var_2: int, var_3: int, var_4: void
+
+      #node_0:
+          store &var_1 <- -1
+          n0 = load &var_1
+          n1 = __sil_bnot(n0)
+          store &var_2 <- n1
+          store &var_0 <- null
+          ret var_0
+    }
+
+    define bitwise_not::main() : void {
+      local var_0: void, var_1: void, var_2: void
+
+      #node_0:
+          n0 = bitwise_not::test_bitwise_not_u32()
+          store &var_1 <- null
+          n1 = bitwise_not::test_bitwise_not_i32()
+          store &var_2 <- null
+          store &var_0 <- null
+          ret var_0
+    }
+
+  |}]
+
+
+let%expect_test "bitwise_not" =
+  test "./rvalues/unop/bitwise_not.ullbc" ;
+  [%expect
+    {|
+    .source_language = "Rust"
+
+    define bitwise_not::test_bitwise_not_u32() : void {
+      local var_0: void, var_1: int, var_2: int, var_3: int, var_4: void
+
+      #node_0:
+          store &var_1 <- 170
+          n0 = load &var_1
+          n1 = __sil_bnot(n0)
+          store &var_2 <- n1
+          store &var_0 <- null
+          ret var_0
+    }
+
+    define bitwise_not::test_bitwise_not_i32() : void {
+      local var_0: void, var_1: int, var_2: int, var_3: int, var_4: void
+
+      #node_0:
+          store &var_1 <- -1
+          n0 = load &var_1
+          n1 = __sil_bnot(n0)
+          store &var_2 <- n1
+          store &var_0 <- null
+          ret var_0
+    }
+
+    define bitwise_not::main() : void {
+      local var_0: void, var_1: void, var_2: void
+
+      #node_0:
+          n0 = bitwise_not::test_bitwise_not_u32()
+          store &var_1 <- null
+          n1 = bitwise_not::test_bitwise_not_i32()
+          store &var_2 <- null
+          store &var_0 <- null
+          ret var_0
+    }
+
+  |}]
+
+
+let%expect_test "logical_not" =
+  test "./rvalues/unop/logical_not.ullbc" ;
+  [%expect
+    {|
+    .source_language = "Rust"
+
+    define logical_not::main() : void {
+      local var_0: void, var_1: bool, var_2: bool, var_3: bool, var_4: void
+
+      #node_0:
+          store &var_1 <- true
+          n0 = load &var_1
+          n1 = __sil_lnot(n0)
+          store &var_2 <- n1
+          store &var_0 <- null
+          ret var_0
+    }
+  |}]
+
+
+let%expect_test "neg_int" =
+  test "./rvalues/unop/neg_int.ullbc" ;
+  [%expect
+    {|
+    .source_language = "Rust"
+
+    define neg_int::main() : void {
+      local var_0: void, var_1: int, var_2: int
+
+      #node_0:
+          store &var_1 <- 1
+          n0:int = load &var_1
+          n1 = __sil_neg(n0)
+          store &var_2 <- n1
+          store &var_0 <- null
+          ret var_0
+    }
   |}]
