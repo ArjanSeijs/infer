@@ -1,0 +1,8 @@
+.old
+codebases
+infer-out
+out
+*.llbc
+*.ullbc
+*.log
+*.print_ullbc

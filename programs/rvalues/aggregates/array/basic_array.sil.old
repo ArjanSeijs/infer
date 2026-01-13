@@ -1,0 +1,36 @@
+
+    .source_language = "Rust"
+
+    define dummy::main() : void {
+      local var_0: void, x_1: int[], _four_2: int, var_3: int
+      #node_0:
+          store &x_1[0] <- 4:int
+          store &x_1[1] <- 5:int
+          store &x_1[2] <- 6:int
+          store &var_3 <- 0:int
+          // ==> current <==
+          //n1:int[] = load &x_1 //instrs_place
+          //n2:int = load &var_3 //instrs_op
+          //n0:int = load n1[n2] //load instr
+          //store &_four_2 <- n0:int
+          // ==> simplified <==
+          //store &_four_2 <- &x_1[0]
+          // ==> expanded <==
+          //n0:int = load &x_1[0]
+          //store &_four_2 <- n0:int
+          //  ==> This goes wrong <==
+          //n1:int[] = load &x_1
+          //n0:int = load n1[0]
+          //store &_four_2 <- n0:int
+          // == Alternate ==
+          n2:int = load &var_3 //instrs_op
+          n0:int = load &x_1[n2]
+          store &_four_2 <- n0:int
+
+          // ==========
+          store &var_0 <- null:void
+          store &var_0 <- null:void
+          n3:void = load &var_0
+          ret n3
+
+    }

@@ -1,0 +1,15 @@
+.source_language = "Rust"
+
+type dummy::main::Point = {x: int; y: int}
+
+define dummy::main() : void {
+    local var_0: void, p_1: dummy::main::Point
+        #node_0:
+            store &p_1.dummy::main::Point.x <- 1:int
+            store &p_1.dummy::main::Point.y <- 2:int
+            store &var_0 <- null:void
+            store &var_0 <- null:void
+            n0:void = load &var_0
+            ret n0
+
+}

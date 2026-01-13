@@ -1,0 +1,4 @@
+"/home/arjan/Files/Studie/Thesis/infer/facebook-clang-plugins/clang/install/bin/clang-20" "@/home/arjan/Files/Studie/Thesis/examples/out/programs/rvalues/aggregates/struct/distance.c/infer-out/tmp/clang_command_.tmp.4cb4f6.txt" \
+  > /home/arjan/Files/Studie/Thesis/examples/programs/rvalues/aggregates/struct/distance.c.ast.biniou
+bdump -x -d "/home/arjan/Files/Studie/Thesis/infer/infer/bin/../etc/clang_ast.dict" -w '!!DUMMY!!' /home/arjan/Files/Studie/Thesis/examples/programs/rvalues/aggregates/struct/distance.c.ast.biniou \
+  > /home/arjan/Files/Studie/Thesis/examples/programs/rvalues/aggregates/struct/distance.c.ast.bdump

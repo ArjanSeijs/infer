@@ -1,0 +1,4 @@
+"/home/arjan/Files/Studie/Thesis/Old/infer_runs/infer-1.2.0/facebook-clang-plugins/clang/install/bin/clang-18" "@/home/arjan/Files/Studie/Thesis/infer/infer/infer-out/tmp/clang_command_.tmp.3fb794.txt" \
+  > /home/arjan/Files/Studie/Thesis/examples/programs/rvalues/aggregates/array/basic_array.c.ast.biniou
+bdump -x -d "/home/arjan/Files/Studie/Thesis/Old/infer_runs/infer-1.2.0/infer/bin/../etc/clang_ast.dict" -w '!!DUMMY!!' /home/arjan/Files/Studie/Thesis/examples/programs/rvalues/aggregates/array/basic_array.c.ast.biniou \
+  > /home/arjan/Files/Studie/Thesis/examples/programs/rvalues/aggregates/array/basic_array.c.ast.bdump

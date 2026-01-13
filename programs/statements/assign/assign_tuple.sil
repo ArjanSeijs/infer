@@ -1,0 +1,18 @@
+.source_language = "Rust"
+
+type Tuple = {
+    _0 : int;
+    _1 : int
+}
+
+define dummy::main() : void {
+  local var_0: void, x_1: Tuple<int,int>
+  #node_0:
+      store &x_1.Tuple._0 <- 1:int
+      store &x_1.Tuple._1 <- 2:int
+      store &var_0 <- null:void
+      store &var_0 <- null:void
+      n0:void = load &var_0
+      ret n0
+
+}
