@@ -200,6 +200,8 @@ let builtin_get_lazy_class = "__sil_get_lazy_class"
 
 let builtin_instanceof = "__sil_instanceof"
 
+let builin_boxnew = "__sil_boxnew"
+
 module BaseTypeName : sig
   include NAME
 
@@ -830,6 +832,8 @@ module ProcDecl = struct
 
   let instanceof_name = make_toplevel_name builtin_instanceof Location.Unknown
 
+  let boxnew_name = make_toplevel_name builin_boxnew Location.Unknown
+
   let unop_table : (Unop.t * string) list =
     [(Neg, "__sil_neg"); (BNot, "__sil_bnot"); (LNot, "__sil_lnot")]
 
@@ -1023,12 +1027,16 @@ module ProcDecl = struct
 
   let builtins_swift = [builtin_assert_fail; builtin_swift_alloc] @ unop_builtins @ binop_builtins
 
+  let builtins_rust = [builtin_free; builtin_malloc; builin_boxnew]
+
   let is_builtin (proc : QualifiedProcName.t) lang =
     match lang with
     | Lang.C ->
         List.mem builtins ~equal:String.equal proc.name.value
     | Lang.Swift ->
         List.mem builtins_swift ~equal:String.equal proc.name.value
+    | Lang.Rust ->
+        List.mem builtins_rust ~equal:String.equal proc.name.value
     | _ ->
         false
 end

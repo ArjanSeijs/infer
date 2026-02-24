@@ -1,0 +1,31 @@
+// Copyright (c) Facebook, Inc. and its affiliates.
+//
+// This source code is licensed under the MIT license found in the
+// LICENSE file in the root directory of this source tree.
+
+.source_language = "Rust"
+
+// Boxes are A pointer type that uniquely owns a heap allocation of type T.
+// The ABI of a box is the same as pointers in C however they are always fully aligned
+// and non-null. 
+// https://doc.rust-lang.org/1.93.1/src/alloc/boxed.rs.html#109
+// https://doc.rust-lang.org/book/ch15-01-box.html
+//
+// The function represents a simplified model of the box new function 
+// that calls malloc. 
+// https://doc.rust-lang.org/1.93.1/src/alloc/boxed.rs.html#244-266
+define __sil_boxnew(o : int): *int {
+  local ptr : *int
+  #entry:
+    n1 = __sil_malloc(<int>)
+    store &ptr <- n1
+    if __sil_ne([&ptr], 0) then jmp end else jmp invalid
+  #end:
+    n2 = load &ptr
+    store n2 <- o
+    ret n1
+  // TODO: Error handling in case of failure. 
+  #invalid:
+    unreachable
+
+}
