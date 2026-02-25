@@ -92,6 +92,7 @@ let build_system_exe_assoc =
   ; (BPython, "python3")
   ; (BRebar3, "rebar3")
   ; (BRust, "rustc")
+  ; (BRust, "cargo")
   ; (BSwiftc, "swiftc")
   ; (BErlc, "erlc")
   ; (BXcode, "xcodebuild") ]
