@@ -535,13 +535,13 @@ let%expect_test "enum" =
 
     type dummy::Types = {@discriminant: int}
 
-    type dummy::Types@Unit extends dummy::Types = {@discriminant: int}
-
-    type dummy::Types@Value extends dummy::Types = {@discriminant: int; 0: int}
+    type dummy::Types@Named extends dummy::Types = {@discriminant: int; id: int}
 
     type dummy::Types@Tuple extends dummy::Types = {@discriminant: int; 0: int; 1: int}
 
-    type dummy::Types@Named extends dummy::Types = {@discriminant: int; id: int}
+    type dummy::Types@Unit extends dummy::Types = {@discriminant: int}
+
+    type dummy::Types@Value extends dummy::Types = {@discriminant: int; 0: int}
 
     define dummy::main() : void {
       local var_0: void, tunit_1: dummy::Types, tvalue_2: dummy::Types, ttype_3: dummy::Types, tname_4: dummy::Types
