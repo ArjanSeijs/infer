@@ -46,7 +46,7 @@ let compile prog args =
   In_channel.close stderr ;
   match IUnix.waitpid pid with
   | Error _ as status ->
-      L.die ExternalError "Rustc exited with: %s @. Output: %s @. Trace: %s@."
+      L.die ExternalError "[CHARON ERROR] Rustc exited with: %s @. Output: %s @. Trace: %s@."
         (IUnix.Exit_or_signal.to_string_hum status)
         output error
   | Ok () ->
@@ -95,7 +95,7 @@ let filename_from_json json =
   | Some file_name ->
       file_name
   | None ->
-      L.die UserError "No file found in crate @."
+      L.die UserError "[CHARON ERROR] No file found in crate @."
 
 
 let capture_file json_filename =
@@ -106,7 +106,7 @@ let capture_file json_filename =
     | Ok crate ->
         RustFrontend.RustMir2Textual.mk_module crate ~file_name
     | Error err ->
-        L.die UserError "%s: %s @." err (Yojson.Basic.to_string json)
+        L.die UserError "[CHARON ERROR] JSON %s: %s @." err (Yojson.Basic.to_string json)
   in
   let sourcefile = Textual.SourceFile.create file_name in
   if Config.debug_mode || Config.dump_textual then dump_textual_file json_filename textual ;
@@ -115,7 +115,7 @@ let capture_file json_filename =
     | Ok vt ->
         vt
     | Error err ->
-        L.die UserError "Textual verification failed: %a @."
+        L.die UserError "[ERROR] Textual verification failed: %a @."
           (F.pp_print_list TextualVerification.pp_error)
           err
   in
@@ -128,7 +128,7 @@ let capture_file json_filename =
     | Ok s ->
         s
     | Error err ->
-        L.die UserError "Module to sil failed: %a @."
+        L.die UserError "[ERROR] Module to sil failed: %a @."
           (F.pp_print_list (Textual.pp_transform_error sourcefile))
           err
   in

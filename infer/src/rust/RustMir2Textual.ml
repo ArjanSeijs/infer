@@ -133,7 +133,7 @@ let mk_qualified_fieldname crate (type_decl : Charon.Generated_Types.type_decl) 
         let field = List.nth_exn variant.fields field_id in
         (field, Some variant)
     | _, _ ->
-        L.die UserError ""
+        L.die UserError "[ERROR] Could not find field %d in %s @." field_id (item_meta_to_string crate type_decl.item_meta)
   in
   let field_name = name_of_field field field_id in
   let enclosing_class = mk_typename_from_type_decl crate type_decl variant in
