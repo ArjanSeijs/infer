@@ -3,31 +3,65 @@
 // Full name: shifts::main
 fn main()
 {
-    let @0: (); // return
-    let @1: u8; // anonymous local
-    let @2: u8; // anonymous local
-    let x@3: i8; // local
-    let @4: i8; // anonymous local
-    let @5: i8; // anonymous local
+    let _0: (); // return
+    let _1: u8; // anonymous local
+    let _2: u32; // anonymous local
+    let _3: bool; // anonymous local
+    let _4: u8; // anonymous local
+    let _5: u32; // anonymous local
+    let _6: bool; // anonymous local
+    let x_7: i8; // local
+    let _8: i8; // anonymous local
+    let _9: i8; // anonymous local
+    let _10: u32; // anonymous local
+    let _11: bool; // anonymous local
 
     bb0: {
-        storage_live(@1);
-        @1 := const (1 : u8) panic.<< const (3 : i32);
-        storage_dead(@1);
-        storage_live(@2);
-        @2 := const (128 : u8) panic.>> const (7 : i32);
-        storage_dead(@2);
-        storage_live(x@3);
-        x@3 := const (-2 : i8);
-        storage_live(@4);
-        storage_live(@5);
-        @5 := copy (x@3);
-        @4 := move (@5) panic.>> const (1 : i32);
-        storage_dead(@5);
-        storage_dead(@4);
-        @0 := ();
-        storage_dead(x@3);
-        @0 := ();
+        storage_live(_2);
+        storage_live(_3);
+        storage_live(_5);
+        storage_live(_6);
+        storage_live(_10);
+        storage_live(_11);
+        _0 = ();
+        storage_live(_1);
+        _2 = cast<i32, u32>(const 3 : i32);
+        _3 = move _2 < const 8 : u32;
+        assert assert(move _3 == true) (overflow) -> bb2 (unwind: bb1);
+    }
+
+    bb1: {
+        unwind_continue;
+    }
+
+    bb2: {
+        _1 = const 1 : u8 wrap.<< const 3 : i32;
+        storage_dead(_1);
+        storage_live(_4);
+        _5 = cast<i32, u32>(const 7 : i32);
+        _6 = move _5 < const 8 : u32;
+        assert assert(move _6 == true) (overflow) -> bb3 (unwind: bb1);
+    }
+
+    bb3: {
+        _4 = const 128 : u8 wrap.>> const 7 : i32;
+        storage_dead(_4);
+        storage_live(x_7);
+        x_7 = const -2 : i8;
+        storage_live(_8);
+        storage_live(_9);
+        _9 = copy x_7;
+        _10 = cast<i32, u32>(const 1 : i32);
+        _11 = move _10 < const 8 : u32;
+        assert assert(move _11 == true) (overflow) -> bb4 (unwind: bb1);
+    }
+
+    bb4: {
+        _8 = move _9 wrap.>> const 1 : i32;
+        storage_dead(_9);
+        storage_dead(_8);
+        _0 = ();
+        storage_dead(x_7);
         return;
     }
 }

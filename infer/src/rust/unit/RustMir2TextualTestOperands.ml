@@ -20,17 +20,27 @@ fn main() {
     {|
     .source_language = "Rust"
 
-    define dummy::main() : void {
-      local var_0: void, var_1: float
+    define UNIT_METADATA() : void {
+      local var_0: void
       #node_0:
-          store &var_1 <- 3.14:float
-          store &var_0 <- null:void
           store &var_0 <- null:void
           n0:void = load &var_0
           ret n0
 
     }
 
+    define dummy::main() : void {
+      local var_0: void, var_1: float
+      #node_0:
+          store &var_0 <- null:void
+          store &var_1 <- 3.14:float
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
+
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]
 
 
@@ -45,17 +55,27 @@ fn main() {
     {|
     .source_language = "Rust"
 
-    define dummy::main() : void {
-      local var_0: void, var_1: int
+    define UNIT_METADATA() : void {
+      local var_0: void
       #node_0:
-          store &var_1 <- 42:int
-          store &var_0 <- null:void
           store &var_0 <- null:void
           n0:void = load &var_0
           ret n0
 
     }
 
+    define dummy::main() : void {
+      local var_0: void, var_1: int
+      #node_0:
+          store &var_0 <- null:void
+          store &var_1 <- 42:int
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
+
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]
 
 
@@ -70,8 +90,17 @@ fn main() {
     {|
     .source_language = "Rust"
 
+    define UNIT_METADATA() : void {
+      local var_0: void
+      #node_0:
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
+
     define dummy::main() : void {
-      local var_0: void, var_1: void
+      local var_0: void
       #node_0:
           store &var_0 <- null:void
           store &var_0 <- null:void
@@ -80,6 +109,7 @@ fn main() {
 
     }
 
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]
 
 
@@ -96,19 +126,29 @@ fn main() {
     {|
     .source_language = "Rust"
 
+    define UNIT_METADATA() : void {
+      local var_0: void
+      #node_0:
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
+
     define dummy::main() : void {
       local var_0: void, x_1: int, y_2: int
       #node_0:
+          store &var_0 <- null:void
           store &x_1 <- 42:int
           n0:int = load &x_1
           store &y_2 <- n0:int
-          store &var_0 <- null:void
           store &var_0 <- null:void
           n1:void = load &var_0
           ret n1
 
     }
 
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]
 
 
@@ -126,17 +166,27 @@ fn main() {
     {|
     .source_language = "Rust"
 
+    define UNIT_METADATA() : void {
+      local var_0: void
+      #node_0:
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
+
     define dummy::main() : void {
       local var_0: void, x_1: int, y_2: int
       #node_0:
+          store &var_0 <- null:void
           store &x_1 <- 100:int
           n0:int = load &x_1
           store &y_2 <- n0:int
-          store &var_0 <- null:void
           store &var_0 <- null:void
           n1:void = load &var_0
           ret n1
 
     }
 
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]

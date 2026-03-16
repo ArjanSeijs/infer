@@ -28,9 +28,19 @@ fn main() {
     {|
     .source_language = "Rust"
 
+    define UNIT_METADATA() : void {
+      local var_0: void
+      #node_0:
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
+
     define dummy::foo() : void {
       local var_0: void
       #node_0:
+          store &var_0 <- null:void
           n0 = dummy::bar()
           store &var_0 <- n0:void
           jmp node_2
@@ -40,7 +50,6 @@ fn main() {
           throw "UnwindResume"
 
       #node_2:
-          store &var_0 <- null:void
           n1:void = load &var_0
           ret n1
 
@@ -59,6 +68,7 @@ fn main() {
     define dummy::main() : void {
       local var_0: void
       #node_0:
+          store &var_0 <- null:void
           n0 = dummy::foo()
           store &var_0 <- n0:void
           jmp node_2
@@ -68,11 +78,12 @@ fn main() {
           throw "UnwindResume"
 
       #node_2:
-          store &var_0 <- null:void
           n1:void = load &var_0
           ret n1
 
     }
+
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]
 
 
@@ -94,9 +105,19 @@ fn main() {
     {|
     .source_language = "Rust"
 
+    define UNIT_METADATA() : void {
+      local var_0: void
+      #node_0:
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
+
     define dummy::main() : void {
       local var_0: void, b_1: int, var_2: int
       #node_0:
+          store &var_0 <- null:void
           store &b_1 <- 1:int
           n0:int = load &b_1
           store &var_2 <- n0:int
@@ -116,11 +137,12 @@ fn main() {
           jmp node_3
 
       #node_3:
-          store &var_0 <- null:void
           n2:void = load &var_0
           ret n2
 
     }
+
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]
 
 
@@ -139,6 +161,15 @@ fn main() {
     {|
     .source_language = "Rust"
 
+    define UNIT_METADATA() : void {
+      local var_0: void
+      #node_0:
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
+
     define dummy::id(x_1: int) : int {
       local var_0: int
       #node_0:
@@ -152,21 +183,23 @@ fn main() {
     define dummy::main() : void {
       local var_0: void, x_1: int
       #node_0:
+          store &var_0 <- null:void
           n0 = dummy::id(10)
           store &x_1 <- n0:int
-          jmp node_1
-          .handlers node_2
+          jmp node_2
+          .handlers node_1
 
       #node_1:
-          store &var_0 <- null:void
+          throw "UnwindResume"
+
+      #node_2:
           store &var_0 <- null:void
           n1:void = load &var_0
           ret n1
 
-      #node_2:
-          throw "UnwindResume"
-
     }
+
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]
 
 
@@ -190,6 +223,15 @@ fn main() {
   [%expect
     {|
     .source_language = "Rust"
+
+    define UNIT_METADATA() : void {
+      local var_0: void
+      #node_0:
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
 
     define dummy::ifelse(b_1: int, x_2: int, y_3: int) : int {
       local var_0: int, var_4: int
@@ -220,21 +262,23 @@ fn main() {
     define dummy::main() : void {
       local var_0: void, x_1: int
       #node_0:
+          store &var_0 <- null:void
           n0 = dummy::ifelse(1, 10, 20)
           store &x_1 <- n0:int
-          jmp node_1
-          .handlers node_2
+          jmp node_2
+          .handlers node_1
 
       #node_1:
-          store &var_0 <- null:void
+          throw "UnwindResume"
+
+      #node_2:
           store &var_0 <- null:void
           n1:void = load &var_0
           ret n1
 
-      #node_2:
-          throw "UnwindResume"
-
     }
+
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]
 
 
@@ -261,6 +305,15 @@ fn main() {
     {|
     .source_language = "Rust"
 
+    define UNIT_METADATA() : void {
+      local var_0: void
+      #node_0:
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
+
     define dummy::call_with_args(x_1: int, y_2: int) : int {
       local var_0: int, var_3: int, var_4: int
       #node_0:
@@ -272,15 +325,15 @@ fn main() {
           n3:int = load &var_4
           n4 = dummy::add(n2, n3)
           store &var_0 <- n4:int
-          jmp node_1
-          .handlers node_2
+          jmp node_2
+          .handlers node_1
 
       #node_1:
-          n5:int = load &var_0
-          ret n5
+          throw "UnwindResume"
 
       #node_2:
-          throw "UnwindResume"
+          n5:int = load &var_0
+          ret n5
 
     }
 
@@ -304,6 +357,7 @@ fn main() {
     define dummy::main() : void {
       local var_0: void, x_1: int, y_2: int, var_3: int, var_4: int, var_5: int
       #node_0:
+          store &var_0 <- null:void
           store &x_1 <- 0:int
           store &y_2 <- 1:int
           n0:int = load &x_1
@@ -314,19 +368,20 @@ fn main() {
           n3:int = load &var_5
           n4 = dummy::call_with_args(n2, n3)
           store &var_3 <- n4:int
-          jmp node_1
-          .handlers node_2
+          jmp node_2
+          .handlers node_1
 
       #node_1:
-          store &var_0 <- null:void
+          throw "UnwindResume"
+
+      #node_2:
           store &var_0 <- null:void
           n5:void = load &var_0
           ret n5
 
-      #node_2:
-          throw "UnwindResume"
-
     }
+
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]
 
 
@@ -355,21 +410,30 @@ fn main() {
     {|
     .source_language = "Rust"
 
+    define UNIT_METADATA() : void {
+      local var_0: void
+      #node_0:
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
+
     define dummy::goto_loop(n_1: int) : int {
-      local var_0: int, var_2: void, var_3: int, var_4: int, var_5: int
+      local var_0: int, var_2: int, var_3: int, var_4: int
       #node_0:
           jmp node_1
 
       #node_1:
           n0:int = load &n_1
-          store &var_3 <- __sil_plusa_int(n0, 1):int
-          n1:int = load &var_3
+          store &var_2 <- __sil_plusa_int(n0, 1):int
+          n1:int = load &var_2
           store &n_1 <- n1:int
           n2:int = load &n_1
-          store &var_5 <- n2:int
-          n3:int = load &var_5
-          store &var_4 <- __sil_gt(n3, 5):int
-          n4:int = load &var_4
+          store &var_4 <- n2:int
+          n3:int = load &var_4
+          store &var_3 <- __sil_gt(n3, 5):int
+          n4:int = load &var_3
           jmp node_2, node_3
 
       #node_2:
@@ -388,25 +452,27 @@ fn main() {
     define dummy::main() : void {
       local var_0: void, x_1: int, var_2: int, var_3: int
       #node_0:
+          store &var_0 <- null:void
           store &x_1 <- 0:int
           n0:int = load &x_1
           store &var_3 <- n0:int
           n1:int = load &var_3
           n2 = dummy::goto_loop(n1)
           store &var_2 <- n2:int
-          jmp node_1
-          .handlers node_2
+          jmp node_2
+          .handlers node_1
 
       #node_1:
-          store &var_0 <- null:void
+          throw "UnwindResume"
+
+      #node_2:
           store &var_0 <- null:void
           n3:void = load &var_0
           ret n3
 
-      #node_2:
-          throw "UnwindResume"
-
     }
+
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]
 
 
@@ -436,27 +502,36 @@ fn main() {
     {|
     .source_language = "Rust"
 
+    define UNIT_METADATA() : void {
+      local var_0: void
+      #node_0:
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
+
     define dummy::goto_with_continue(x_1: int, y_2: int) : int {
-      local var_0: int, var_3: void, var_4: void, var_5: int, var_6: int, var_7: int, var_8: int
+      local var_0: int, var_3: int, var_4: int, var_5: int, var_6: int
       #node_0:
           jmp node_1
 
       #node_1:
           n0:int = load &x_1
-          store &var_6 <- n0:int
+          store &var_4 <- n0:int
           n1:int = load &y_2
-          store &var_7 <- n1:int
-          n2:int = load &var_6
-          n3:int = load &var_7
-          store &var_5 <- __sil_lt(n2, n3):int
-          n4:int = load &var_5
+          store &var_5 <- n1:int
+          n2:int = load &var_4
+          n3:int = load &var_5
+          store &var_3 <- __sil_lt(n2, n3):int
+          n4:int = load &var_3
           jmp node_2, node_3
 
       #node_2:
           prune n4
           n5:int = load &x_1
-          store &var_8 <- __sil_plusa_int(n5, 1):int
-          n6:int = load &var_8
+          store &var_6 <- __sil_plusa_int(n5, 1):int
+          n6:int = load &var_6
           store &x_1 <- n6:int
           jmp node_1
 
@@ -472,6 +547,7 @@ fn main() {
     define dummy::main() : void {
       local var_0: void, x_1: int, y_2: int, var_3: int, var_4: int, var_5: int
       #node_0:
+          store &var_0 <- null:void
           store &x_1 <- 0:int
           store &y_2 <- 1:int
           n0:int = load &x_1
@@ -482,19 +558,20 @@ fn main() {
           n3:int = load &var_5
           n4 = dummy::goto_with_continue(n2, n3)
           store &var_3 <- n4:int
-          jmp node_1
-          .handlers node_2
+          jmp node_2
+          .handlers node_1
 
       #node_1:
-          store &var_0 <- null:void
+          throw "UnwindResume"
+
+      #node_2:
           store &var_0 <- null:void
           n5:void = load &var_0
           ret n5
 
-      #node_2:
-          throw "UnwindResume"
-
     }
+
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]
 
 
@@ -517,6 +594,15 @@ fn main() {
   [%expect
     {|
     .source_language = "Rust"
+
+    define UNIT_METADATA() : void {
+      local var_0: void
+      #node_0:
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
 
     define dummy::compare(x_1: int, y_2: int) : int {
       local var_0: int, var_3: int, var_4: int, var_5: int
@@ -552,6 +638,7 @@ fn main() {
     define dummy::main() : void {
       local var_0: void, x_1: int, y_2: int, var_3: int, var_4: int, var_5: int
       #node_0:
+          store &var_0 <- null:void
           store &x_1 <- 0:int
           store &y_2 <- 1:int
           n0:int = load &x_1
@@ -562,19 +649,20 @@ fn main() {
           n3:int = load &var_5
           n4 = dummy::compare(n2, n3)
           store &var_3 <- n4:int
-          jmp node_1
-          .handlers node_2
+          jmp node_2
+          .handlers node_1
 
       #node_1:
-          store &var_0 <- null:void
+          throw "UnwindResume"
+
+      #node_2:
           store &var_0 <- null:void
           n5:void = load &var_0
           ret n5
 
-      #node_2:
-          throw "UnwindResume"
-
     }
+
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]
 
 
@@ -600,6 +688,15 @@ fn main() {
   [%expect
     {|
     .source_language = "Rust"
+
+    define UNIT_METADATA() : void {
+      local var_0: void
+      #node_0:
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
 
     define dummy::swi_nested(a_1: int, b_2: int) : int {
       local var_0: int, var_3: int, var_4: int, var_5: int, var_6: int
@@ -647,6 +744,7 @@ fn main() {
     define dummy::main() : void {
       local var_0: void, x_1: int, y_2: int, var_3: int, var_4: int, var_5: int
       #node_0:
+          store &var_0 <- null:void
           store &x_1 <- 0:int
           store &y_2 <- 1:int
           n0:int = load &x_1
@@ -657,17 +755,18 @@ fn main() {
           n3:int = load &var_5
           n4 = dummy::swi_nested(n2, n3)
           store &var_3 <- n4:int
-          jmp node_1
-          .handlers node_2
+          jmp node_2
+          .handlers node_1
 
       #node_1:
-          store &var_0 <- null:void
+          throw "UnwindResume"
+
+      #node_2:
           store &var_0 <- null:void
           n5:void = load &var_0
           ret n5
 
-      #node_2:
-          throw "UnwindResume"
-
     }
+
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]

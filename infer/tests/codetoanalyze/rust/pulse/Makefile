@@ -29,5 +29,5 @@ charon:
 		if [ -e "$$file.args" ]; then \
     		args=$$(cat "$$file.args"); \
 		fi; \
-		charon rustc --mir=elaborated --monomorphize-conservative --print-ullbc --ullbc --dest-file $$file.ullbc $$args -- $$file --allow unused > $$file.print_ullbc || error=1 ; \
+		charon rustc --mir=elaborated --precise-drops --treat-box-as-builtin --reconstruct-fallible-operations --print-ullbc --ullbc --dest-file $$file.ullbc $$args -- $$file --allow unused > $$file.print_ullbc || error=1 ; \
 	done; fi

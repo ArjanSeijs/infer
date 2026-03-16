@@ -3,107 +3,205 @@
 // Full name: div_and_modulo::main
 fn main()
 {
-    let @0: (); // return
-    let a@1: u32; // local
-    let b@2: u32; // local
-    let @3: u32; // anonymous local
-    let @4: u32; // anonymous local
-    let @5: u32; // anonymous local
-    let @6: u32; // anonymous local
-    let @7: u32; // anonymous local
-    let @8: u32; // anonymous local
-    let c@9: i32; // local
-    let d@10: i32; // local
-    let @11: i32; // anonymous local
-    let @12: i32; // anonymous local
-    let @13: i32; // anonymous local
-    let @14: i32; // anonymous local
-    let @15: i32; // anonymous local
-    let @16: i32; // anonymous local
-    let e@17: i32; // local
-    let f@18: i32; // local
-    let @19: i32; // anonymous local
-    let @20: i32; // anonymous local
-    let @21: i32; // anonymous local
-    let @22: i32; // anonymous local
-    let @23: i32; // anonymous local
-    let @24: i32; // anonymous local
+    let _0: (); // return
+    let a_1: u32; // local
+    let b_2: u32; // local
+    let _3: u32; // anonymous local
+    let _4: u32; // anonymous local
+    let _5: u32; // anonymous local
+    let _6: bool; // anonymous local
+    let _7: u32; // anonymous local
+    let _8: u32; // anonymous local
+    let _9: u32; // anonymous local
+    let _10: bool; // anonymous local
+    let c_11: i32; // local
+    let d_12: i32; // local
+    let _13: i32; // anonymous local
+    let _14: i32; // anonymous local
+    let _15: i32; // anonymous local
+    let _16: bool; // anonymous local
+    let _17: bool; // anonymous local
+    let _18: bool; // anonymous local
+    let _19: bool; // anonymous local
+    let _20: i32; // anonymous local
+    let _21: i32; // anonymous local
+    let _22: i32; // anonymous local
+    let _23: bool; // anonymous local
+    let _24: bool; // anonymous local
+    let _25: bool; // anonymous local
+    let _26: bool; // anonymous local
+    let e_27: i32; // local
+    let f_28: i32; // local
+    let _29: i32; // anonymous local
+    let _30: i32; // anonymous local
+    let _31: i32; // anonymous local
+    let _32: bool; // anonymous local
+    let _33: bool; // anonymous local
+    let _34: bool; // anonymous local
+    let _35: bool; // anonymous local
+    let _36: i32; // anonymous local
+    let _37: i32; // anonymous local
+    let _38: i32; // anonymous local
+    let _39: bool; // anonymous local
+    let _40: bool; // anonymous local
+    let _41: bool; // anonymous local
+    let _42: bool; // anonymous local
 
     bb0: {
-        storage_live(a@1);
-        a@1 := const (7 : u32);
-        storage_live(b@2);
-        b@2 := const (3 : u32);
-        storage_live(@3);
-        storage_live(@4);
-        @4 := copy (a@1);
-        storage_live(@5);
-        @5 := copy (b@2);
-        @3 := move (@4) panic./ move (@5);
-        storage_dead(@5);
-        storage_dead(@4);
-        storage_dead(@3);
-        storage_live(@6);
-        storage_live(@7);
-        @7 := copy (a@1);
-        storage_live(@8);
-        @8 := copy (b@2);
-        @6 := move (@7) panic.% move (@8);
-        storage_dead(@8);
-        storage_dead(@7);
-        storage_dead(@6);
-        storage_live(c@9);
-        c@9 := const (7 : i32);
-        storage_live(d@10);
-        d@10 := const (-3 : i32);
-        storage_live(@11);
-        storage_live(@12);
-        @12 := copy (c@9);
-        storage_live(@13);
-        @13 := copy (d@10);
-        @11 := move (@12) panic./ move (@13);
-        storage_dead(@13);
-        storage_dead(@12);
-        storage_dead(@11);
-        storage_live(@14);
-        storage_live(@15);
-        @15 := copy (c@9);
-        storage_live(@16);
-        @16 := copy (d@10);
-        @14 := move (@15) panic.% move (@16);
-        storage_dead(@16);
-        storage_dead(@15);
-        storage_dead(@14);
-        storage_live(e@17);
-        e@17 := const (-7 : i32);
-        storage_live(f@18);
-        f@18 := const (3 : i32);
-        storage_live(@19);
-        storage_live(@20);
-        @20 := copy (e@17);
-        storage_live(@21);
-        @21 := copy (f@18);
-        @19 := move (@20) panic./ move (@21);
-        storage_dead(@21);
-        storage_dead(@20);
-        storage_dead(@19);
-        storage_live(@22);
-        storage_live(@23);
-        @23 := copy (e@17);
-        storage_live(@24);
-        @24 := copy (f@18);
-        @22 := move (@23) panic.% move (@24);
-        storage_dead(@24);
-        storage_dead(@23);
-        storage_dead(@22);
-        @0 := ();
-        storage_dead(f@18);
-        storage_dead(e@17);
-        storage_dead(d@10);
-        storage_dead(c@9);
-        storage_dead(b@2);
-        storage_dead(a@1);
-        @0 := ();
+        storage_live(_6);
+        storage_live(_10);
+        storage_live(_16);
+        storage_live(_17);
+        storage_live(_18);
+        storage_live(_19);
+        storage_live(_23);
+        storage_live(_24);
+        storage_live(_25);
+        storage_live(_26);
+        storage_live(_32);
+        storage_live(_33);
+        storage_live(_34);
+        storage_live(_35);
+        storage_live(_39);
+        storage_live(_40);
+        storage_live(_41);
+        storage_live(_42);
+        _0 = ();
+        storage_live(a_1);
+        a_1 = const 7 : u32;
+        storage_live(b_2);
+        b_2 = const 3 : u32;
+        storage_live(_3);
+        storage_live(_4);
+        _4 = copy a_1;
+        storage_live(_5);
+        _5 = copy b_2;
+        _6 = copy _5 == const 0 : u32;
+        assert assert(move _6 == false) (division_by_zero) -> bb2 (unwind: bb1);
+    }
+
+    bb1: {
+        unwind_continue;
+    }
+
+    bb2: {
+        _3 = move _4 ub./ move _5;
+        storage_dead(_5);
+        storage_dead(_4);
+        storage_dead(_3);
+        storage_live(_7);
+        storage_live(_8);
+        _8 = copy a_1;
+        storage_live(_9);
+        _9 = copy b_2;
+        _10 = copy _9 == const 0 : u32;
+        assert assert(move _10 == false) (remainder_by_zero) -> bb3 (unwind: bb1);
+    }
+
+    bb3: {
+        _7 = move _8 ub.% move _9;
+        storage_dead(_9);
+        storage_dead(_8);
+        storage_dead(_7);
+        storage_live(c_11);
+        c_11 = const 7 : i32;
+        storage_live(d_12);
+        d_12 = const -3 : i32;
+        storage_live(_13);
+        storage_live(_14);
+        _14 = copy c_11;
+        storage_live(_15);
+        _15 = copy d_12;
+        _16 = copy _15 == const 0 : i32;
+        assert assert(move _16 == false) (division_by_zero) -> bb4 (unwind: bb1);
+    }
+
+    bb4: {
+        _17 = copy _15 == const -1 : i32;
+        _18 = copy _14 == const -2147483648 : i32;
+        _19 = move _17 & move _18;
+        assert assert(move _19 == false) (overflow) -> bb5 (unwind: bb1);
+    }
+
+    bb5: {
+        _13 = move _14 ub./ move _15;
+        storage_dead(_15);
+        storage_dead(_14);
+        storage_dead(_13);
+        storage_live(_20);
+        storage_live(_21);
+        _21 = copy c_11;
+        storage_live(_22);
+        _22 = copy d_12;
+        _23 = copy _22 == const 0 : i32;
+        assert assert(move _23 == false) (remainder_by_zero) -> bb6 (unwind: bb1);
+    }
+
+    bb6: {
+        _24 = copy _22 == const -1 : i32;
+        _25 = copy _21 == const -2147483648 : i32;
+        _26 = move _24 & move _25;
+        assert assert(move _26 == false) (overflow) -> bb7 (unwind: bb1);
+    }
+
+    bb7: {
+        _20 = move _21 ub.% move _22;
+        storage_dead(_22);
+        storage_dead(_21);
+        storage_dead(_20);
+        storage_live(e_27);
+        e_27 = const -7 : i32;
+        storage_live(f_28);
+        f_28 = const 3 : i32;
+        storage_live(_29);
+        storage_live(_30);
+        _30 = copy e_27;
+        storage_live(_31);
+        _31 = copy f_28;
+        _32 = copy _31 == const 0 : i32;
+        assert assert(move _32 == false) (division_by_zero) -> bb8 (unwind: bb1);
+    }
+
+    bb8: {
+        _33 = copy _31 == const -1 : i32;
+        _34 = copy _30 == const -2147483648 : i32;
+        _35 = move _33 & move _34;
+        assert assert(move _35 == false) (overflow) -> bb9 (unwind: bb1);
+    }
+
+    bb9: {
+        _29 = move _30 ub./ move _31;
+        storage_dead(_31);
+        storage_dead(_30);
+        storage_dead(_29);
+        storage_live(_36);
+        storage_live(_37);
+        _37 = copy e_27;
+        storage_live(_38);
+        _38 = copy f_28;
+        _39 = copy _38 == const 0 : i32;
+        assert assert(move _39 == false) (remainder_by_zero) -> bb10 (unwind: bb1);
+    }
+
+    bb10: {
+        _40 = copy _38 == const -1 : i32;
+        _41 = copy _37 == const -2147483648 : i32;
+        _42 = move _40 & move _41;
+        assert assert(move _42 == false) (overflow) -> bb11 (unwind: bb1);
+    }
+
+    bb11: {
+        _36 = move _37 ub.% move _38;
+        storage_dead(_38);
+        storage_dead(_37);
+        storage_dead(_36);
+        _0 = ();
+        storage_dead(f_28);
+        storage_dead(e_27);
+        storage_dead(d_12);
+        storage_dead(c_11);
+        storage_dead(b_2);
+        storage_dead(a_1);
         return;
     }
 }

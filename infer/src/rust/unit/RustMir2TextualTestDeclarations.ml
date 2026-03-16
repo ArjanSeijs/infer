@@ -31,6 +31,15 @@ fn main() {
     {|
     .source_language = "Rust"
 
+    define UNIT_METADATA() : void {
+      local var_0: void
+      #node_0:
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
+
     define dummy::succ(i_1: int) : int {
       local var_0: int, var_2: int, var_3: int
       #node_0:
@@ -48,12 +57,12 @@ fn main() {
     define dummy::main() : void {
       local var_0: void, eleven_1: int, var_2: int
       #node_0:
+          store &var_0 <- null:void
           n0:int = load &GLOBAL@dummy::X
           n1:int = load &GLOBAL@dummy::Y
           store &var_2 <- __sil_plusa_int(n0, n1):int
           n2:int = load &var_2
           store &eleven_1 <- n2:int
-          store &var_0 <- null:void
           store &var_0 <- null:void
           n3:void = load &var_0
           ret n3
@@ -86,6 +95,8 @@ fn main() {
           ret n2
 
     }
+
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
 
     global GLOBAL@dummy::X: int = [Some dummy::X()]
 

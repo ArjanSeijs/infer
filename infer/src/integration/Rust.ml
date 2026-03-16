@@ -23,7 +23,12 @@ let dump_textual_test_file file module_ =
   TextualSil.dump_module ~show_location:false ~filename module_
 
 
-let default_charon_args = ["--mir=elaborated"; "--monomorphize-conservative"]
+let default_charon_args =
+  [ "--mir=elaborated"
+  ; "--precise-drops"
+  ; "--treat-box-as-builtin"
+  ; "--reconstruct-fallible-operations" ]
+
 
 let run_charon json_file prog args =
   let args = default_charon_args @ args in

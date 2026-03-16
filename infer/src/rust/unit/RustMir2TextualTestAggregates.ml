@@ -25,9 +25,19 @@ fn main() {
     {|
     .source_language = "Rust"
 
+    define UNIT_METADATA() : void {
+      local var_0: void
+      #node_0:
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
+
     define dummy::main() : void {
       local var_0: void, x_1: __infer_rust_tuple_class<int,int>, one_2: int, two_3: int, var_4: int, var_5: int
       #node_0:
+          store &var_0 <- null:void
           store &x_1.__infer_rust_tuple_class<int,int>.0 <- 1:int
           store &x_1.__infer_rust_tuple_class<int,int>.1 <- 2:int
           n0:int = load &x_1.__infer_rust_tuple_class<int,int>.0
@@ -43,13 +53,14 @@ fn main() {
           n5:int = load &var_5
           store &x_1.__infer_rust_tuple_class<int,int>.1 <- n5:int
           store &var_0 <- null:void
-          store &var_0 <- null:void
           n6:void = load &var_0
           ret n6
 
     }
 
     type __infer_rust_tuple_class<int,int> = {0: int; 1: int}
+
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]
 
 
@@ -77,9 +88,19 @@ fn main() {
 
     type dummy::main::Point = {x: int; y: int}
 
+    define UNIT_METADATA() : void {
+      local var_0: void
+      #node_0:
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
+
     define dummy::main() : void {
       local var_0: void, p_1: dummy::main::Point, one_2: int, two_3: int, var_4: int, var_5: int
       #node_0:
+          store &var_0 <- null:void
           store &p_1.dummy::main::Point.x <- 1:int
           store &p_1.dummy::main::Point.y <- 2:int
           n0:int = load &p_1.dummy::main::Point.x
@@ -95,11 +116,12 @@ fn main() {
           n5:int = load &var_5
           store &p_1.dummy::main::Point.y <- n5:int
           store &var_0 <- null:void
-          store &var_0 <- null:void
           n6:void = load &var_0
           ret n6
 
     }
+
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]
 
 
@@ -120,9 +142,19 @@ fn main() {
     {|
     .source_language = "Rust"
 
+    define UNIT_METADATA() : void {
+      local var_0: void
+      #node_0:
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
+
     define dummy::main() : void {
       local var_0: void, x_1: int[], four_2: int, var_3: int, five_4: int, var_5: int, var_6: int, var_7: int, var_8: int, var_9: int
       #node_0:
+          store &var_0 <- null:void
           store &x_1[0] <- 4:int
           store &x_1[1] <- 5:int
           store &x_1[2] <- 6:int
@@ -147,11 +179,12 @@ fn main() {
           n9:int = load &var_8
           store &x_1[n8] <- n9:int
           store &var_0 <- null:void
-          store &var_0 <- null:void
           n10:void = load &var_0
           ret n10
 
     }
+
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]
 
 
@@ -181,9 +214,19 @@ struct Point {
 
     type dummy::Point = {x: int; y: int}
 
+    define UNIT_METADATA() : void {
+      local var_0: void
+      #node_0:
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
+
     define dummy::main() : void {
       local var_0: void, p_1: dummy::Point, var_2: int, var_3: dummy::Point
       #node_0:
+          store &var_0 <- null:void
           store &p_1.dummy::Point.x <- 1:int
           store &p_1.dummy::Point.y <- 2:int
           n0:dummy::Point = load &p_1
@@ -191,17 +234,16 @@ struct Point {
           n1:dummy::Point = load &var_3
           n2 = dummy::distance(n1)
           store &var_2 <- n2:int
-          jmp node_1
-          .handlers node_2
+          jmp node_2
+          .handlers node_1
 
       #node_1:
-          store &var_0 <- null:void
+          throw "UnwindResume"
+
+      #node_2:
           store &var_0 <- null:void
           n3:void = load &var_0
           ret n3
-
-      #node_2:
-          throw "UnwindResume"
 
     }
 
@@ -235,6 +277,8 @@ struct Point {
           ret n13
 
     }
+
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]
 
 
@@ -263,24 +307,33 @@ fn main() {
 
     type dummy::Adder = {}
 
+    define UNIT_METADATA() : void {
+      local var_0: void
+      #node_0:
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
+
     define dummy::main() : void {
       local var_0: void, adder_1: dummy::Adder, three_2: int, var_3: *dummy::Adder
       #node_0:
+          store &var_0 <- null:void
           store &var_3 <- &adder_1:*dummy::Adder
           n0:*dummy::Adder = load &var_3
           n1 = dummy::{dummy::Adder}::add(n0, 1, 2)
           store &three_2 <- n1:int
-          jmp node_1
-          .handlers node_2
+          jmp node_2
+          .handlers node_1
 
       #node_1:
-          store &var_0 <- null:void
+          throw "UnwindResume"
+
+      #node_2:
           store &var_0 <- null:void
           n2:void = load &var_0
           ret n2
-
-      #node_2:
-          throw "UnwindResume"
 
     }
 
@@ -300,6 +353,8 @@ fn main() {
           ret n5
 
     }
+
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]
 
 
@@ -323,9 +378,19 @@ struct Foo {
 
     type dummy::Foo = {array: int[]; tuple: __infer_rust_tuple_class<int,int>}
 
+    define UNIT_METADATA() : void {
+      local var_0: void
+      #node_0:
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
+
     define dummy::main() : void {
       local var_0: void, x_1: dummy::Foo, var_2: int[], var_3: __infer_rust_tuple_class<int,int>
       #node_0:
+          store &var_0 <- null:void
           store &var_2[0] <- 1:int
           store &var_2[1] <- 2:int
           store &var_3.__infer_rust_tuple_class<int,int>.0 <- 3:int
@@ -335,13 +400,14 @@ struct Foo {
           n1:__infer_rust_tuple_class<int,int> = load &var_3
           store &x_1.dummy::Foo.tuple <- n1:__infer_rust_tuple_class<int,int>
           store &var_0 <- null:void
-          store &var_0 <- null:void
           n2:void = load &var_0
           ret n2
 
     }
 
     type __infer_rust_tuple_class<int,int> = {0: int; 1: int}
+
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]
 
 
@@ -361,9 +427,19 @@ fn main() {
     {|
     .source_language = "Rust"
 
+    define UNIT_METADATA() : void {
+      local var_0: void
+      #node_0:
+          store &var_0 <- null:void
+          n0:void = load &var_0
+          ret n0
+
+    }
+
     define dummy::main() : void {
       local var_0: void, x_1: __infer_rust_tuple_class<int,int>, y_2: __infer_rust_tuple_class<int,int>, z_3: __infer_rust_tuple_class<int[],int[]>, var_4: int[], var_5: int[], aa_6: __infer_rust_tuple_class<__infer_rust_tuple_class<int,int,int>,__infer_rust_tuple_class<int,int,int>>, var_7: __infer_rust_tuple_class<int,int,int>, var_8: __infer_rust_tuple_class<int,int,int>
       #node_0:
+          store &var_0 <- null:void
           store &x_1.__infer_rust_tuple_class<int,int>.0 <- 1:int
           store &x_1.__infer_rust_tuple_class<int,int>.1 <- 2:int
           store &y_2.__infer_rust_tuple_class<int,int>.0 <- 2:int
@@ -385,7 +461,6 @@ fn main() {
           n3:__infer_rust_tuple_class<int,int,int> = load &var_8
           store &aa_6.__infer_rust_tuple_class<__infer_rust_tuple_class<int,int,int>,__infer_rust_tuple_class<int,int,int>>.1 <- n3:__infer_rust_tuple_class<int,int,int>
           store &var_0 <- null:void
-          store &var_0 <- null:void
           n4:void = load &var_0
           ret n4
 
@@ -399,4 +474,6 @@ fn main() {
     type __infer_rust_tuple_class<int,int,int> = {0: int; 1: int; 2: int}
 
     type __infer_rust_tuple_class<int[],int[]> = {0: int[]; 1: int[]}
+
+    global GLOBAL@UNIT_METADATA: void = [Some UNIT_METADATA()]
     |}]

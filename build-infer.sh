@@ -167,8 +167,8 @@ if [ "$BUILD_CLANG" == "no" ] && [ "$BUILD_ERLANG" == "no" ] && \
   build_all
 fi
 
-CHARON_VERSION="0.1.123"
-CHARON_VERSION_COMMIT="4289a52cc427ac6f8ecbb746e2b226f5b297be40"
+CHARON_VERSION="0.1.174"
+CHARON_VERSION_COMMIT="8f77f850bdb2da62cd9189d8438322d7c536dada"
 # Check for charon on path when rust is enabled
 if [ "$BUILD_RUST" == "yes" ]; then
   if [[ $(charon version) != "$CHARON_VERSION" ]]; then
@@ -204,7 +204,6 @@ install_opam_deps () {
         locked=.locked
     fi
 
-    # Charon Version 0.1.123
     opam pin add --no-action charon "$INFER_ROOT"/dependencies/charon
     opam pin add --no-action name_matcher_parser "$INFER_ROOT"/dependencies/charon
     opam pin add --no-action ppx_show "$INFER_ROOT"/dependencies/ppx_show

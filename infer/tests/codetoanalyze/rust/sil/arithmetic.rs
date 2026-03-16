@@ -13,14 +13,14 @@ fn main() {
     let _ = y - x;
     let _ = x * y;
 
-    let c: i128 = 1;
+    let c: i128 = 10;
     let d: i128 = 2;
 
     let _ = c + d;
     let _ = c - d;
     let _ = c * d;
 
-    let z: u128 = 1;
+    let z: u128 = 10;
     let w: u128 = 2;
 
     let _ = z + w;

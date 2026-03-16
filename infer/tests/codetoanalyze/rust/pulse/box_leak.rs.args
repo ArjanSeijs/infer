@@ -1,1 +1,3 @@
---hide-marker-traits --hide-allocator --extract-opaque-bodies --include=std::mem::forget
+--hide-marker-traits 
+--hide-allocator 
+--include=std::mem::forget

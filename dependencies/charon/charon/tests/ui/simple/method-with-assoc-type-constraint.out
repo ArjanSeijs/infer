@@ -12,26 +12,24 @@ pub trait Sized<Self>
     non-dyn-compatible
 }
 
-// Full name: core::ops::drop::Drop
-#[lang_item("drop")]
-pub trait Drop<Self>
+// Full name: core::marker::Destruct
+#[lang_item("destruct")]
+pub trait Destruct<Self>
 {
-    parent_clause0 : [@TraitClause0]: MetaSized<Self>
-    fn drop<'_0> = drop<'_0_0, Self>[Self]
-    vtable: core::ops::drop::Drop::{vtable}
+    fn drop_in_place = drop_in_place<Self>
+    non-dyn-compatible
 }
 
-// Full name: core::ops::drop::Drop::drop
-pub fn drop<'_0, Self>(@1: &'_0 mut (Self))
-where
-    [@TraitClause0]: Drop<Self>,
+// Full name: core::marker::Destruct::drop_in_place
+unsafe fn drop_in_place<Self>(_1: *mut Self)
+= <opaque>
 
 // Full name: test_crate::IntoIterator
 pub trait IntoIterator<Self, Self_Item>
 {
     parent_clause0 : [@TraitClause0]: MetaSized<Self>
     parent_clause1 : [@TraitClause1]: Sized<Self_Item>
-    non-dyn-compatible
+    vtable: test_crate::IntoIterator::{vtable}<Self_Item>
 }
 
 // Full name: test_crate::FromIterator
@@ -39,36 +37,37 @@ pub trait FromIterator<Self, A>
 {
     parent_clause0 : [@TraitClause0]: Sized<Self>
     parent_clause1 : [@TraitClause1]: Sized<A>
-    fn from_iter<T, [@TraitClause0]: Sized<T>, [@TraitClause1]: IntoIterator<T, A>> = test_crate::FromIterator::from_iter<Self, A, T>[Self, @TraitClause0_0, @TraitClause0_1]
+    fn from_iter<T, [@TraitClause0_1]: Sized<T>, [@TraitClause1_1]: IntoIterator<T, A>> = test_crate::FromIterator::from_iter<Self, A, T>[Self, @TraitClause0_1, @TraitClause1_1]
     non-dyn-compatible
 }
 
-pub fn test_crate::FromIterator::from_iter<Self, A, T>(@1: T) -> Self
+pub fn test_crate::FromIterator::from_iter<Self, A, T>(_1: T) -> Self
 where
     [@TraitClause0]: FromIterator<Self, A>,
     [@TraitClause1]: Sized<T>,
     [@TraitClause2]: IntoIterator<T, A>,
+= <method_without_default_body>
 
 // Full name: test_crate::{impl FromIterator<()> for ()}::from_iter
-pub fn {impl FromIterator<()> for ()}::from_iter<I>(@1: I)
+pub fn {impl FromIterator<()> for ()}::from_iter<I>(_1: I)
 where
     [@TraitClause0]: Sized<I>,
     [@TraitClause1]: IntoIterator<I, ()>,
 {
-    let @0: (); // return
-    let iter@1: I; // arg #1
+    let _0: (); // return
+    let iter_1: I; // arg #1
 
-    @0 := ()
-    drop[Drop<I>] iter@1
-    @0 := ()
+    _0 = ()
+    _0 = ()
+    conditional_drop[{built_in impl Destruct for I}] iter_1
     return
 }
 
 // Full name: test_crate::{impl FromIterator<()> for ()}
 impl FromIterator<()> for () {
-    parent_clause0 = Sized<()>
-    parent_clause1 = Sized<()>
-    fn from_iter<I, [@TraitClause0]: Sized<I>, [@TraitClause1]: IntoIterator<I, ()>> = {impl FromIterator<()> for ()}::from_iter<I>[@TraitClause0_0, @TraitClause0_1]
+    parent_clause0 = {built_in impl Sized for ()}
+    parent_clause1 = {built_in impl Sized for ()}
+    fn from_iter<I, [@TraitClause0_1]: Sized<I>, [@TraitClause1_1]: IntoIterator<I, ()>> = {impl FromIterator<()> for ()}::from_iter<I>[@TraitClause0_1, @TraitClause1_1]
     non-dyn-compatible
 }
 
