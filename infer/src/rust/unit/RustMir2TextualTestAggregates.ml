@@ -266,7 +266,6 @@ fn main() {
     define dummy::main() : void {
       local var_0: void, adder_1: dummy::Adder, three_2: int, var_3: *dummy::Adder
       #node_0:
-          store &adder_1 <- null:void
           store &var_3 <- &adder_1:*dummy::Adder
           n0:*dummy::Adder = load &var_3
           n1 = dummy::{dummy::Adder}::add(n0, 1, 2)

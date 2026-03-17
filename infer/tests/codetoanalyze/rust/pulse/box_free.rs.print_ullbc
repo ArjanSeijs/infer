@@ -8,16 +8,15 @@ pub trait Drop<Self>
     vtable: core::ops::drop::Drop::{vtable}
 }
 
-pub fn core::ops::drop::Drop::drop<'_0, Self>(@1: &'_0 mut (Self))
-where
-    [@TraitClause0]: Drop<Self>,
+#[lang_item("NonNull")]
+pub opaque type core::ptr::non_null::NonNull::<i32>
+
+#[lang_item("ptr_unique")]
+pub opaque type core::ptr::unique::Unique::<i32>
 
 // Full name: alloc::alloc::Global
 #[lang_item("global_alloc_ty")]
 pub struct Global {}
-
-// Full name: alloc::boxed::{impl Drop for alloc::boxed::Box<T>}::drop
-pub fn {impl Drop for alloc::boxed::Box<T>}::drop<'_0, T, A>(@1: &'_0 mut (alloc::boxed::Box<T>))
 
 // Full name: alloc::boxed::{impl Drop for alloc::boxed::Box<T>}
 impl<T, A> Drop for alloc::boxed::Box<T> {
@@ -35,8 +34,10 @@ fn main()
     let @4: *const i32; // anonymous local
     let @5: &'_ (i32); // anonymous local
     let ub@6: i32; // local
+    let @7: *const i32; // anonymous local
 
     bb0: {
+        storage_live(@7);
         storage_live(ptr@1);
         storage_live(@2);
         storage_live(x@3);
@@ -46,7 +47,8 @@ fn main()
     bb1: {
         storage_live(@4);
         storage_live(@5);
-        @5 := &*(x@3);
+        @7 := transmute<core::ptr::non_null::NonNull::<i32>, *const i32>(copy ((*(x@3)).0));
+        @5 := &*(@7);
         @4 := &raw const *(@5);
         ptr@1 := move (@4);
         storage_dead(@4);

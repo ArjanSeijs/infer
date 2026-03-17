@@ -11,7 +11,6 @@ type empty_struct::Adder = {}
 define empty_struct::main() : void {
   local var_0: void, adder_1: empty_struct::Adder, three_2: int, var_3: *empty_struct::Adder
   #node_0:
-      store &adder_1 <- null:void
       store &var_3 <- &adder_1:*empty_struct::Adder
       n0:*empty_struct::Adder = load &var_3
       n1 = empty_struct::{empty_struct::Adder}::add(n0, 1, 2)

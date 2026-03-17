@@ -227,6 +227,33 @@ let proc_name_from_binop (op : Charon.Generated_Expressions.binop) (typ : Textua
   (Textual.ProcDecl.of_binop bin_op, typ)
 
 
+(* Model Unqiue<T> and NonNull<T> as *T *)
+let is_pointer_type crate (name : Charon.Generated_Types.name) =
+  let name = name |> List.map ~f:(name_of_path_element crate) in
+  match name with
+  | "core" :: "ptr" :: "non_null" :: "NonNull" :: _ ->
+      true
+  | "core" :: "ptr" :: "unique" :: "Unique" :: _ ->
+      true
+  | _ ->
+      false
+
+
+let is_ty_decl_pointer_type crate type_decl_id =
+  let type_decl = type_decl_map_find_id crate type_decl_id in
+  is_pointer_type crate type_decl.item_meta.name
+
+
+let is_ty_pointer_type crate (ty : Charon.Generated_Types.ty) =
+  match ty with
+  | TAdt {id= TAdtId type_decl_id} ->
+      is_ty_decl_pointer_type crate type_decl_id
+  | TAdt {id= TBuiltin TBox} ->
+      true
+  | _ ->
+      false
+
+
 let rec mk_struct_args crate (types : Charon.Generated_Types.ty list) =
   List.map types ~f:(fun typ ->
       Textual.TypeName.of_string (Format.asprintf "%a" Textual.Typ.pp (ty_to_textual_typ crate typ)) )
@@ -239,6 +266,14 @@ and mk_tuple_type_name crate generics =
 
 and mk_tuple_struct_typ crate type_decl_ref =
   Textual.Typ.Struct (mk_tuple_type_name crate type_decl_ref)
+
+
+and mk_ptr_from_generics_types crate (types : Charon.Generated_Types.ty list) =
+  match types with
+  | typ :: _ ->
+      Textual.Typ.mk_ptr (ty_to_textual_typ crate typ)
+  | _ ->
+      Textual.Typ.mk_ptr Textual.Typ.Void
 
 
 and adt_ty_to_textual_typ crate (type_decl_ref : Charon.Generated_Types.type_decl_ref) :
@@ -254,6 +289,10 @@ and adt_ty_to_textual_typ crate (type_decl_ref : Charon.Generated_Types.type_dec
         Textual.Typ.Array (ty_to_textual_typ crate typ)
     | _ ->
         Textual.Typ.Array Textual.Typ.Void )
+  | TAdtId type_decl_id
+    when let type_decl = type_decl_map_find_id crate type_decl_id in
+         is_pointer_type crate type_decl.item_meta.name ->
+      mk_ptr_from_generics_types crate type_decl_ref.generics.types
   | TAdtId type_decl_id -> (
       let type_decl = type_decl_map_find_id crate type_decl_id in
       match type_decl.kind with
@@ -265,12 +304,8 @@ and adt_ty_to_textual_typ crate (type_decl_ref : Charon.Generated_Types.type_dec
           Textual.Typ.Struct type_name
       | _ ->
           Textual.Typ.Void )
-  | TBuiltin TBox | TBuiltin TSlice -> (
-    match type_decl_ref.generics.types with
-    | typ :: _ ->
-        Textual.Typ.mk_ptr (ty_to_textual_typ crate typ)
-    | _ ->
-        Textual.Typ.mk_ptr Textual.Typ.Void )
+  | TBuiltin TBox | TBuiltin TSlice ->
+      mk_ptr_from_generics_types crate type_decl_ref.generics.types
   | TBuiltin TStr ->
       Textual.Typ.Struct Textual.TypeName.sil_string
 
@@ -378,10 +413,31 @@ let rec mk_exp_from_place ~loc (crate : Charon.UllbcAst.crate) (place_map : plac
   | PlaceLocal var_id ->
       let exp = Textual.Exp.Lvar (place_map_find_id place_map var_id) in
       exp
+  (* Model the --mir=elaborated version of box, unique and nonnull as a pointer and treat them as the same since their ABI
+  are the same. When you do a deref of a box: *b. This will be translated to the deref trait and in truth it will call
+  fn deref(&self) -> &T {
+       &**self
+  } 
+  https://doc.rust-lang.org/1.93.1/src/alloc/boxed.rs.html#2180
+
+  At the mir elaborated this will look like:
+  @3 := transmute<NonNull<i32>, *const i32>(copy (( *(b@1)).0));
+  value@2 := copy ( *(@3));
+  
+  We treat the ( *(b@1)).0 as just b@1 since their ABI are the same. This skips the ( *(b@1)) step.
+  *)
+  | PlaceProjection (({ty= TAdt {id= TBuiltin TBox}} as projection_place), Deref)
+    when is_ty_pointer_type crate place.ty ->
+      mk_exp_from_place ~loc crate place_map projection_place
   | PlaceProjection (projection_place, Deref) ->
       let proj_typ = ty_to_textual_typ crate projection_place.ty in
       let exp = mk_exp_from_place ~loc crate place_map projection_place in
       Textual.Exp.Load {exp; typ= Some proj_typ}
+  (* i.e. NonNull<T>.0 Unqiue<T>.0
+    which has the same ABI as their field so skip a step.
+  *)
+  | PlaceProjection (projection_place, Field _) when is_ty_pointer_type crate projection_place.ty ->
+      mk_exp_from_place ~loc crate place_map projection_place
   | PlaceProjection (projection_place, Field (ProjAdt (type_decl_id, variant), field_id)) ->
       let exp = mk_exp_from_place ~loc crate place_map projection_place in
       let type_decl = type_decl_map_find_id crate type_decl_id in
@@ -646,7 +702,7 @@ let mk_instr crate (place_map : place_map_ty) (statement : Charon.Generated_Ullb
   let loc = location_from_span statement.span in
   match statement.content with
   (* Unit type case *)
-  | Assign (lhs, Aggregate (AggregatedAdt (_, None, None), [])) ->
+  | Assign (lhs, Aggregate (AggregatedAdt ({id= TTuple}, None, None), [])) ->
       let exp1 = mk_exp_from_place ~loc crate place_map lhs in
       let exp2, typ = (Textual.Exp.Const Textual.Const.Null, Textual.Typ.Void) in
       let store_instr = Textual.Instr.Store {exp1; typ= Some typ; exp2; loc} in
@@ -732,14 +788,11 @@ let mk_instr crate (place_map : place_map_ty) (statement : Charon.Generated_Ullb
     The following implementation is a simplified model for drops 
     of boxes created by Box::new() of types using the global allocator.
     https://doc.rust-lang.org/1.93.1/alloc/alloc/struct.Global.html
-    It assumes that drops are elaborated, it is possible to get the elaborated mir
-    by passing --mir=elaborated as charon argument, however this will also change
-    how box types are trated in the current verion. 
     At some point we want to update the charon version to be able to use --precise-drops
     https://rustc-dev-guide.rust-lang.org/mir/drop-elaboration.html
     https://doc.rust-lang.org/1.93.1/alloc/alloc/trait.GlobalAlloc.html#tymethod.dealloc
   *)
-  | Drop (place, _trait_ref) ->
+  | Drop ({ty=TAdt {id=TBuiltin TBox}} as place, _trait_ref) ->
       let exp, _ = mk_exp_from_place_load ~loc crate place_map place in
       let qualified_free_name = Textual.ProcDecl.free_name in
       let free_call = Textual.Exp.call_non_virtual qualified_free_name [exp] in

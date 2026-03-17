@@ -1,21 +1,16 @@
 # Final ULLBC before serialization:
 
-// Full name: core::mem::forget
 #[lang_item("mem_forget")]
-pub fn forget<T>(@1: T)
+pub fn core::mem::forget::<alloc::boxed::Box<i32>>(@1: alloc::boxed::Box<i32>)
 {
     let @0: (); // return
-    let t@1: T; // arg #1
+    let t@1: alloc::boxed::Box<i32>; // arg #1
 
     bb0: {
         @0 := ();
         return;
     }
 }
-
-// Full name: alloc::alloc::Global
-#[lang_item("global_alloc_ty")]
-pub struct Global {}
 
 // Full name: box_leak::main
 fn main()
@@ -34,7 +29,7 @@ fn main()
         storage_live(@2);
         storage_live(@3);
         @3 := move (b@1);
-        @2 := forget<alloc::boxed::Box<i32>>(move (@3)) -> bb3 (unwind: bb4);
+        @2 := core::mem::forget::<alloc::boxed::Box<i32>>(move (@3)) -> bb3 (unwind: bb4);
     }
 
     bb2: {
