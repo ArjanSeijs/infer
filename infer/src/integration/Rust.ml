@@ -148,8 +148,8 @@ let capture_file json_filename =
 
 
 let capture prog (args : string list) =
-  if not (String.equal prog "rustc") then
-    L.die UserError "[ERROR] rustc should be explicitly used instead of %s. @." prog ;
+  if not (String.equal prog "rustc") && not (String.equal prog "cargo")then
+    L.die UserError "[ERROR] rustc or cargo should be explicitly used instead of %s. @." prog ;
   let json_filename = compile prog args in
   capture_file json_filename
 
