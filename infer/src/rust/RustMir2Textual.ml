@@ -691,7 +691,7 @@ let mk_terminator (crate : Charon.UllbcAst.crate) (idx : int) (place_map : place
     https://rustc-dev-guide.rust-lang.org/mir/drop-elaboration.html
     https://doc.rust-lang.org/1.93.1/alloc/alloc/trait.GlobalAlloc.html#tymethod.dealloc
   *)
-  | Drop (Precise, ({ty= TAdt {id= TBuiltin TBox}} as place), _trait_ref, target, on_unwind) ->
+  | Drop (Precise, ({ty= TAdt {id= TBuiltin TBox;generics={types=TLiteral _ :: _}}} as place), _trait_ref, target, on_unwind) ->
       let exp, _ = mk_exp_from_place_load ~loc crate place_map place in
       let qualified_free_name = Textual.ProcDecl.free_name in
       let free_call = Textual.Exp.call_non_virtual qualified_free_name [exp] in
@@ -737,16 +737,7 @@ let mk_instr crate (place_map : place_map_ty) (statement : Charon.Generated_Ullb
   | Assign (lhs, Aggregate (AggregatedAdt ({id= TAdtId type_decl_id}, None, None), ops)) ->
       let lexp = mk_exp_from_place ~loc crate place_map lhs in
       let type_decl = type_decl_map_find_id crate type_decl_id in
-      let fields =
-        match type_decl.kind with
-        | Struct fields ->
-            fields
-        | _ ->
-            L.die UserError
-              "[ERROR] Should not be reachable: Encountered none struct kind even tough variant \
-               and field_id are None. @. > %a @."
-              Charon.Generated_Types.pp_type_decl_kind type_decl.kind
-      in
+      let fields = Charon.TypesUtils.type_decl_get_fields type_decl None in
       let enclosing_class = mk_typename_from_type_decl crate type_decl None in
       mk_field_store_instrs_from_rvalues ~loc crate lexp enclosing_class place_map ops fields
   (* Enum Variant *)
